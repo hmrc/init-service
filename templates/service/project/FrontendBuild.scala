@@ -20,6 +20,7 @@ private object AppDependencies {
   private val playPartialsVersion = "$!playPartialsVersion!$"
   private val playAuthorisedFrontendVersion = "$!playAuthorisedFrontendVersion!$"
   private val playConfigVersion = "$!playConfigVersion!$"
+  private val hmrcTestVersion = "$!hmrcTestVersion!$"
   
   val compile = Seq(
     ws,
@@ -41,6 +42,7 @@ private object AppDependencies {
   object Test {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
+        "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % "2.2.2" % scope,
         "org.pegdown" % "pegdown" % "1.4.2" % scope,
         "org.jsoup" % "jsoup" % "1.7.3" % scope,

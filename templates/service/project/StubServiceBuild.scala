@@ -13,14 +13,13 @@ private object AppDependencies {
   import play.PlayImport._
   import play.core.PlayVersion
 
-  private val stubsCoreVersion = "$!stubsCoreVersion!$"
+
   private val microserviceBootstrapVersion = "$!microserviceBootstrapVersion!$"
   private val playHealthVersion = "$!playHealthVersion!$"
   private val playConfigVersion = "$!playConfigVersion!$"
+  private val hmrcTestVersion = "$!hmrcTestVersion!$"
   
   val compile = Seq(
-    "uk.gov.hmrc" %% "hmrc-stubs-core" % stubsCoreVersion,
-
     ws,
     "uk.gov.hmrc" %% "microservice-bootstrap" % microserviceBootstrapVersion,
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
@@ -36,6 +35,7 @@ private object AppDependencies {
   object Test {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
+        "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
         "org.scalatest" %% "scalatest" % "2.2.2" % scope,
         "org.pegdown" % "pegdown" % "1.4.2" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope

@@ -1,4 +1,5 @@
 app/controllers/HelloWorld.scala
+test/controllers/HelloWorldControllerSpec.scala
 app/config/microserviceGlobal.scala
 app/config/microserviceWiring.scala
 app/config/frontendWiring.scala
@@ -8,5 +9,4 @@ app/views
 conf/messages
 project/MicroServiceBuild.scala
 project/FrontendBuild.scala
-test/controllers
 it

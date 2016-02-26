@@ -1,4 +1,5 @@
 app/controllers/HelloWorld.scala
+test/controllers/HelloWorldControllerSpec.scala
 app/config/StubGlobal.scala
 app/config/frontendWiring.scala
 app/config/frontendGlobal.scala
@@ -8,4 +9,3 @@ conf/messages
 conf/resources
 project/StubServiceBuild.scala
 project/FrontendBuild.scala
-test/controllers

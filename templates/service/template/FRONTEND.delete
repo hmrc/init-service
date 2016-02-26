@@ -1,4 +1,5 @@
 app/controllers/MicroserviceHelloWorld.scala
+test/controllers/MicroserviceHelloWorldControllerSpec.scala
 app/config/microserviceWiring.scala
 app/config/microserviceGlobal.scala
 app/config/StubGlobal.scala

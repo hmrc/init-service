@@ -239,21 +239,21 @@ def create_service(project_root_name, service_type, has_mongo=False):
         print "----"
 
 
-# def clone_or_update_repo(repo, repo_folder):
-#     if not os.path.exists(repo_folder):
-#         os.chdir(workspace)
-#         command = 'git clone %s' % repo
-#         ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-#         ps_command.communicate()
-#         if ps_command.returncode is not 0:
-#             print "ERROR: Unable to clone repo '%s'" % repo
-#     else:
-#         os.chdir(repo_folder)
-#         command = 'git pull'
-#         ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-#         ps_command.communicate()
-#         if ps_command.returncode is not 0:
-#             print "ERROR: Unable to update repo '%s'" % repo
+def clone_or_update_repo(repo, repo_folder):
+    if not os.path.exists(repo_folder):
+        os.chdir(workspace)
+        command = 'git clone %s' % repo
+        ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+        ps_command.communicate()
+        if ps_command.returncode is not 0:
+            print "ERROR: Unable to clone repo '%s'" % repo
+    else:
+        os.chdir(repo_folder)
+        command = 'git pull'
+        ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+        ps_command.communicate()
+        if ps_command.returncode is not 0:
+            print "ERROR: Unable to update repo '%s'" % repo
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Template Creation Tool - Create an new open service(s)... fast!')
