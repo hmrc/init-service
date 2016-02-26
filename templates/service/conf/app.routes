@@ -1,0 +1,7 @@
+# microservice specific routes
+
+<!--(if type=="MICROSERVICE" or type=="STUB")-->
+GET        /hello-world             controllers.MicroserviceHelloWorld.hello
+<!--(else)-->
+GET        /hello-world             controllers.HelloWorld.helloWorld
+<!--(end)-->
