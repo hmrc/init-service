@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 import os
+import shutil
 import sys
 import subprocess
 from subprocess import call
 import uuid
-
-# dont do this in production code, this is bad practice it would seem, only for tests
-#sys.path.append(os.path.abspath(os.path.dirname(__file__)) + '/' + '../bin')
 
 import unittest
 
@@ -15,17 +13,15 @@ class IntegrationTestActions(unittest.TestCase):
     def setUp(self):
         self.createscript = os.path.abspath(os.path.dirname(__file__)) + '/' + '../bin/create.py'
         workspace = os.path.realpath('./') + '/target/'
-        process = subprocess.Popen(['mkdir', workspace])
-        process.communicate()
+        os.mkdir(workspace)
         self.workspace = workspace
         pass
 
     def tearDown(self):
-        process = subprocess.Popen(['rm', "-rf", self.workspace])
-        process.communicate()
+        shutil.rmtree(self.workspace)
 
     def test_created_code_compiles(self):
-        workspace = self.workspace #os.path.realpath('../..') + '/'
+        workspace = self.workspace
         print('workspace Used : '+ self.workspace)
         project_prefix = "test_project_" + str(uuid.uuid4())
 

@@ -58,24 +58,6 @@ def find_version_in(dom):
     return latestNode.firstChild.nodeValue
 
 
-def get_version_info_from_sonatype(artifact):
-    sonatype_nexus = "https://oss.sonatype.org/service/local/lucene/search?a=" + artifact
-    request = urllib2.Request(sonatype_nexus)
-    response = urllib2.urlopen(request)
-    dom = parse(response)
-    response.close()
-    return dom
-
-def get_version_info_from_nexus_dev(artifact):
-    lucene_nexus = "https://nexus-dev.tax.service.gov.uk/service/local/lucene/search?a=" + artifact
-    request = urllib2.Request(lucene_nexus)
-    base64string = base64.encodestring(_header_credentials()).replace('\n', '')
-    request.add_header("Authorization", "Basic %s" % base64string)
-    response = urllib2.urlopen(request)
-    dom = parse(response)
-    response.close()
-    return dom
-
 def get_version_info_from_bintray(artifact):
     print("Bintray version info")
     bintray = "https://dl.bintray.com/hmrc/releases/uk/gov/hmrc/" + artifact + "/maven-metadata.xml"
