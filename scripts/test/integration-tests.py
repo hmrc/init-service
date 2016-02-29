@@ -6,14 +6,15 @@ from subprocess import call
 import uuid
 
 # dont do this in production code, this is bad practice it would seem, only for tests
-sys.path.append(os.path.abspath(os.path.dirname(__file__)) + '/' + '../bin')
+#sys.path.append(os.path.abspath(os.path.dirname(__file__)) + '/' + '../bin')
 
 import unittest
 
 
 class IntegrationTestActions(unittest.TestCase):
     def setUp(self):
-        workspace = os.path.realpath('../..') + '/target/'
+        self.createscript = os.path.abspath(os.path.dirname(__file__)) + '/' + '../bin/create.py'
+        workspace = os.path.realpath('./') + '/target/'
         process = subprocess.Popen(['mkdir', workspace])
         process.communicate()
         self.workspace = workspace
@@ -30,7 +31,7 @@ class IntegrationTestActions(unittest.TestCase):
 
         print project_prefix
 
-        process = subprocess.Popen(['python', '../bin/create.py', project_prefix],
+        process = subprocess.Popen(['python', self.createscript, project_prefix],
                                    stderr=subprocess.STDOUT,
                                    stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE,
@@ -39,6 +40,7 @@ class IntegrationTestActions(unittest.TestCase):
         out, err = process.communicate(input='Y\nY\nY\nY')
 
         if process.returncode is not 0:
+            print (out)
             self.fail(msg="script did not execute correctly, see output for errors")
 
         projects_to_compile = [
