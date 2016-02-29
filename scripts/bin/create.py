@@ -4,7 +4,7 @@ import sys
 import argparse
 import os
 import distutils.core
-import string 
+import string
 import random
 import subprocess
 import fileinput
@@ -18,15 +18,19 @@ from xml.dom.minidom import parse
 def required_environment_directory(environment_variable, description_for_error):
     directory = os.environ.get(environment_variable, None)
     if not directory:
-        print "'%s' environment variable is required. You can add this to your ~/.bash_profile by adding the line %s=[%s]" % (environment_variable, environment_variable, description_for_error)
-        exit(1)    
+        print "'%s' environment variable is required. You can add this to your ~/.bash_profile by adding the line %s=[%s]" % (
+        environment_variable, environment_variable, description_for_error)
+        exit(1)
     directory = os.path.abspath(directory)
     if not os.path.isdir(directory):
-        print "Error: '%s' environment variable points to non-existent directory: %s" % (environment_variable, directory)
+        print "Error: '%s' environment variable points to non-existent directory: %s" % (
+        environment_variable, directory)
         sys.exit(1)
     return directory
 
+
 workspace = required_environment_directory("WORKSPACE", "your workspace root dir")
+
 
 def get_latest_version_in_open(artifact, scalaVersion="_2.11"):
     artifactWithVersion = artifact + scalaVersion
@@ -38,13 +42,15 @@ def get_latest_version_in_open(artifact, scalaVersion="_2.11"):
         self.context.log("Unable to get latest version from bintray")
         return None
 
-    latestVersion =  data.getElementsByTagName("latest")[0].firstChild.nodeValue
+    latestVersion = data.getElementsByTagName("latest")[0].firstChild.nodeValue
     return latestVersion
+
 
 def max_version_of(*args):
     def rank(ver):
         ver = ver or ""
         return [int(s) for s in ver.split(".") if s.isdigit()]
+
     return sorted(args, key=rank, reverse=True)[0]
 
 
@@ -74,7 +80,8 @@ def lookup_credentials():
     if not os.path.exists(sbt_credentials):
         print "Cannot look up nexus credentials from " + sbt_credentials
         return {}
-    return {key.strip(): value.strip() for (key, value) in map(lambda x: x.split("=", 1), open(sbt_credentials, 'r').readlines())}
+    return {key.strip(): value.strip() for (key, value) in
+            map(lambda x: x.split("=", 1), open(sbt_credentials, 'r').readlines())}
 
 
 def _header_credentials():
@@ -83,8 +90,8 @@ def _header_credentials():
 
 
 def query_yes_no(question, default="yes"):
-    valid = {"yes": True,   "y": True,  "ye": True,
-             "no": False,     "n": False}
+    valid = {"yes": True, "y": True, "ye": True,
+             "no": False, "n": False}
     if default is None:
         prompt = " [y/n] "
     elif default == "yes":
@@ -113,23 +120,28 @@ def generate_app_secret():
 
 
 def replace_variables_for_app(folder_to_search, application_name, service_type, has_mongo=False):
-    govukTemplateVersion=get_latest_version_in_open("govuk-template")
-    frontendBootstrapVersion=get_latest_version_in_open("frontend-bootstrap")
-    playUiVersion=get_latest_version_in_open("play-ui")
-    playPartialsVersion=get_latest_version_in_open("play-partials")
-    playAuthVersion=get_latest_version_in_open("play-authorisation")
-    playAuthorisedFrontendVersion=get_latest_version_in_open("play-authorised-frontend")
-    microserviceBootstrapVersion=get_latest_version_in_open("microservice-bootstrap")
-    playUrlBindersVersion=get_latest_version_in_open("play-url-binders")
-    playConfigVersion=get_latest_version_in_open("play-config")
-    domainVersion=get_latest_version_in_open("domain")
-    hmrcTestVersion=get_latest_version_in_open("hmrctest")
-    playReactivemongoVersion=get_latest_version_in_open("play-reactivemongo")
-    simpleReactivemongoVersion=get_latest_version_in_open("simple-reactivemongo")
-    playHealthVersion=get_latest_version_in_open("play-health")
-    playJsonLoggerVersion=get_latest_version_in_open("play-json-logger")    
+    govukTemplateVersion = get_latest_version_in_open("govuk-template")
+    frontendBootstrapVersion = get_latest_version_in_open("frontend-bootstrap")
+    playUiVersion = get_latest_version_in_open("play-ui")
+    playPartialsVersion = get_latest_version_in_open("play-partials")
+    playAuthVersion = get_latest_version_in_open("play-authorisation")
+    playAuthorisedFrontendVersion = get_latest_version_in_open("play-authorised-frontend")
+    microserviceBootstrapVersion = get_latest_version_in_open("microservice-bootstrap")
+    playUrlBindersVersion = get_latest_version_in_open("play-url-binders")
+    playConfigVersion = get_latest_version_in_open("play-config")
+    domainVersion = get_latest_version_in_open("domain")
+    hmrcTestVersion = get_latest_version_in_open("hmrctest")
+    playReactivemongoVersion = get_latest_version_in_open("play-reactivemongo")
+    simpleReactivemongoVersion = get_latest_version_in_open("simple-reactivemongo")
+    playHealthVersion = get_latest_version_in_open("play-health")
+    playJsonLoggerVersion = get_latest_version_in_open("play-json-logger")
+
+    print "folder_to_search :" + folder_to_search
 
     for subdir, dirs, files in os.walk(folder_to_search):
+        if '.git' in dirs:
+            dirs.remove('.git')
+
         for f in files:
             file_name = os.path.join(subdir, f)
             t = pyratemp.Template(filename=os.path.join(subdir, f))
@@ -153,10 +165,10 @@ def replace_variables_for_app(folder_to_search, application_name, service_type, 
                              playReactivemongoVersion=playReactivemongoVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
                              playHealthVersion=playHealthVersion,
-                             playJsonLoggerVersion=playJsonLoggerVersion,                             
+                             playJsonLoggerVersion=playJsonLoggerVersion,
                              bashbang="#!/bin/bash",
                              shbang="#!/bin/sh",
-                             )
+            )
             write_to_file(file_name, file_content)
 
 
@@ -188,59 +200,76 @@ def call(command, quiet=True):
     ps_command.wait()
     return ps_command
 
+
 def clone_git_repo(repo, folder):
     os.chdir(folder)
     call('git clone %s' % repo)
 
 
-def create_service(project_root_name, service_type, has_mongo=False):
-    project_name = project_root_name
-    if service_type == "FRONTEND":
-        project_name = "%s-frontend" % project_name
-    if service_type == "STUB":
-        project_name = "%s-stub" % project_name
+def create_service(project_root_name, service_type, existing_repo, has_mongo=False):
+    project_name = folder_name(project_root_name, service_type)
+    template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/service"))
+
+
+    print("project name :" + project_name)
+
+    if existing_repo:
+        clone_repo(project_name)
+
     print "Creating new service: %s, this could take a few moments" % project_name
     project_folder = os.path.normpath(os.path.join(workspace, project_name))
-    if os.path.isdir(project_folder):
+    if os.path.isdir(project_folder) and not existing_repo:
         print "The folder '%s' already exists, not creating front end module" % str(project_folder)
     else:
-        template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/service"))
         distutils.dir_util.copy_tree(template_dir, project_folder)
         replace_variables_for_app(project_folder, project_name, service_type, has_mongo)
         delete_files_for_type(project_folder, service_type)
         shutil.rmtree(os.path.join(project_folder, "template"))
-        print "Created %s at '%s'. You can now finish by doing the following from the new dir" % (service_type, project_folder)
+        print "Created %s at '%s'. You can now finish by doing the following from the new dir" % (
+        service_type, project_folder)
         print "git push -u origin master"
         print "----"
 
 
-def clone_or_update_repo(repo, repo_folder):
-    if not os.path.exists(repo_folder):
-        os.chdir(workspace)
-        command = 'git clone %s' % repo
-        ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-        ps_command.communicate()
-        if ps_command.returncode is not 0:
-            print "ERROR: Unable to clone repo '%s'" % repo
+def folder_name(project_name, project_type):
+    folder_name = project_name
+    if project_type == "FRONTEND":
+        folder_name = "%s-frontend" % project_name
+    if project_type == "STUB":
+        folder_name = "%s-stub" % project_name
+    return folder_name
+
+
+def clone_repo(repo):
+    current_path = os.path.normpath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "../"))
+    print "current_path" + current_path
+    os.chdir(workspace)
+    command = 'git clone git@github.com:hmrc/%s.git' % repo
+    print("cloning : " + command)
+    ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+    ps_command.communicate()
+    if ps_command.returncode is not 0:
+        print "ERROR: Unable to clone repo '%s'" % repo
     else:
-        os.chdir(repo_folder)
-        command = 'git pull'
-        ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-        ps_command.communicate()
-        if ps_command.returncode is not 0:
-            print "ERROR: Unable to update repo '%s'" % repo
+        os.chdir(current_path)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Template Creation Tool - Create an new open service(s)... fast!')
     parser.add_argument('PROJECT_NAME', type=str, help='The name of the project you want to create')
     args = parser.parse_args()
 
+    existing_repo_q = "have you got an existing repo in github?"
+
     if query_yes_no("Would you like to create a front end?"):
-        create_service(args.PROJECT_NAME, "FRONTEND")
+        existing_repo = query_yes_no(existing_repo_q)
+        create_service(args.PROJECT_NAME, "FRONTEND", existing_repo)
 
     if query_yes_no("Would you like to create a micro service?"):
+        existing_repo = query_yes_no(existing_repo_q)
         use_mongo = query_yes_no("Will your service require mongo?")
-        create_service(args.PROJECT_NAME, "MICROSERVICE", use_mongo)
+        create_service(args.PROJECT_NAME, "MICROSERVICE", existing_repo, use_mongo)
 
     if query_yes_no("Would you like to create a stub project?"):
-        create_service(args.PROJECT_NAME, "STUB")
+        existing_repo = query_yes_no(existing_repo_q)
+        create_service(args.PROJECT_NAME, "STUB", existing_repo)

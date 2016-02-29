@@ -12,9 +12,9 @@ import unittest
 class IntegrationTestActions(unittest.TestCase):
     def setUp(self):
         self.createscript = os.path.abspath(os.path.dirname(__file__)) + '/' + '../bin/create.py'
-        workspace = os.path.realpath('./') + '/target/'
-        os.mkdir(workspace)
-        self.workspace = workspace
+        self.workspace = os.path.realpath('./') + '/target/'
+        shutil.rmtree(self.workspace, True)
+        os.mkdir(self.workspace)
         pass
 
     def tearDown(self):
@@ -33,7 +33,7 @@ class IntegrationTestActions(unittest.TestCase):
                                    stdout=subprocess.PIPE,
                                    env=dict(os.environ, WORKSPACE=workspace))
 
-        out, err = process.communicate(input='Y\nY\nY\nY')
+        out, err = process.communicate(input='Y\nn\nY\nn\nY\nY\nn')
 
         if process.returncode is not 0:
             print (out)
@@ -46,7 +46,7 @@ class IntegrationTestActions(unittest.TestCase):
 
         for project in projects_to_compile:
             print('calling compile on ' + project)
-            compile_process = subprocess.Popen(['sbt', 'compile'], cwd=project)
+            compile_process = subprocess.Popen(['sbt', 'test'], cwd=project)
             o, e = compile_process.communicate()
             print(str(o))
             print('return code was ' + str(process.returncode))
