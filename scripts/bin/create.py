@@ -28,12 +28,6 @@ def required_environment_directory(environment_variable, description_for_error):
 
 workspace = required_environment_directory("WORKSPACE", "your workspace root dir")
 
-def get_latest_version(artifact, scalaVersion="_2.11"):
-    artifactWithVersion = artifact + scalaVersion
-    local_nexus_version = find_version_in(get_version_info_from_nexus_dev(artifactWithVersion))
-    sonatype_version    = find_version_in(get_version_info_from_sonatype(artifactWithVersion))
-    return max_version_of(local_nexus_version, sonatype_version)
-
 def get_latest_version_in_open(artifact, scalaVersion="_2.11"):
     artifactWithVersion = artifact + scalaVersion
     maven_metadata = get_version_info_from_bintray(artifactWithVersion)
@@ -83,7 +77,9 @@ def get_version_info_from_nexus_dev(artifact):
     return dom
 
 def get_version_info_from_bintray(artifact):
+    print("Bintray version info")
     bintray = "https://dl.bintray.com/hmrc/releases/uk/gov/hmrc/" + artifact + "/maven-metadata.xml"
+    print(bintray)
     request = urllib2.Request(bintray)
     response = urllib2.urlopen(request)
     dom = parse(response)
@@ -146,12 +142,11 @@ def replace_variables_for_app(folder_to_search, application_name, service_type, 
     playConfigVersion=get_latest_version_in_open("play-config")
     domainVersion=get_latest_version_in_open("domain")
     hmrcTestVersion=get_latest_version_in_open("hmrctest")
-    stubsCoreVersion=get_latest_version("hmrc-stubs-core")
     playReactivemongoVersion=get_latest_version_in_open("play-reactivemongo")
     simpleReactivemongoVersion=get_latest_version_in_open("simple-reactivemongo")
     playHealthVersion=get_latest_version_in_open("play-health")
     playJsonLoggerVersion=get_latest_version_in_open("play-json-logger")    
-    assetsFrontendVersion=get_latest_version("assets-frontend", "")
+
     for subdir, dirs, files in os.walk(folder_to_search):
         for f in files:
             file_name = os.path.join(subdir, f)
@@ -173,12 +168,10 @@ def replace_variables_for_app(folder_to_search, application_name, service_type, 
                              playAuthVersion=playAuthVersion,
                              playPartialsVersion=playPartialsVersion,
                              playAuthorisedFrontendVersion=playAuthorisedFrontendVersion,
-                             stubsCoreVersion=stubsCoreVersion,
                              playReactivemongoVersion=playReactivemongoVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
                              playHealthVersion=playHealthVersion,
                              playJsonLoggerVersion=playJsonLoggerVersion,                             
-                             assetsFrontendVersion=assetsFrontendVersion,
                              bashbang="#!/bin/bash",
                              shbang="#!/bin/sh",
                              )
