@@ -240,21 +240,11 @@ def move_folders_to_project_package(project_root_name, project_folder, service_t
 
     move_files_to_dist(os.listdir(project_app_folder), project_app_folder, project_package_app )
     move_files_to_dist(os.listdir(project_test_folder), project_test_folder, project_package_test )
-    #distutils.dir_util.copy_tree(project_app_folder, project_package_app)
-    #distutils.dir_util.copy_tree(project_test_folder, project_package_test)
-    #shutil.move("%s/*" %project_app_folder, project_package_app)
-    #shutil.move("%s/*" %project_test_folder, project_package_test)
-    #shutil.move("%s/controllers" %project_app_folder, "%s/controllers" %project_package_app)
-    #shutil.move("%s/controllers" %project_test_folder, "%s/controllers" %project_package_test)
-    #if service_type == "FRONTEND":
-      #  shutil.move("%s/views" %project_app_folder, project_package_app)
 
 def move_files_to_dist(files, src, dst):
     for f in files:
-        fullPath = src + "/" + f
-        shutil.move(fullPath, dst)
-        # subprocess.Popen("mv %s %s" %(fullPath, dst), shell=True)
-        # subprocess.communicate()
+        full_path = src + "/" + f
+        shutil.move(full_path, dst)
 
 def folder_name(project_name, project_type):
     folder_name = project_name
