@@ -1,8 +1,7 @@
-package controllers
+package uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers
 
 import play.api.http.Status
 import play.api.test.FakeRequest
-import controllers.MicroserviceHelloWorld
 import play.api.http.Status
 import play.api.test.FakeRequest
 import uk.gov.hmrc.play.test.UnitSpec

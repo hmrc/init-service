@@ -1,4 +1,4 @@
-package controllers
+package uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers
 
 import uk.gov.hmrc.play.microservice.controller.BaseController
 import uk.gov.hmrc.play.http.logging.MdcLoggingExecutionContext._
