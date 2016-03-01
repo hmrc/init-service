@@ -136,8 +136,6 @@ def replace_variables_for_app(folder_to_search, application_name, service_type, 
     playHealthVersion = get_latest_version_in_open("play-health")
     playJsonLoggerVersion = get_latest_version_in_open("play-json-logger")
 
-    print "folder_to_search :" + folder_to_search
-
     for subdir, dirs, files in os.walk(folder_to_search):
         if '.git' in dirs:
             dirs.remove('.git')
@@ -241,17 +239,12 @@ def folder_name(project_name, project_type):
 
 
 def clone_repo(repo):
-    current_path = os.path.normpath(os.path.join(os.path.abspath(os.path.dirname(__file__)), "../"))
-    print "current_path" + current_path
-    os.chdir(workspace)
     command = 'git clone git@github.com:hmrc/%s.git' % repo
     print("cloning : " + command)
-    ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+    ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, cwd=workspace)
     ps_command.communicate()
     if ps_command.returncode is not 0:
         print "ERROR: Unable to clone repo '%s'" % repo
-    else:
-        os.chdir(current_path)
 
 
 if __name__ == '__main__':
