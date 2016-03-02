@@ -1,4 +1,4 @@
-package config
+package uk.gov.hmrc.$!APP_PACKAGE_NAME!$
 
 import play.api.Play.{configuration, current}
 import uk.gov.hmrc.play.config.ServicesConfig

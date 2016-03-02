@@ -1,4 +1,4 @@
-package config
+package uk.gov.hmrc.$!APP_PACKAGE_NAME!$
 
 import java.io.File
 

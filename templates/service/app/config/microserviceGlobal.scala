@@ -1,4 +1,4 @@
-package config
+package uk.gov.hmrc.$!APP_PACKAGE_NAME!$
 
 import com.typesafe.config.Config
 import play.api.{Application, Configuration, Play}
