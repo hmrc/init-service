@@ -3,9 +3,14 @@
 
 [![Build Status](https://travis-ci.org/hmrc/init-service.svg?branch=master)](https://travis-ci.org/hmrc/init-service) [ ![Download](https://api.bintray.com/packages/hmrc/releases/init-service/images/download.svg) ](https://bintray.com/hmrc/releases/init-service/_latestVersion)
 
-This is a placeholder README.md for a new repository
+Steps to create a service :
 
-### License
+1. Clone the repository
+2. run create_service.sh <your project name>
+3. follow the instruction on the prompt.
 
-This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html").
+
+PS: 
+   1. if you have a existing repo in git hub for service/frontend/stub respond accordingly when prompted and the repositories will be    cloned and project structure will be copied to them. If it fails to clone the repository it will continue to create the project locally.
+   2. script will use "WORKSPACE" environment variable to create/clone the projects. 
     
