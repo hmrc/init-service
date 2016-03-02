@@ -6,7 +6,7 @@
 Steps to create a service :
 
 1. Clone the repository
-2. run create_service.sh <your project name>
+2. run scripts/create_service.sh <your project name>
 3. follow the instruction on the prompt.
 
 
