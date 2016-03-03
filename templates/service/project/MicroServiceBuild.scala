@@ -1,9 +1,15 @@
 import sbt._
+import uk.gov.hmrc.SbtAutoBuildPlugin
+import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
+import uk.gov.hmrc.versioning.SbtGitVersioning
 
 object MicroServiceBuild extends Build with MicroService {
-  import scala.util.Properties.envOrElse
 
   val appName = "$!APP_NAME!$"
+
+  override lazy val plugins: Seq[Plugins] = Seq(
+    SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin
+  )
 
   override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
 }
