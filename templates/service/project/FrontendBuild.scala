@@ -2,21 +2,12 @@ import sbt._
 import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.versioning.SbtGitVersioning
+import play.PlayImport._
+import play.core.PlayVersion
 
 object FrontendBuild extends Build with MicroService {
 
   val appName = "$!APP_NAME!$"
-
-  override lazy val plugins: Seq[Plugins] = Seq(
-    SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin
-  )
-
-  override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
-}
-
-private object AppDependencies {
-  import play.PlayImport._
-  import play.core.PlayVersion
 
   private val playHealthVersion = "$!playHealthVersion!$"    
   private val playJsonLoggerVersion = "$!playJsonLoggerVersion!$"      
@@ -27,7 +18,13 @@ private object AppDependencies {
   private val playAuthorisedFrontendVersion = "$!playAuthorisedFrontendVersion!$"
   private val playConfigVersion = "$!playConfigVersion!$"
   private val hmrcTestVersion = "$!hmrcTestVersion!$"
-  
+
+  override lazy val plugins: Seq[Plugins] = Seq(
+    SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin
+  )
+
+  override lazy val appDependencies: Seq[ModuleID] = compile ++ testDependencies
+
   val compile = Seq(
     ws,
     "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
@@ -40,24 +37,16 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-ui" % playUiVersion
   )
 
-  trait TestDependencies {
-    lazy val scope: String = "test"
-    lazy val test : Seq[ModuleID] = ???
-  }
+  val testDependencies: Seq[ModuleID] = baseTestDependencies("test")
 
-  object Test {
-    def apply() = new TestDependencies {
-      override lazy val test = Seq(
-        "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
-        "org.scalatest" %% "scalatest" % "2.2.2" % scope,
-        "org.pegdown" % "pegdown" % "1.4.2" % scope,
-        "org.jsoup" % "jsoup" % "1.7.3" % scope,
-        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
-      )
-    }.test
-  }
+  private def baseTestDependencies(scope: String): Seq[ModuleID] = Seq(
+    "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
+    "org.scalatest" %% "scalatest" % "2.2.2" % scope,
+    "org.pegdown" % "pegdown" % "1.4.2" % scope,
+    "org.jsoup" % "jsoup" % "1.7.3" % scope,
+    "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
+  )
 
-  def apply() = compile ++ Test()
 }
 
 
