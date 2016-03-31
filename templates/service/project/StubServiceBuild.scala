@@ -24,7 +24,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "microservice-bootstrap" % microserviceBootstrapVersion,
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
-    "uk.gov.hmrc" %% "play-json-logger" % "1.0.0"
+    "uk.gov.hmrc" %% "play-json-logger" % "2.1.1"
   )
 
   trait TestDependencies {
@@ -36,8 +36,8 @@ private object AppDependencies {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
-        "org.scalatest" %% "scalatest" % "2.2.2" % scope,
-        "org.pegdown" % "pegdown" % "1.4.2" % scope,
+        "org.scalatest" %% "scalatest" % "2.2.6" % scope,
+        "org.pegdown" % "pegdown" % "1.5.0" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
       )
     }.test
