@@ -16,6 +16,7 @@ object HmrcBuild extends Build {
     .settings(
       name := appName,
       targetJvm := "jvm-1.8",
+      scalaVersion := "2.11.8",
       libraryDependencies ++= Seq(
         Test.scalaTest,
         Test.pegdown
@@ -30,7 +31,7 @@ private object BuildDependencies {
   }
 
   sealed abstract class Test(scope: String) {
-    val scalaTest = "org.scalatest" %% "scalatest" % "2.2.4" % scope
+    val scalaTest = "org.scalatest" %% "scalatest" % "2.2.6" % scope
     val pegdown = "org.pegdown" % "pegdown" % "1.5.0" % scope
   }
 
