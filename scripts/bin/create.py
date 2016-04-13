@@ -12,6 +12,7 @@ import shutil
 import pyratemp
 import urllib2
 import base64
+import json
 from xml.dom.minidom import parse
 
 
@@ -19,12 +20,12 @@ def required_environment_directory(environment_variable, description_for_error):
     directory = os.environ.get(environment_variable, None)
     if not directory:
         print "'%s' environment variable is required. You can add this to your ~/.bash_profile by adding the line %s=[%s]" % (
-        environment_variable, environment_variable, description_for_error)
+            environment_variable, environment_variable, description_for_error)
         exit(1)
     directory = os.path.abspath(directory)
     if not os.path.isdir(directory):
         print "Error: '%s' environment variable points to non-existent directory: %s" % (
-        environment_variable, directory)
+            environment_variable, directory)
         sys.exit(1)
     return directory
 
@@ -32,9 +33,13 @@ def required_environment_directory(environment_variable, description_for_error):
 workspace = required_environment_directory("WORKSPACE", "your workspace root dir")
 
 
-def get_latest_version_in_open(artifact, scalaVersion="_2.11"):
-    artifactWithVersion = artifact + scalaVersion
-    maven_metadata = get_version_info_from_bintray(artifactWithVersion)
+def get_latest_sbt_plugin_version_in_open(artifact):
+    return get_sbt_plugin_version_info_from_bintray(artifact)
+
+
+def get_latest_library_version_in_open(artifact, scalaVersion="_2.11"):
+    artifact_with_version = artifact + scalaVersion
+    maven_metadata = get_library_version_info_from_bintray(artifact_with_version)
 
     try:
         data = maven_metadata.getElementsByTagName("versioning")[0]
@@ -42,8 +47,7 @@ def get_latest_version_in_open(artifact, scalaVersion="_2.11"):
         self.context.log("Unable to get latest version from bintray")
         return None
 
-    latestVersion = data.getElementsByTagName("latest")[0].firstChild.nodeValue
-    return latestVersion
+    return data.getElementsByTagName("latest")[0].firstChild.nodeValue
 
 
 def max_version_of(*args):
@@ -64,9 +68,24 @@ def find_version_in(dom):
     return latestNode.firstChild.nodeValue
 
 
-def get_version_info_from_bintray(artifact):
-    print("Bintray version info")
-    bintray = "https://dl.bintray.com/hmrc/releases/uk/gov/hmrc/" + artifact + "/maven-metadata.xml"
+def get_library_version_info_from_bintray(artifact):
+    return get_maven_version_info_from_bintray("releases", artifact)
+
+
+def get_sbt_plugin_version_info_from_bintray(artifact):
+    return get_ivy_version_info_from_bintray("sbt-plugin-releases", artifact)
+
+
+def get_ivy_version_info_from_bintray(repository_name, artifact):
+    bintray = "https://api.bintray.com/packages/hmrc/" + repository_name + "/" + artifact
+    print(bintray)
+    request = urllib2.Request(bintray)
+    response = urllib2.urlopen(request).read()
+    return json.loads(response)['latest_version']
+
+
+def get_maven_version_info_from_bintray(repository_name, artifact):
+    bintray = "https://dl.bintray.com/hmrc/" + repository_name + "/uk/gov/hmrc/" + artifact + "/maven-metadata.xml"
     print(bintray)
     request = urllib2.Request(bintray)
     response = urllib2.urlopen(request)
@@ -119,22 +138,30 @@ def generate_app_secret():
     return application_secret
 
 
-def replace_variables_for_app(application_root_name,folder_to_search, application_name, service_type, has_mongo=False):
-    govukTemplateVersion = get_latest_version_in_open("govuk-template")
-    frontendBootstrapVersion = get_latest_version_in_open("frontend-bootstrap")
-    playUiVersion = get_latest_version_in_open("play-ui")
-    playPartialsVersion = get_latest_version_in_open("play-partials")
-    playAuthVersion = get_latest_version_in_open("play-authorisation")
-    playAuthorisedFrontendVersion = get_latest_version_in_open("play-authorised-frontend")
-    microserviceBootstrapVersion = get_latest_version_in_open("microservice-bootstrap")
-    playUrlBindersVersion = get_latest_version_in_open("play-url-binders")
-    playConfigVersion = get_latest_version_in_open("play-config")
-    domainVersion = get_latest_version_in_open("domain")
-    hmrcTestVersion = get_latest_version_in_open("hmrctest")
-    playReactivemongoVersion = get_latest_version_in_open("play-reactivemongo")
-    simpleReactivemongoVersion = get_latest_version_in_open("simple-reactivemongo")
-    playHealthVersion = get_latest_version_in_open("play-health")
-    playJsonLoggerVersion = get_latest_version_in_open("play-json-logger")
+def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
+    govukTemplateVersion = get_latest_library_version_in_open("govuk-template")
+    frontendBootstrapVersion = get_latest_library_version_in_open("frontend-bootstrap")
+    playUiVersion = get_latest_library_version_in_open("play-ui")
+    playPartialsVersion = get_latest_library_version_in_open("play-partials")
+    playAuthVersion = get_latest_library_version_in_open("play-authorisation")
+    playAuthorisedFrontendVersion = get_latest_library_version_in_open("play-authorised-frontend")
+    microserviceBootstrapVersion = get_latest_library_version_in_open("microservice-bootstrap")
+    playUrlBindersVersion = get_latest_library_version_in_open("play-url-binders")
+    playConfigVersion = get_latest_library_version_in_open("play-config")
+    domainVersion = get_latest_library_version_in_open("domain")
+    hmrcTestVersion = get_latest_library_version_in_open("hmrctest")
+    playReactivemongoVersion = get_latest_library_version_in_open("play-reactivemongo")
+    simpleReactivemongoVersion = get_latest_library_version_in_open("simple-reactivemongo")
+    playHealthVersion = get_latest_library_version_in_open("play-health")
+    playJsonLoggerVersion = get_latest_library_version_in_open("play-json-logger")
+
+    sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
+    sbt_git_versioning = get_latest_sbt_plugin_version_in_open("sbt-git-versioning")
+    sbt_distributables = get_latest_sbt_plugin_version_in_open("sbt-distributables")
+
+    print("sbt_auto_build  " + sbt_auto_build)
+    print("sbt_git_versioning  " + sbt_git_versioning)
+    print("sbt_distributables  " + sbt_distributables)
 
     for subdir, dirs, files in os.walk(folder_to_search):
         if '.git' in dirs:
@@ -146,7 +173,7 @@ def replace_variables_for_app(application_root_name,folder_to_search, applicatio
             file_content = t(UPPER_CASE_APP_NAME=application_name.upper(),
                              UPPER_CASE_APP_NAME_UNDERSCORE_ONLY=application_name.upper().replace("-", "_"),
                              APP_NAME=application_name,
-                             APP_PACKAGE_NAME=application_root_name.replace("-",""),
+                             APP_PACKAGE_NAME=application_root_name.replace("-", ""),
                              SECRET_KEY=generate_app_secret(),
                              type=service_type,
                              MONGO=has_mongo,
@@ -165,9 +192,12 @@ def replace_variables_for_app(application_root_name,folder_to_search, applicatio
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
                              playHealthVersion=playHealthVersion,
                              playJsonLoggerVersion=playJsonLoggerVersion,
+                             sbt_auto_build=sbt_auto_build,
+                             sbt_git_versioning=sbt_git_versioning,
+                             sbt_distributables=sbt_distributables,
                              bashbang="#!/bin/bash",
                              shbang="#!/bin/sh",
-            )
+                             )
             write_to_file(file_name, file_content)
 
 
@@ -209,7 +239,6 @@ def create_service(project_root_name, service_type, existing_repo, has_mongo=Fal
     project_name = folder_name(project_root_name, service_type)
     template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/service"))
 
-
     print("project name :" + project_name)
 
     if existing_repo:
@@ -221,30 +250,32 @@ def create_service(project_root_name, service_type, existing_repo, has_mongo=Fal
         print "The folder '%s' already exists, not creating front end module" % str(project_folder)
     else:
         distutils.dir_util.copy_tree(template_dir, project_folder)
-        replace_variables_for_app(project_root_name,project_folder, project_name, service_type, has_mongo)
+        replace_variables_for_app(project_root_name, project_folder, project_name, service_type, has_mongo)
         delete_files_for_type(project_folder, service_type)
         shutil.rmtree(os.path.join(project_folder, "template"))
         move_folders_to_project_package(project_root_name, project_folder, service_type)
         print "Created %s at '%s'. You can now finish by doing the following from the new dir" % (
-        service_type, project_folder)
+            service_type, project_folder)
         print "git push -u origin master"
         print "----"
 
 
 def move_folders_to_project_package(project_root_name, project_folder, service_type):
     project_app_folder = "%s/app" % project_folder
-    project_test_folder = "%s/test" %project_folder
-    project_package = "uk/gov/hmrc/%s" %project_root_name.replace("-","")
+    project_test_folder = "%s/test" % project_folder
+    project_package = "uk/gov/hmrc/%s" % project_root_name.replace("-", "")
     project_package_app = os.path.join(project_app_folder, project_package)
     project_package_test = os.path.join(project_test_folder, project_package)
 
-    move_files_to_dist(os.listdir(project_app_folder), project_app_folder, project_package_app )
-    move_files_to_dist(os.listdir(project_test_folder), project_test_folder, project_package_test )
+    move_files_to_dist(os.listdir(project_app_folder), project_app_folder, project_package_app)
+    move_files_to_dist(os.listdir(project_test_folder), project_test_folder, project_package_test)
+
 
 def move_files_to_dist(files, src, dst):
     for f in files:
         full_path = src + "/" + f
         shutil.move(full_path, dst)
+
 
 def folder_name(project_name, project_type):
     folder_name = project_name
