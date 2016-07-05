@@ -1,7 +1,7 @@
 
 # init-service
 
-[![Build Status](https://travis-ci.org/hmrc/init-service.svg?branch=master)](https://travis-ci.org/hmrc/init-service) [ ![Download](https://api.bintray.com/packages/hmrc/releases/init-service/images/download.svg) ](https://bintray.com/hmrc/releases/init-service/_latestVersion)
+[![Build Status](https://travis-ci.org/hmrc/init-service.svg)](https://travis-ci.org/hmrc/init-service) [ ![Download](https://api.bintray.com/packages/hmrc/releases/init-service/images/download.svg) ](https://bintray.com/hmrc/releases/init-service/_latestVersion)
 
 Steps to create a service :
 
