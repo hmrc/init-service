@@ -7,10 +7,6 @@ object FrontendBuild extends Build with MicroService {
 
   val appName = "$!APP_NAME!$"
 
-  override lazy val plugins: Seq[Plugins] = Seq(
-    SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin
-  )
-
   override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
 }
 
@@ -27,6 +23,8 @@ private object AppDependencies {
   private val playAuthorisedFrontendVersion = "$!playAuthorisedFrontendVersion!$"
   private val playConfigVersion = "$!playConfigVersion!$"
   private val hmrcTestVersion = "$!hmrcTestVersion!$"
+  private val scalaTestVersion = "2.2.6"
+  private val pegdownVersion = "1.6.0"
   
   val compile = Seq(
     ws,
@@ -49,9 +47,9 @@ private object AppDependencies {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
-        "org.scalatest" %% "scalatest" % "2.2.6" % scope,
-        "org.pegdown" % "pegdown" % "1.6.0" % scope,
-        "org.jsoup" % "jsoup" % "1.7.3" % scope,
+        "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
+        "org.pegdown" % "pegdown" % pegdownVersion % scope,
+        "org.jsoup" % "jsoup" % "1.8.1" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
       )
     }.test
