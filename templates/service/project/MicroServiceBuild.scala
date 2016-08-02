@@ -7,10 +7,6 @@ object MicroServiceBuild extends Build with MicroService {
 
   val appName = "$!APP_NAME!$"
 
-  override lazy val plugins: Seq[Plugins] = Seq(
-    SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin
-  )
-
   override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
 }
 
@@ -26,6 +22,9 @@ private object AppDependencies {
   private val playConfigVersion = "$!playConfigVersion!$"
   private val domainVersion = "$!domainVersion!$"
   private val hmrcTestVersion = "$!hmrcTestVersion!$"
+  private val scalaTestVersion = "2.2.6"
+  private val pegdownVersion = "1.6.0"
+
   <!--(if MONGO)-->
   private val playReactivemongoVersion = "$!playReactivemongoVersion!$"
   <!--(end)-->
@@ -54,8 +53,8 @@ private object AppDependencies {
     def apply() = new TestDependencies {
       override lazy val test = Seq(
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
-        "org.scalatest" %% "scalatest" % "2.2.6" % scope,
-        "org.pegdown" % "pegdown" % "1.6.0" % scope,
+        "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
+        "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
       )
     }.test
@@ -68,8 +67,8 @@ private object AppDependencies {
 
       override lazy val test = Seq(
         "uk.gov.hmrc" %% "hmrctest" % hmrcTestVersion % scope,
-        "org.scalatest" %% "scalatest" % "2.2.6" % scope,
-        "org.pegdown" % "pegdown" % "1.6.0" % scope,
+        "org.scalatest" %% "scalatest" % scalaTestVersion % scope,
+        "org.pegdown" % "pegdown" % pegdownVersion % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope
       )
     }.test
