@@ -234,6 +234,24 @@ def clone_git_repo(repo, folder):
     os.chdir(folder)
     call('git clone %s' % repo)
 
+def add_mongo_to_travis(project_folder, existing_repo, has_mongo=False):
+    if has_mongo and existing_repo:
+        file_name = os.path.join(project_folder, ".travis.yml")
+
+        fh = open(file_name, "a")
+
+        travis_mongo_config = \
+            ("services:\n"
+             "- mongodb\n"
+             "addons:\n"
+             "  apt:\n"
+             "    sources:\n"
+             "    - mongodb-3.0-precise\n"
+             "    packages:\n"
+             "    - mongodb-org-server\n")
+
+        fh.writelines(travis_mongo_config)
+        fh.close()
 
 def create_service(project_root_name, service_type, existing_repo, has_mongo=False):
     project_name = folder_name(project_root_name, service_type)
@@ -254,6 +272,7 @@ def create_service(project_root_name, service_type, existing_repo, has_mongo=Fal
         delete_files_for_type(project_folder, service_type)
         shutil.rmtree(os.path.join(project_folder, "template"))
         move_folders_to_project_package(project_root_name, project_folder, service_type)
+        add_mongo_to_travis(project_folder, existing_repo, has_mongo)
         print "Created %s at '%s'. You can now finish by doing the following from the new dir" % (
             service_type, project_folder)
         print "git push -u origin master"
