@@ -5,4 +5,4 @@
 ->     	   /template                  template.Routes
 <!--(end)-->
 
-GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController.metrics
+GET        /admin/metrics             @com.kenshoo.play.metrics.MetricsController.metrics

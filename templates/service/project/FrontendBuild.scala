@@ -11,11 +11,11 @@ object FrontendBuild extends Build with MicroService {
 }
 
 private object AppDependencies {
-  import play.PlayImport._
+  import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val playHealthVersion = "$!playHealthVersion!$"    
-  private val playJsonLoggerVersion = "$!playJsonLoggerVersion!$"      
+  private val playHealthVersion = "$!playHealthVersion!$"
+  private val logbackJsonLoggerVersion = "$!logbackJsonLoggerVersion!$"
   private val frontendBootstrapVersion = "$!frontendBootstrapVersion!$"
   private val govukTemplateVersion = "$!govukTemplateVersion!$"
   private val playUiVersion = "$!playUiVersion!$"
@@ -25,14 +25,14 @@ private object AppDependencies {
   private val hmrcTestVersion = "$!hmrcTestVersion!$"
   private val scalaTestVersion = "2.2.6"
   private val pegdownVersion = "1.6.0"
-  
+
   val compile = Seq(
     ws,
     "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
-    "uk.gov.hmrc" %% "play-json-logger" % playJsonLoggerVersion,
+    "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion
@@ -57,5 +57,3 @@ private object AppDependencies {
 
   def apply() = compile ++ Test()
 }
-
-
