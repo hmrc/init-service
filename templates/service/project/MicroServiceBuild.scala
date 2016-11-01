@@ -11,13 +11,13 @@ object MicroServiceBuild extends Build with MicroService {
 }
 
 private object AppDependencies {
-  import play.PlayImport._
+  import play.sbt.PlayImport._
   import play.core.PlayVersion
 
   private val microserviceBootstrapVersion = "$!microserviceBootstrapVersion!$"
   private val playAuthVersion = "$!playAuthVersion!$"
   private val playHealthVersion = "$!playHealthVersion!$"
-  private val playJsonLoggerVersion = "$!playJsonLoggerVersion!$"  
+  private val logbackJsonLoggerVersion = "$!logbackJsonLoggerVersion!$"
   private val playUrlBindersVersion = "$!playUrlBindersVersion!$"
   private val playConfigVersion = "$!playConfigVersion!$"
   private val domainVersion = "$!domainVersion!$"
@@ -40,7 +40,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
     "uk.gov.hmrc" %% "play-url-binders" % playUrlBindersVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
-    "uk.gov.hmrc" %% "play-json-logger" % playJsonLoggerVersion,
+    "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "domain" % domainVersion
   )
 
@@ -76,4 +76,3 @@ private object AppDependencies {
 
   def apply() = compile ++ Test() ++ IntegrationTest()
 }
-

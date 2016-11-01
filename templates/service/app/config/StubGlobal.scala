@@ -6,12 +6,13 @@ import uk.gov.hmrc.play.config.ControllerConfig
 import net.ceedubs.ficus.Ficus._
 import com.typesafe.config.Config
 import uk.gov.hmrc.play.http.logging.filters.LoggingFilter
+import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
 
 object ControllerConfiguration extends ControllerConfig {
   lazy val controllerConfigs = Play.current.configuration.underlying.as[Config]("controllers")
 }
 
-object MicroserviceLoggingFilter extends LoggingFilter {
+object MicroserviceLoggingFilter extends LoggingFilter with MicroserviceFilterSupport {
   override def controllerNeedsLogging(controllerName: String) = ControllerConfiguration.paramsForController(controllerName).needsLogging
 }
 

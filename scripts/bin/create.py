@@ -137,22 +137,23 @@ def generate_app_secret():
     application_secret = ''.join(lst)
     return application_secret
 
+
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
-    govukTemplateVersion = "4.0.0"
-    frontendBootstrapVersion = "6.7.0"
-    playUiVersion = "4.17.0"
-    playPartialsVersion = "4.6.0"
-    playAuthVersion = "3.4.0"
-    playAuthorisedFrontendVersion = "5.8.0"
-    microserviceBootstrapVersion = "4.4.0"
-    playUrlBindersVersion = "1.1.0"
-    playConfigVersion = "2.1.0"
-    domainVersion = "3.7.0"
-    hmrcTestVersion = "1.9.0"
-    playReactivemongoVersion = "4.8.0"
-    simpleReactivemongoVersion = "4.8.0"
-    playHealthVersion = "1.1.0"
-    playJsonLoggerVersion = "2.1.1"
+    govukTemplateVersion = get_latest_library_version_in_open("govuk-template")
+    frontendBootstrapVersion = get_latest_library_version_in_open("frontend-bootstrap")
+    playUiVersion = get_latest_library_version_in_open("play-ui")
+    playPartialsVersion = get_latest_library_version_in_open("play-partials")
+    playAuthVersion = get_latest_library_version_in_open("play-authorisation")
+    playAuthorisedFrontendVersion = get_latest_library_version_in_open("play-authorised-frontend")
+    microserviceBootstrapVersion = get_latest_library_version_in_open("microservice-bootstrap")
+    playUrlBindersVersion = get_latest_library_version_in_open("play-url-binders")
+    playConfigVersion = get_latest_library_version_in_open("play-config")
+    domainVersion = get_latest_library_version_in_open("domain")
+    hmrcTestVersion = get_latest_library_version_in_open("hmrctest")
+    playReactivemongoVersion = get_latest_library_version_in_open("play-reactivemongo")
+    simpleReactivemongoVersion = get_latest_library_version_in_open("simple-reactivemongo")
+    playHealthVersion = get_latest_library_version_in_open("play-health")
+    logbackJsonLoggerVersion = get_latest_library_version_in_open("logback-json-logger")
 
     sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
     sbt_git_versioning = get_latest_sbt_plugin_version_in_open("sbt-git-versioning")
@@ -190,7 +191,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              playReactivemongoVersion=playReactivemongoVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
                              playHealthVersion=playHealthVersion,
-                             playJsonLoggerVersion=playJsonLoggerVersion,
+                             logbackJsonLoggerVersion=logbackJsonLoggerVersion,
                              sbt_auto_build=sbt_auto_build,
                              sbt_git_versioning=sbt_git_versioning,
                              sbt_distributables=sbt_distributables,
