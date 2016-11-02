@@ -15,7 +15,7 @@ private object AppDependencies {
   import play.core.PlayVersion
 
   private val playHealthVersion = "$!playHealthVersion!$"
-  private val logbackJsonLoggerVersion = "$!logbackJsonLoggerVersion!$"
+  private val playJsonLoggerVersion = "$!playJsonLoggerVersion!$"
   private val frontendBootstrapVersion = "$!frontendBootstrapVersion!$"
   private val govukTemplateVersion = "$!govukTemplateVersion!$"
   private val playUiVersion = "$!playUiVersion!$"
@@ -32,7 +32,7 @@ private object AppDependencies {
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
-    "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
+    "uk.gov.hmrc" %% "play-json-logger" % playJsonLoggerVersion,
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
     "uk.gov.hmrc" %% "play-health" % playHealthVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion
