@@ -153,7 +153,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
     playReactivemongoVersion = get_latest_library_version_in_open("play-reactivemongo")
     simpleReactivemongoVersion = get_latest_library_version_in_open("simple-reactivemongo")
     playHealthVersion = get_latest_library_version_in_open("play-health")
-    playJsonLoggerVersion = get_latest_library_version_in_open("play-json-logger")
+    logbackJsonLoggerVersion = get_latest_library_version_in_open("logback-json-logger")
 
     sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
     sbt_git_versioning = get_latest_sbt_plugin_version_in_open("sbt-git-versioning")
@@ -191,7 +191,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              playReactivemongoVersion=playReactivemongoVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
                              playHealthVersion=playHealthVersion,
-                             playJsonLoggerVersion=playJsonLoggerVersion,
+                             logbackJsonLoggerVersion=logbackJsonLoggerVersion,
                              sbt_auto_build=sbt_auto_build,
                              sbt_git_versioning=sbt_git_versioning,
                              sbt_distributables=sbt_distributables,
