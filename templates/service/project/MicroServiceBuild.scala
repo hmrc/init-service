@@ -16,7 +16,6 @@ private object AppDependencies {
 
   private val microserviceBootstrapVersion = "$!microserviceBootstrapVersion!$"
   private val playAuthVersion = "$!playAuthVersion!$"
-  private val playHealthVersion = "$!playHealthVersion!$"
   private val logbackJsonLoggerVersion = "$!logbackJsonLoggerVersion!$"
   private val playUrlBindersVersion = "$!playUrlBindersVersion!$"
   private val playConfigVersion = "$!playConfigVersion!$"
