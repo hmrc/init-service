@@ -1,4 +1,3 @@
-import sbt._
 import uk.gov.hmrc.SbtAutoBuildPlugin
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin
 import uk.gov.hmrc.versioning.SbtGitVersioning
@@ -14,7 +13,6 @@ private object AppDependencies {
   import play.sbt.PlayImport._
   import play.core.PlayVersion
 
-  private val playHealthVersion = "$!playHealthVersion!$"
   private val logbackJsonLoggerVersion = "$!logbackJsonLoggerVersion!$"
   private val frontendBootstrapVersion = "$!frontendBootstrapVersion!$"
   private val govukTemplateVersion = "$!govukTemplateVersion!$"
@@ -28,13 +26,13 @@ private object AppDependencies {
 
   val compile = Seq(
     ws,
+    "com.typesafe.play" %% "play" % PlayVersion.current,
     "uk.gov.hmrc" %% "frontend-bootstrap" % frontendBootstrapVersion,
     "uk.gov.hmrc" %% "play-partials" % playPartialsVersion,
     "uk.gov.hmrc" %% "play-authorised-frontend" % playAuthorisedFrontendVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
     "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
     "uk.gov.hmrc" %% "govuk-template" % govukTemplateVersion,
-    "uk.gov.hmrc" %% "play-health" % playHealthVersion,
     "uk.gov.hmrc" %% "play-ui" % playUiVersion
   )
 

@@ -1,4 +1,4 @@
-import sbt._
+
 
 
 object StubServiceBuild extends Build with MicroService {
@@ -16,7 +16,6 @@ private object AppDependencies {
 
 
   private val microserviceBootstrapVersion = "$!microserviceBootstrapVersion!$"
-  private val playHealthVersion = "$!playHealthVersion!$"
   private val playConfigVersion = "$!playConfigVersion!$"
   private val logbackJsonLoggerVersion = "$!logbackJsonLoggerVersion!$"
   private val hmrcTestVersion = "$!hmrcTestVersion!$"
@@ -24,9 +23,9 @@ private object AppDependencies {
   private val pegdownVersion = "1.6.0"
 
   val compile = Seq(
+    "com.typesafe.play" %% "play" % PlayVersion.current,
     ws,
     "uk.gov.hmrc" %% "microservice-bootstrap" % microserviceBootstrapVersion,
-    "uk.gov.hmrc" %% "play-health" % playHealthVersion,
     "uk.gov.hmrc" %% "play-config" % playConfigVersion,
     "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion
   )
