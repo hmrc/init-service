@@ -319,6 +319,7 @@ def commit_repo(project_folder, project_name):
     call('git add . -A')
     call('git commit -m \"Creating new service %s\"' % project_name)
 
+FNULL = open(os.devnull, 'w')
 
 def push_repo(project_name):
     command = 'git push -u origin master'
