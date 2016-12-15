@@ -10,29 +10,14 @@ object StubServiceBuild extends Build with MicroService {
   val appName = "$!APP_NAME!$"
   val appVersion = envOrElse("$!UPPER_CASE_APP_NAME_UNDERSCORE_ONLY!$_VERSION", "999-SNAPSHOT")
 
-  override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
-}
-
-private object AppDependencies {
-  import play.sbt.PlayImport._
-  import play.core.PlayVersion
-
-
-  private val microserviceBootstrapVersion = "$!microserviceBootstrapVersion!$"
-  private val playConfigVersion = "$!playConfigVersion!$"
-  private val logbackJsonLoggerVersion = "$!logbackJsonLoggerVersion!$"
-  private val hmrcTestVersion = "$!hmrcTestVersion!$"
-  private val scalaTestVersion = "2.2.6"
-  private val pegdownVersion = "1.6.0"
-
   override lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 
   val compile = Seq(
     "com.typesafe.play" %% "play" % PlayVersion.current,
     ws,
-    "uk.gov.hmrc" %% "microservice-bootstrap" % microserviceBootstrapVersion,
-    "uk.gov.hmrc" %% "play-config" % playConfigVersion,
-    "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion
+    "uk.gov.hmrc" %% "microservice-bootstrap" % "$!microserviceBootstrapVersion!$",
+    "uk.gov.hmrc" %% "play-config" % "$!playConfigVersion!$",
+    "uk.gov.hmrc" %% "logback-json-logger" % "$!logbackJsonLoggerVersion!$"
   )
 
   def test(scope: String = "test") = Seq(

@@ -10,27 +10,6 @@ object MicroServiceBuild extends Build with MicroService {
 
   val appName = "$!APP_NAME!$"
 
-  override lazy val appDependencies: Seq[ModuleID] = AppDependencies()
-}
-
-private object AppDependencies {
-  import play.sbt.PlayImport._
-  import play.core.PlayVersion
-
-  private val microserviceBootstrapVersion = "$!microserviceBootstrapVersion!$"
-  private val playAuthVersion = "$!playAuthVersion!$"
-  private val logbackJsonLoggerVersion = "$!logbackJsonLoggerVersion!$"
-  private val playUrlBindersVersion = "$!playUrlBindersVersion!$"
-  private val playConfigVersion = "$!playConfigVersion!$"
-  private val domainVersion = "$!domainVersion!$"
-  private val hmrcTestVersion = "$!hmrcTestVersion!$"
-  private val scalaTestVersion = "2.2.6"
-  private val pegdownVersion = "1.6.0"
-
-  <!--(if MONGO)-->
-  private val playReactivemongoVersion = "$!playReactivemongoVersion!$"
-  <!--(end)-->
-
   override lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 
   val compile = Seq(
@@ -39,12 +18,12 @@ private object AppDependencies {
     <!--(end)-->
     ws,
     "com.typesafe.play" %% "play" % PlayVersion.current,
-    "uk.gov.hmrc" %% "microservice-bootstrap" % microserviceBootstrapVersion,
-    "uk.gov.hmrc" %% "play-authorisation" % playAuthVersion,
-    "uk.gov.hmrc" %% "play-url-binders" % playUrlBindersVersion,
-    "uk.gov.hmrc" %% "play-config" % playConfigVersion,
-    "uk.gov.hmrc" %% "logback-json-logger" % logbackJsonLoggerVersion,
-    "uk.gov.hmrc" %% "domain" % domainVersion
+  "uk.gov.hmrc" %% "microservice-bootstrap" % "$!microserviceBootstrapVersion!$",
+  "uk.gov.hmrc" %% "play-authorisation" % "$!playAuthVersion!$",
+  "uk.gov.hmrc" %% "play-url-binders" % "$!playUrlBindersVersion!$",
+  "uk.gov.hmrc" %% "play-config" % "$!playConfigVersion!$",
+  "uk.gov.hmrc" %% "logback-json-logger" % "$!logbackJsonLoggerVersion!$",
+  "uk.gov.hmrc" %% "domain" % "$!domainVersion!$"
   )
 
   def test(scope: String = "test,it") = Seq(
