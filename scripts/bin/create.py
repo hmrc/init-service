@@ -272,10 +272,11 @@ def create_service(project_root_name, service_type, existing_repo, has_mongo=Fal
         shutil.rmtree(os.path.join(project_folder, "template"))
         move_folders_to_project_package(project_root_name, project_folder, service_type)
         add_mongo_to_travis(project_folder, existing_repo, has_mongo)
-        print "Created %s at '%s'. You can now finish by doing the following from the new dir" % (
+        print "Created %s at '%s'." % (
             service_type, project_folder)
-        print "git push -u origin master"
-        print "----"
+        print "Pushing repo '%s'." % project_folder
+        commit_repo(project_folder, project_name)
+        push_repo(project_name)
 
 
 def move_folders_to_project_package(project_root_name, project_folder, service_type):
@@ -311,6 +312,22 @@ def clone_repo(repo):
     ps_command.communicate()
     if ps_command.returncode is not 0:
         print "ERROR: Unable to clone repo '%s'" % repo
+
+
+def commit_repo(project_folder, project_name):
+    os.chdir(project_folder)
+    call('git add . -A')
+    call('git commit -m \"Creating new service %s\"' % project_name)
+
+
+def push_repo(project_name):
+    command = 'git push -u origin master'
+    print("pushing repo : " + command)
+
+    ps_command = subprocess.Popen(command, shell=True, stdout=FNULL, stderr=FNULL, cwd=workspace+'/'+project_name)
+    ps_command.communicate()
+    if ps_command.returncode is not 0:
+        raise Exception("ERROR: Unable to push repo '%s'" % project_name)
 
 
 if __name__ == '__main__':
