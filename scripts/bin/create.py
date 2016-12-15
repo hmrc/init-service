@@ -11,7 +11,6 @@ import fileinput
 import shutil
 import pyratemp
 import urllib2
-import base64
 import json
 from xml.dom.minidom import parse
 
@@ -44,7 +43,7 @@ def get_latest_library_version_in_open(artifact, scalaVersion="_2.11"):
     try:
         data = maven_metadata.getElementsByTagName("versioning")[0]
     except:
-        self.context.log("Unable to get latest version from bintray")
+        print "Unable to get latest version from bintray"
         return None
 
     return data.getElementsByTagName("latest")[0].firstChild.nodeValue
@@ -317,19 +316,12 @@ def clone_repo(repo):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Template Creation Tool - Create an new open service(s)... fast!')
     parser.add_argument('PROJECT_NAME', type=str, help='The name of the project you want to create')
+    parser.add_argument('TYPE', choices=['FRONTEND', 'MICROSERVICE'], help='Sets the type of repository to be either a Play template for FRONTEND or MICROSERVICE')
+    parser.add_argument('-exists', action='store_true', help='Does the repository already exists?')
+    parser.add_argument('-use_mongo', action='store_true', help='Does your service require Mongo? This only available if the repository is of type "MICROSERVICE"')
     args = parser.parse_args()
 
-    existing_repo_q = "have you got an existing repo in github?"
-
-    if query_yes_no("Would you like to create a front end?"):
-        existing_repo = query_yes_no(existing_repo_q)
-        create_service(args.PROJECT_NAME, "FRONTEND", existing_repo)
-
-    if query_yes_no("Would you like to create a micro service?"):
-        existing_repo = query_yes_no(existing_repo_q)
-        use_mongo = query_yes_no("Will your service require mongo?")
-        create_service(args.PROJECT_NAME, "MICROSERVICE", existing_repo, use_mongo)
-
-    if query_yes_no("Would you like to create a stub project?"):
-        existing_repo = query_yes_no(existing_repo_q)
-        create_service(args.PROJECT_NAME, "STUB", existing_repo)
+    if args.TYPE == 'MICROSERVICE':
+        create_service(args.PROJECT_NAME, args.TYPE, args.exists, args.use_mongo)
+    elif args.TYPE == 'FRONTEND':
+        create_service(args.PROJECT_NAME, args.TYPE, args.exists)
