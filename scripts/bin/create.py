@@ -252,8 +252,7 @@ def add_mongo_to_travis(project_folder, existing_repo, has_mongo=False):
         fh.writelines(travis_mongo_config)
         fh.close()
 
-def create_service(project_root_name, service_type, existing_repo, has_mongo=False):
-    project_name = folder_name(project_root_name, service_type)
+def create_service(project_name, service_type, existing_repo, has_mongo=False):
     template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/service"))
 
     print("project name :" + project_name)
@@ -267,10 +266,10 @@ def create_service(project_root_name, service_type, existing_repo, has_mongo=Fal
         print "The folder '%s' already exists, not creating front end module" % str(project_folder)
     else:
         distutils.dir_util.copy_tree(template_dir, project_folder)
-        replace_variables_for_app(project_root_name, project_folder, project_name, service_type, has_mongo)
+        replace_variables_for_app(project_name, project_folder, project_name, service_type, has_mongo)
         delete_files_for_type(project_folder, service_type)
         shutil.rmtree(os.path.join(project_folder, "template"))
-        move_folders_to_project_package(project_root_name, project_folder, service_type)
+        move_folders_to_project_package(project_name, project_folder, service_type)
         add_mongo_to_travis(project_folder, existing_repo, has_mongo)
         print "Created %s at '%s'." % (
             service_type, project_folder)
@@ -294,15 +293,6 @@ def move_files_to_dist(files, src, dst):
     for f in files:
         full_path = src + "/" + f
         shutil.move(full_path, dst)
-
-
-def folder_name(project_name, project_type):
-    folder_name = project_name
-    if project_type == "FRONTEND":
-        folder_name = "%s-frontend" % project_name
-    if project_type == "STUB":
-        folder_name = "%s-stub" % project_name
-    return folder_name
 
 
 def clone_repo(repo):
