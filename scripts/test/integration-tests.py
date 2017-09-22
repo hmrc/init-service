@@ -17,6 +17,20 @@ class IntegrationTestActions(unittest.TestCase):
         os.mkdir(self.workspace)
         pass
 
+    def runCreate(self, project_prefix, service_type):
+        workspace = self.workspace
+        process = subprocess.Popen(['python', self.createscript, project_prefix, service_type],
+                                           stderr=subprocess.STDOUT,
+                                           stdin=subprocess.PIPE,
+                                           stdout=subprocess.PIPE,
+                                           env=dict(os.environ, WORKSPACE=workspace))
+
+        out, err = process.communicate(input='Y\nn\nY\nn\nY\nY\nn')
+
+        if process.returncode is not 0:
+            print (out)
+            self.fail(msg="script did not execute correctly, see output for errors")
+
     def tearDown(self):
         shutil.rmtree(self.workspace)
 
@@ -27,21 +41,11 @@ class IntegrationTestActions(unittest.TestCase):
 
         print project_prefix
 
-        process = subprocess.Popen(['python', self.createscript, project_prefix],
-                                   stderr=subprocess.STDOUT,
-                                   stdin=subprocess.PIPE,
-                                   stdout=subprocess.PIPE,
-                                   env=dict(os.environ, WORKSPACE=workspace))
-
-        out, err = process.communicate(input='Y\nn\nY\nn\nY\nY\nn')
-
-        if process.returncode is not 0:
-            print (out)
-            self.fail(msg="script did not execute correctly, see output for errors")
+        self.runCreate(project_prefix, 'MICROSERVICE')
+        self.runCreate(project_prefix + '-frontend', 'FRONTEND')
 
         projects_to_compile = [
             workspace + project_prefix,
-            workspace + project_prefix + '-stub',
             workspace + project_prefix + '-frontend']
 
         for project in projects_to_compile:
@@ -49,9 +53,9 @@ class IntegrationTestActions(unittest.TestCase):
             compile_process = subprocess.Popen(['sbt', 'test'], cwd=project)
             o, e = compile_process.communicate()
             print(str(o))
-            print('return code was ' + str(process.returncode))
+            print('return code was ' + str(compile_process.returncode))
 
-            if process.returncode is not 0:
+            if compile_process.returncode is not 0:
                 self.fail(msg="project did not compile, see output for errors")
 
 
