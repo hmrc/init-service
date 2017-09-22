@@ -16,13 +16,7 @@ object MicroServiceBuild extends Build with MicroService {
     "uk.gov.hmrc" %% "play-reactivemongo" % "$!playReactivemongoVersion!$",
     <!--(end)-->
     ws,
-    "uk.gov.hmrc" %% "microservice-bootstrap" % "$!microserviceBootstrapVersion!$",
-    "uk.gov.hmrc" %% "play-authorisation" % "$!playAuthVersion!$",
-    "uk.gov.hmrc" %% "play-health" % "$!playHealthVersion!$",
-    "uk.gov.hmrc" %% "play-url-binders" % "$!playUrlBindersVersion!$",
-    "uk.gov.hmrc" %% "play-config" % "$!playConfigVersion!$",
-    "uk.gov.hmrc" %% "logback-json-logger" % "$!logbackJsonLoggerVersion!$",
-    "uk.gov.hmrc" %% "domain" % "$!domainVersion!$"
+    "uk.gov.hmrc" %% "microservice-bootstrap" % "$!microserviceBootstrapVersion!$"
   )
 
   def test(scope: String = "test,it") = Seq(
