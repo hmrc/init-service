@@ -12,8 +12,11 @@ object FrontendBuild extends Build with MicroService {
   override lazy val appDependencies: Seq[ModuleID] = compile ++ test()
 
   val compile = Seq(
+    "uk.gov.hmrc" %% "govuk-template" % "$!govukTemplateVersion!$",
+    "uk.gov.hmrc" %% "play-ui" % "$!playUiVersion!$",
+
     ws,
-    "uk.gov.hmrc" %% "frontend-bootstrap" % "$!frontendBootstrapVersion!$"
+    "uk.gov.hmrc" %% "bootstrap-play-25" % "$!bootstrapPlay25Version!$"
   )
 
   def test(scope: String = "test") = Seq(
