@@ -1,9 +1,6 @@
 app/controllers/HelloWorld.scala
 test/controllers/HelloWorldControllerSpec.scala
-app/config/StubGlobal.scala
-app/config/frontendWiring.scala
-app/config/frontendGlobal.scala
-app/config/frontendAppConfig.scala
+app/config
 app/views
 conf/messages
 conf/resources

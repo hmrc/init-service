@@ -138,21 +138,13 @@ def generate_app_secret():
 
 
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
-    govukTemplateVersion = get_latest_library_version_in_open("govuk-template")
-    frontendBootstrapVersion = get_latest_library_version_in_open("frontend-bootstrap")
-    playUiVersion = get_latest_library_version_in_open("play-ui")
-    playPartialsVersion = get_latest_library_version_in_open("play-partials")
-    playAuthVersion = get_latest_library_version_in_open("play-authorisation")
-    playAuthorisedFrontendVersion = get_latest_library_version_in_open("play-authorised-frontend")
-    microserviceBootstrapVersion = get_latest_library_version_in_open("microservice-bootstrap")
-    playUrlBindersVersion = get_latest_library_version_in_open("play-url-binders")
-    playConfigVersion = get_latest_library_version_in_open("play-config")
-    domainVersion = get_latest_library_version_in_open("domain")
-    hmrcTestVersion = get_latest_library_version_in_open("hmrctest")
-    playReactivemongoVersion = get_latest_library_version_in_open("play-reactivemongo")
-    simpleReactivemongoVersion = get_latest_library_version_in_open("simple-reactivemongo")
-    playHealthVersion = get_latest_library_version_in_open("play-health")
-    logbackJsonLoggerVersion = get_latest_library_version_in_open("logback-json-logger")
+    bootstrapPlay25Version=get_latest_library_version_in_open("bootstrap-play-25")
+    govukTemplateVersion=get_latest_library_version_in_open("govuk-template")
+    playUiVersion=get_latest_library_version_in_open("play-ui")
+    hmrcTestVersion=get_latest_library_version_in_open("hmrctest")
+    playReactivemongoVersion=get_latest_library_version_in_open("play-reactivemongo")
+    simpleReactivemongoVersion=get_latest_library_version_in_open("simple-reactivemongo")
+    microserviceBootstrapVersion=get_latest_library_version_in_open("microservice-bootstrap")
 
     sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
     sbt_git_versioning = get_latest_sbt_plugin_version_in_open("sbt-git-versioning")
@@ -176,21 +168,13 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              SECRET_KEY=generate_app_secret(),
                              type=service_type,
                              MONGO=has_mongo,
-                             govukTemplateVersion=govukTemplateVersion,
+                             bootstrapPlay25Version=bootstrapPlay25Version,
                              microserviceBootstrapVersion=microserviceBootstrapVersion,
-                             playUrlBindersVersion=playUrlBindersVersion,
-                             playConfigVersion=playConfigVersion,
-                             domainVersion=domainVersion,
+                             govukTemplateVersion=govukTemplateVersion,
                              hmrcTestVersion=hmrcTestVersion,
-                             frontendBootstrapVersion=frontendBootstrapVersion,
                              playUiVersion=playUiVersion,
-                             playAuthVersion=playAuthVersion,
-                             playPartialsVersion=playPartialsVersion,
-                             playAuthorisedFrontendVersion=playAuthorisedFrontendVersion,
                              playReactivemongoVersion=playReactivemongoVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
-                             playHealthVersion=playHealthVersion,
-                             logbackJsonLoggerVersion=logbackJsonLoggerVersion,
                              sbt_auto_build=sbt_auto_build,
                              sbt_git_versioning=sbt_git_versioning,
                              sbt_distributables=sbt_distributables,
@@ -285,13 +269,18 @@ def move_folders_to_project_package(project_root_name, project_folder, service_t
     project_package_app = os.path.join(project_app_folder, project_package)
     project_package_test = os.path.join(project_test_folder, project_package)
 
+    print os.listdir(project_app_folder)
+
     move_files_to_dist(os.listdir(project_app_folder), project_app_folder, project_package_app)
     move_files_to_dist(os.listdir(project_test_folder), project_test_folder, project_package_test)
 
 
-def move_files_to_dist(files, src, dst):
-    for f in files:
-        full_path = src + "/" + f
+def move_files_to_dist(dirs, src, dst):
+    if not os.path.exists(dst):
+        os.makedirs(dst)
+
+    for d in dirs:
+        full_path = src + "/" + d
         shutil.move(full_path, dst)
 
 

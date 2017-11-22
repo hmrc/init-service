@@ -1,4 +1,5 @@
-@(appConfig: uk.gov.hmrc.$!APP_PACKAGE_NAME!$.AppConfig,
+@import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config.AppConfig
+@(appConfig: AppConfig,
   title: String,
   mainClass: Option[String] = None,
   mainDataAttributes: Option[Html] = None,
