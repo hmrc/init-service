@@ -1,0 +1,4 @@
+leakDetectionExemptions:
+ - ruleId: 'play_crypto_secret'
+   filePaths:
+      - '/templates/service/conf/application.conf'
