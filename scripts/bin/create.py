@@ -147,7 +147,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
     microserviceBootstrapVersion=get_latest_library_version_in_open("microservice-bootstrap")
 
     sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
-    sbt_git_versioning = get_latest_sbt_plugin_version_in_open("sbt-git-versioning")
+    sbt_git_versioning = "0.10.0"
     sbt_distributables = get_latest_sbt_plugin_version_in_open("sbt-distributables")
 
     print("sbt_auto_build  " + sbt_auto_build)
