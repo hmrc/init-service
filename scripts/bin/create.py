@@ -142,7 +142,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
     govukTemplateVersion=get_latest_library_version_in_open("govuk-template")
     playUiVersion=get_latest_library_version_in_open("play-ui")
     hmrcTestVersion=get_latest_library_version_in_open("hmrctest")
-    playReactivemongoVersion=get_latest_library_version_in_open("play-reactivemongo")
+    playReactivemongoVersion="6.2.0"
     simpleReactivemongoVersion="6.1.0"
     microserviceBootstrapVersion=get_latest_library_version_in_open("microservice-bootstrap")
 
