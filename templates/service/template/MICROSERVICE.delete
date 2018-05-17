@@ -4,5 +4,3 @@ app/config
 app/views
 conf/messages
 conf/resources
-project/StubServiceBuild.scala
-project/FrontendBuild.scala
