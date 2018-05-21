@@ -4,6 +4,4 @@ app/config/ErrorHandler.scala
 app/config/AppConfig.scala
 app/views
 conf/messages
-project/MicroServiceBuild.scala
-project/FrontendBuild.scala
 it
