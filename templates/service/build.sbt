@@ -24,8 +24,5 @@ lazy val microservice = Project(appName, file("."))
     addTestReportOption(IntegrationTest, "int-test-reports")
   )
   .settings(
-    resolvers ++= Seq(
-      Resolver.bintrayRepo("hmrc", "releases"),
-      Resolver.jcenterRepo
-    )
+    resolvers += Resolver.jcenterRepo
   )
