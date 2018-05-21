@@ -1,5 +1,5 @@
 import TestPhases.oneForkedJvmPerTest
-import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings, scalaSettings}
+import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 name := "$!APP_NAME!$"
@@ -9,9 +9,7 @@ lazy val root = (project in file("."))
   .configs(IntegrationTest)
   .settings(inConfig(IntegrationTest)(Defaults.itSettings): _*)
 
-scalaSettings
 publishingSettings
-defaultSettings()
 AppDependencies.appDependencies
 retrieveManaged := true
 evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(false)
