@@ -5,10 +5,6 @@ import sbt._
 
 object AppDependencies {
 
-  def appDependencies: Seq[Setting[_]] = Seq(
-    libraryDependencies ++= compile ++ test()
-  )
-
   val compile = Seq(
     <!--(if type=="FRONTEND")-->
     "uk.gov.hmrc" %% "govuk-template" % "$!govukTemplateVersion!$",
