@@ -1,6 +1,6 @@
 # microservice specific routes
 
-<!--(if type=="MICROSERVICE" or type=="STUB")-->
+<!--(if type=="MICROSERVICE")-->
 GET        /hello-world             uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers.MicroserviceHelloWorld.hello
 <!--(else)-->
 GET        /hello-world             uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers.HelloWorld.helloWorld

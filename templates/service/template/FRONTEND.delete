@@ -1,6 +1,2 @@
 app/controllers/MicroserviceHelloWorld.scala
 test/controllers/MicroserviceHelloWorldControllerSpec.scala
-app/config/StubGlobal.scala
-conf/resources
-test/uk
-it

@@ -147,12 +147,14 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
     microserviceBootstrapVersion=get_latest_library_version_in_open("microservice-bootstrap")
 
     sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
-    sbt_git_versioning = "0.10.0"
+    sbt_git_versioning = get_latest_sbt_plugin_version_in_open("sbt-git-versioning")
+    sbt_artifactory = get_latest_sbt_plugin_version_in_open("sbt-artifactory")
     sbt_distributables = get_latest_sbt_plugin_version_in_open("sbt-distributables")
 
     print("sbt_auto_build  " + sbt_auto_build)
     print("sbt_git_versioning  " + sbt_git_versioning)
     print("sbt_distributables  " + sbt_distributables)
+    print("sbt_artifactory  " + sbt_artifactory)
 
     for subdir, dirs, files in os.walk(folder_to_search):
         if '.git' in dirs:
@@ -178,6 +180,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              sbt_auto_build=sbt_auto_build,
                              sbt_git_versioning=sbt_git_versioning,
                              sbt_distributables=sbt_distributables,
+                             sbt_artifactory=sbt_artifactory,
                              bashbang="#!/bin/bash",
                              shbang="#!/bin/sh",
                              )
@@ -265,14 +268,17 @@ def create_service(project_name, service_type, existing_repo, has_mongo=False):
 def move_folders_to_project_package(project_root_name, project_folder, service_type):
     project_app_folder = "%s/app" % project_folder
     project_test_folder = "%s/test" % project_folder
+    project_it_folder = "%s/it" % project_folder
     project_package = "uk/gov/hmrc/%s" % project_root_name.replace("-", "")
     project_package_app = os.path.join(project_app_folder, project_package)
     project_package_test = os.path.join(project_test_folder, project_package)
+    project_package_it = os.path.join(project_it_folder, project_package)
 
     print os.listdir(project_app_folder)
 
     move_files_to_dist(os.listdir(project_app_folder), project_app_folder, project_package_app)
     move_files_to_dist(os.listdir(project_test_folder), project_test_folder, project_package_test)
+    move_files_to_dist(os.listdir(project_it_folder), project_it_folder, project_package_it)
 
 
 def move_files_to_dist(dirs, src, dst):
