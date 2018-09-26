@@ -216,10 +216,6 @@ def call(command, quiet=True):
     return ps_command
 
 
-def clone_git_repo(repo, folder):
-    os.chdir(folder)
-    call('git clone %s' % repo)
-
 def add_mongo_to_travis(project_folder, existing_repo, has_mongo=False):
     if has_mongo and existing_repo:
         file_name = os.path.join(project_folder, ".travis.yml")
@@ -239,13 +235,13 @@ def add_mongo_to_travis(project_folder, existing_repo, has_mongo=False):
         fh.writelines(travis_mongo_config)
         fh.close()
 
-def create_service(project_name, service_type, existing_repo, has_mongo=False):
+def create_service(project_name, service_type, existing_repo, has_mongo, github_token):
     template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/service"))
 
     print("project name :" + project_name)
 
     if existing_repo:
-        clone_repo(project_name)
+        clone_repo(project_name, github_token)
 
     print "Creating new service: %s, this could take a few moments" % project_name
     project_folder = os.path.normpath(os.path.join(workspace, project_name))
@@ -290,8 +286,8 @@ def move_files_to_dist(dirs, src, dst):
         shutil.move(full_path, dst)
 
 
-def clone_repo(repo):
-    command = 'git clone git@github.com:hmrc/%s.git' % repo
+def clone_repo(repo, github_token):
+    command = 'git clone https://%s@github.com/hmrc/%s' % (github_token, repo)
     print("cloning : " + command)
     ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, cwd=workspace)
     ps_command.communicate()
@@ -318,13 +314,11 @@ def push_repo(project_name):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Template Creation Tool - Create an new open service(s)... fast!')
-    parser.add_argument('PROJECT_NAME', type=str, help='The name of the project you want to create')
-    parser.add_argument('TYPE', choices=['FRONTEND', 'MICROSERVICE'], help='Sets the type of repository to be either a Play template for FRONTEND or MICROSERVICE')
-    parser.add_argument('-exists', action='store_true', help='Does the repository already exists?')
-    parser.add_argument('-use_mongo', action='store_true', help='Does your service require Mongo? This only available if the repository is of type "MICROSERVICE"')
+    parser.add_argument('REPOSITORY', type=str, help='The name of the service you want to create')
+    parser.add_argument('--type', choices=['FRONTEND', 'BACKEND'], help='Sets the type of repository to be either a Play template for FRONTEND or BACKEND microservice')
+    parser.add_argument('--github_token', help='The github token authorised to push to the repository')
+    parser.add_argument('--exists', action='store_true', help='Does the repository already exists?')
+    parser.add_argument('--use_mongo', action='store_true', help='Does your service require Mongo? This only available if the repository is of type "BACKEND"')
     args = parser.parse_args()
 
-    if args.TYPE == 'MICROSERVICE':
-        create_service(args.PROJECT_NAME, args.TYPE, args.exists, args.use_mongo)
-    elif args.TYPE == 'FRONTEND':
-        create_service(args.PROJECT_NAME, args.TYPE, args.exists)
+    create_service(args.REPOSITORY, args.type, args.exists, args.use_mongo, args.github_token)

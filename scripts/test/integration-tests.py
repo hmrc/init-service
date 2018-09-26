@@ -41,7 +41,7 @@ class IntegrationTestActions(unittest.TestCase):
 
         print project_prefix
 
-        self.runCreate(project_prefix, 'MICROSERVICE')
+        self.runCreate(project_prefix, 'BACKEND')
         self.runCreate(project_prefix + '-frontend', 'FRONTEND')
 
         projects_to_compile = [
