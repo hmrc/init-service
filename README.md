@@ -11,6 +11,6 @@ Steps to create a service :
 
 
 PS: 
-   1. if you have a existing repo in git hub for service/frontend/stub respond accordingly when prompted and the repositories will be    cloned and project structure will be copied to them. If it fails to clone the repository it will continue to create the project locally.
+   1. if you have a existing repo in git hub for backend/frontend microservice respond accordingly when prompted and the repositories will be    cloned and project structure will be copied to them. If it fails to clone the repository it will continue to create the project locally.
    2. script will use "WORKSPACE" environment variable to create/clone the projects. 
     

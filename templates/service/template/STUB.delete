@@ -1,7 +1,0 @@
-app/controllers/HelloWorld.scala
-test/controllers/HelloWorldControllerSpec.scala
-app/config/ErrorHandler.scala
-app/config/AppConfig.scala
-app/views
-conf/messages
-it
