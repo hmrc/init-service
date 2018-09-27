@@ -302,7 +302,7 @@ if __name__ == '__main__':
     parser.add_argument('--type', choices=['FRONTEND', 'BACKEND', 'LIBRARY'], help='Sets the type of repository to be either a Play template for FRONTEND or BACKEND microservice or a Play library')
     parser.add_argument('--github-token', help='The github token authorised to push to the repository')
     parser.add_argument('--github', action='store_true', help='Does the repository already exists on github? Set --github for this repo to be cloned, and updated')
-    parser.add_argument('--use-mongo', action='store_true', help='Does your service require Mongo? This only available if the repository is of type "BACKEND"')
+    parser.add_argument('--with-mongo', action='store_true', help='Does your service require Mongo? This only available if the repository is of type "BACKEND"')
     args = parser.parse_args()
 
-    create_service(args.REPOSITORY, args.type, args.github, args.use_mongo, args.github_token)
+    create_service(args.REPOSITORY, args.type, args.github, args.with_mongo, args.github_token)
