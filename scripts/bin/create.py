@@ -216,25 +216,6 @@ def call(command, quiet=True):
     return ps_command
 
 
-def add_mongo_to_travis(project_folder, existing_repo, has_mongo=False):
-    if has_mongo and existing_repo:
-        file_name = os.path.join(project_folder, ".travis.yml")
-
-        fh = open(file_name, "a")
-
-        travis_mongo_config = \
-            ("services:\n"
-             "- mongodb\n"
-             "addons:\n"
-             "  apt:\n"
-             "    sources:\n"
-             "    - mongodb-3.0-precise\n"
-             "    packages:\n"
-             "    - mongodb-org-server\n")
-
-        fh.writelines(travis_mongo_config)
-        fh.close()
-
 def create_service(project_name, service_type, existing_repo, has_mongo, github_token):
     template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/service"))
 
@@ -252,16 +233,15 @@ def create_service(project_name, service_type, existing_repo, has_mongo, github_
         replace_variables_for_app(project_name, project_folder, project_name, service_type, has_mongo)
         delete_files_for_type(project_folder, service_type)
         shutil.rmtree(os.path.join(project_folder, "template"))
-        move_folders_to_project_package(project_name, project_folder, service_type)
-        add_mongo_to_travis(project_folder, existing_repo, has_mongo)
-        print "Created %s at '%s'." % (
-            service_type, project_folder)
-        print "Pushing repo '%s'." % project_folder
-        commit_repo(project_folder, project_name)
-        push_repo(project_name)
+        move_folders_to_project_package(project_name, project_folder)
+        print "Created %s at '%s'." % (service_type, project_folder)
+        commit_repo(project_folder, project_name, existing_repo)
+        if existing_repo:
+            print "Pushing repo '%s'." % project_folder
+            push_repo(project_name)
 
 
-def move_folders_to_project_package(project_root_name, project_folder, service_type):
+def move_folders_to_project_package(project_root_name, project_folder):
     project_app_folder = "%s/app" % project_folder
     project_test_folder = "%s/test" % project_folder
     project_it_folder = "%s/it" % project_folder
@@ -292,11 +272,13 @@ def clone_repo(repo, github_token):
     ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, cwd=workspace)
     ps_command.communicate()
     if ps_command.returncode is not 0:
-        print "ERROR: Unable to clone repo '%s'" % repo
+        raise Exception("ERROR: Unable to clone repo '%s'" % repo)
 
 
-def commit_repo(project_folder, project_name):
+def commit_repo(project_folder, project_name, existing_repo):
     os.chdir(project_folder)
+    if not existing_repo:
+        call('git init')
     call('git add . -A')
     call('git commit -m \"Creating new service %s\"' % project_name)
 
@@ -316,9 +298,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Template Creation Tool - Create an new open service(s)... fast!')
     parser.add_argument('REPOSITORY', type=str, help='The name of the service you want to create')
     parser.add_argument('--type', choices=['FRONTEND', 'BACKEND'], help='Sets the type of repository to be either a Play template for FRONTEND or BACKEND microservice')
-    parser.add_argument('--github_token', help='The github token authorised to push to the repository')
-    parser.add_argument('--exists', action='store_true', help='Does the repository already exists?')
-    parser.add_argument('--use_mongo', action='store_true', help='Does your service require Mongo? This only available if the repository is of type "BACKEND"')
+    parser.add_argument('--github-token', help='The github token authorised to push to the repository')
+    parser.add_argument('--github', action='store_true', help='Does the repository already exists on github? Set --github for this repo to be cloned, and updated')
+    parser.add_argument('--use-mongo', action='store_true', help='Does your service require Mongo? This only available if the repository is of type "BACKEND"')
     args = parser.parse_args()
 
-    create_service(args.REPOSITORY, args.type, args.exists, args.use_mongo, args.github_token)
+    create_service(args.REPOSITORY, args.type, args.github, args.use_mongo, args.github_token)
