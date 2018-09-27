@@ -1,8 +1,6 @@
 
 # init-service
 
-[![Build Status](https://travis-ci.org/hmrc/init-service.svg)](https://travis-ci.org/hmrc/init-service) [ ![Download](https://api.bintray.com/packages/hmrc/releases/init-service/images/download.svg) ](https://bintray.com/hmrc/releases/init-service/_latestVersion)
-
 A python script to initialise a repository
 
 Run `python ./scripts/bin/create.py -h` for instructions.

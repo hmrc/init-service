@@ -19,7 +19,7 @@ class IntegrationTestActions(unittest.TestCase):
 
     def runCreate(self, project_prefix, service_type):
         workspace = self.workspace
-        process = subprocess.Popen(['python', self.createscript, project_prefix, service_type],
+        process = subprocess.Popen(['python', self.createscript, project_prefix, "--type", service_type],
                                            stderr=subprocess.STDOUT,
                                            stdin=subprocess.PIPE,
                                            stdout=subprocess.PIPE,
