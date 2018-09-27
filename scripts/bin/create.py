@@ -141,7 +141,6 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
     bootstrapPlay25Version=get_latest_library_version_in_open("bootstrap-play-25")
     govukTemplateVersion=get_latest_library_version_in_open("govuk-template")
     playUiVersion=get_latest_library_version_in_open("play-ui")
-    hmrcTestVersion=get_latest_library_version_in_open("hmrctest")
     playReactivemongoVersion="6.2.0"
     simpleReactivemongoVersion="6.1.0"
     microserviceBootstrapVersion=get_latest_library_version_in_open("microservice-bootstrap")
@@ -173,7 +172,6 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              bootstrapPlay25Version=bootstrapPlay25Version,
                              microserviceBootstrapVersion=microserviceBootstrapVersion,
                              govukTemplateVersion=govukTemplateVersion,
-                             hmrcTestVersion=hmrcTestVersion,
                              playUiVersion=playUiVersion,
                              playReactivemongoVersion=playReactivemongoVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
@@ -217,7 +215,10 @@ def call(command, quiet=True):
 
 
 def create_service(project_name, service_type, existing_repo, has_mongo, github_token):
-    template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/service"))
+    if service_type == "LIBRARY":
+        template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/library"))
+    else:
+        template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/service"))
 
     print("project name :" + project_name)
 
@@ -231,9 +232,10 @@ def create_service(project_name, service_type, existing_repo, has_mongo, github_
     else:
         distutils.dir_util.copy_tree(template_dir, project_folder)
         replace_variables_for_app(project_name, project_folder, project_name, service_type, has_mongo)
-        delete_files_for_type(project_folder, service_type)
-        shutil.rmtree(os.path.join(project_folder, "template"))
-        move_folders_to_project_package(project_name, project_folder)
+        if service_type != "LIBRARY":
+            delete_files_for_type(project_folder, service_type)
+            shutil.rmtree(os.path.join(project_folder, "template"))
+            move_folders_to_project_package(project_name, project_folder)
         print "Created %s at '%s'." % (service_type, project_folder)
         commit_repo(project_folder, project_name, existing_repo)
         if existing_repo:
@@ -297,7 +299,7 @@ def push_repo(project_name):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Template Creation Tool - Create an new open service(s)... fast!')
     parser.add_argument('REPOSITORY', type=str, help='The name of the service you want to create')
-    parser.add_argument('--type', choices=['FRONTEND', 'BACKEND'], help='Sets the type of repository to be either a Play template for FRONTEND or BACKEND microservice')
+    parser.add_argument('--type', choices=['FRONTEND', 'BACKEND', 'LIBRARY'], help='Sets the type of repository to be either a Play template for FRONTEND or BACKEND microservice or a Play library')
     parser.add_argument('--github-token', help='The github token authorised to push to the repository')
     parser.add_argument('--github', action='store_true', help='Does the repository already exists on github? Set --github for this repo to be cloned, and updated')
     parser.add_argument('--use-mongo', action='store_true', help='Does your service require Mongo? This only available if the repository is of type "BACKEND"')

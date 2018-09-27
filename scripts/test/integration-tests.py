@@ -41,12 +41,14 @@ class IntegrationTestActions(unittest.TestCase):
 
         print project_prefix
 
-        self.runCreate(project_prefix, 'BACKEND')
+        self.runCreate(project_prefix + '-backend', 'BACKEND')
         self.runCreate(project_prefix + '-frontend', 'FRONTEND')
+        self.runCreate(project_prefix + '-library', 'LIBRARY')
 
         projects_to_compile = [
-            workspace + project_prefix,
-            workspace + project_prefix + '-frontend']
+            workspace + project_prefix + '-backend',
+            workspace + project_prefix + '-frontend',
+            workspace + project_prefix + '-library']
 
         for project in projects_to_compile:
             print('calling compile on ' + project)
