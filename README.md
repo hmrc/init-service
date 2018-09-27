@@ -16,7 +16,7 @@ This will:
 ####Examples
 
 Create a frontend microservice like this:
-```python scripts/bin/create.py --type FRONTEND --exists --github_token <token> my-backend-microservice```
+```python scripts/bin/create.py --type FRONTEND --exists --github-token <token> my-backend-microservice```
 
 Create a backend microservice like this:
-```python scripts/bin/create.py --type BACKEND --exists --use_mongo --github_token <token> my-backend-microservice```
+```python scripts/bin/create.py --type BACKEND --exists --with-mongo --github-token <token> my-backend-microservice```
