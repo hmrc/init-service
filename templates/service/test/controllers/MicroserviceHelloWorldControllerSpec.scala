@@ -1,15 +1,12 @@
 package uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers
 
+import org.scalatest.{Matchers, WordSpec}
+import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
-import play.api.http.Status
-import play.api.test.FakeRequest
-import uk.gov.hmrc.play.test.UnitSpec
-import uk.gov.hmrc.play.test.WithFakeApplication
-import uk.gov.hmrc.play.test.{UnitSpec, WithFakeApplication}
+import play.api.test.Helpers._
 
-
-class MicroserviceHelloWorldControllerSpec extends UnitSpec with WithFakeApplication{
+class MicroserviceHelloWorldControllerSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
 
   val fakeRequest = FakeRequest("GET", "/")
 

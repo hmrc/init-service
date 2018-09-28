@@ -141,18 +141,19 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
     bootstrapPlay25Version=get_latest_library_version_in_open("bootstrap-play-25")
     govukTemplateVersion=get_latest_library_version_in_open("govuk-template")
     playUiVersion=get_latest_library_version_in_open("play-ui")
-    hmrcTestVersion=get_latest_library_version_in_open("hmrctest")
     playReactivemongoVersion="6.2.0"
     simpleReactivemongoVersion="6.1.0"
     microserviceBootstrapVersion=get_latest_library_version_in_open("microservice-bootstrap")
 
     sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
-    sbt_git_versioning = "0.10.0"
+    sbt_git_versioning = get_latest_sbt_plugin_version_in_open("sbt-git-versioning")
+    sbt_artifactory = get_latest_sbt_plugin_version_in_open("sbt-artifactory")
     sbt_distributables = get_latest_sbt_plugin_version_in_open("sbt-distributables")
 
     print("sbt_auto_build  " + sbt_auto_build)
     print("sbt_git_versioning  " + sbt_git_versioning)
     print("sbt_distributables  " + sbt_distributables)
+    print("sbt_artifactory  " + sbt_artifactory)
 
     for subdir, dirs, files in os.walk(folder_to_search):
         if '.git' in dirs:
@@ -171,13 +172,13 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              bootstrapPlay25Version=bootstrapPlay25Version,
                              microserviceBootstrapVersion=microserviceBootstrapVersion,
                              govukTemplateVersion=govukTemplateVersion,
-                             hmrcTestVersion=hmrcTestVersion,
                              playUiVersion=playUiVersion,
                              playReactivemongoVersion=playReactivemongoVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
                              sbt_auto_build=sbt_auto_build,
                              sbt_git_versioning=sbt_git_versioning,
                              sbt_distributables=sbt_distributables,
+                             sbt_artifactory=sbt_artifactory,
                              bashbang="#!/bin/bash",
                              shbang="#!/bin/sh",
                              )
@@ -213,36 +214,16 @@ def call(command, quiet=True):
     return ps_command
 
 
-def clone_git_repo(repo, folder):
-    os.chdir(folder)
-    call('git clone %s' % repo)
-
-def add_mongo_to_travis(project_folder, existing_repo, has_mongo=False):
-    if has_mongo and existing_repo:
-        file_name = os.path.join(project_folder, ".travis.yml")
-
-        fh = open(file_name, "a")
-
-        travis_mongo_config = \
-            ("services:\n"
-             "- mongodb\n"
-             "addons:\n"
-             "  apt:\n"
-             "    sources:\n"
-             "    - mongodb-3.0-precise\n"
-             "    packages:\n"
-             "    - mongodb-org-server\n")
-
-        fh.writelines(travis_mongo_config)
-        fh.close()
-
-def create_service(project_name, service_type, existing_repo, has_mongo=False):
-    template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/service"))
+def create_service(project_name, service_type, existing_repo, has_mongo, github_token):
+    if service_type == "LIBRARY":
+        template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/library"))
+    else:
+        template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/service"))
 
     print("project name :" + project_name)
 
     if existing_repo:
-        clone_repo(project_name)
+        clone_repo(project_name, github_token)
 
     print "Creating new service: %s, this could take a few moments" % project_name
     project_folder = os.path.normpath(os.path.join(workspace, project_name))
@@ -251,28 +232,31 @@ def create_service(project_name, service_type, existing_repo, has_mongo=False):
     else:
         distutils.dir_util.copy_tree(template_dir, project_folder)
         replace_variables_for_app(project_name, project_folder, project_name, service_type, has_mongo)
-        delete_files_for_type(project_folder, service_type)
-        shutil.rmtree(os.path.join(project_folder, "template"))
-        move_folders_to_project_package(project_name, project_folder, service_type)
-        add_mongo_to_travis(project_folder, existing_repo, has_mongo)
-        print "Created %s at '%s'." % (
-            service_type, project_folder)
-        print "Pushing repo '%s'." % project_folder
-        commit_repo(project_folder, project_name)
-        push_repo(project_name)
+        if service_type != "LIBRARY":
+            delete_files_for_type(project_folder, service_type)
+            shutil.rmtree(os.path.join(project_folder, "template"))
+            move_folders_to_project_package(project_name, project_folder)
+        print "Created %s at '%s'." % (service_type, project_folder)
+        commit_repo(project_folder, project_name, existing_repo)
+        if existing_repo:
+            print "Pushing repo '%s'." % project_folder
+            push_repo(project_name)
 
 
-def move_folders_to_project_package(project_root_name, project_folder, service_type):
+def move_folders_to_project_package(project_root_name, project_folder):
     project_app_folder = "%s/app" % project_folder
     project_test_folder = "%s/test" % project_folder
+    project_it_folder = "%s/it" % project_folder
     project_package = "uk/gov/hmrc/%s" % project_root_name.replace("-", "")
     project_package_app = os.path.join(project_app_folder, project_package)
     project_package_test = os.path.join(project_test_folder, project_package)
+    project_package_it = os.path.join(project_it_folder, project_package)
 
     print os.listdir(project_app_folder)
 
     move_files_to_dist(os.listdir(project_app_folder), project_app_folder, project_package_app)
     move_files_to_dist(os.listdir(project_test_folder), project_test_folder, project_package_test)
+    move_files_to_dist(os.listdir(project_it_folder), project_it_folder, project_package_it)
 
 
 def move_files_to_dist(dirs, src, dst):
@@ -284,17 +268,19 @@ def move_files_to_dist(dirs, src, dst):
         shutil.move(full_path, dst)
 
 
-def clone_repo(repo):
-    command = 'git clone git@github.com:hmrc/%s.git' % repo
+def clone_repo(repo, github_token):
+    command = 'git clone https://%s@github.com/hmrc/%s' % (github_token, repo)
     print("cloning : " + command)
     ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, cwd=workspace)
     ps_command.communicate()
     if ps_command.returncode is not 0:
-        print "ERROR: Unable to clone repo '%s'" % repo
+        raise Exception("ERROR: Unable to clone repo '%s'" % repo)
 
 
-def commit_repo(project_folder, project_name):
+def commit_repo(project_folder, project_name, existing_repo):
     os.chdir(project_folder)
+    if not existing_repo:
+        call('git init')
     call('git add . -A')
     call('git commit -m \"Creating new service %s\"' % project_name)
 
@@ -312,13 +298,11 @@ def push_repo(project_name):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Template Creation Tool - Create an new open service(s)... fast!')
-    parser.add_argument('PROJECT_NAME', type=str, help='The name of the project you want to create')
-    parser.add_argument('TYPE', choices=['FRONTEND', 'MICROSERVICE'], help='Sets the type of repository to be either a Play template for FRONTEND or MICROSERVICE')
-    parser.add_argument('-exists', action='store_true', help='Does the repository already exists?')
-    parser.add_argument('-use_mongo', action='store_true', help='Does your service require Mongo? This only available if the repository is of type "MICROSERVICE"')
+    parser.add_argument('REPOSITORY', type=str, help='The name of the service you want to create')
+    parser.add_argument('--type', choices=['FRONTEND', 'BACKEND', 'LIBRARY'], help='Sets the type of repository to be either a Play template for FRONTEND or BACKEND microservice or a Play library')
+    parser.add_argument('--github-token', help='The github token authorised to push to the repository')
+    parser.add_argument('--github', action='store_true', help='Does the repository already exists on github? Set --github for this repo to be cloned, and updated')
+    parser.add_argument('--with-mongo', action='store_true', help='Does your service require Mongo? This only available if the repository is of type "BACKEND"')
     args = parser.parse_args()
 
-    if args.TYPE == 'MICROSERVICE':
-        create_service(args.PROJECT_NAME, args.TYPE, args.exists, args.use_mongo)
-    elif args.TYPE == 'FRONTEND':
-        create_service(args.PROJECT_NAME, args.TYPE, args.exists)
+    create_service(args.REPOSITORY, args.type, args.github, args.with_mongo, args.github_token)

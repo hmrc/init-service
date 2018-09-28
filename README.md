@@ -1,16 +1,22 @@
 
 # init-service
 
-[![Build Status](https://travis-ci.org/hmrc/init-service.svg)](https://travis-ci.org/hmrc/init-service) [ ![Download](https://api.bintray.com/packages/hmrc/releases/init-service/images/download.svg) ](https://bintray.com/hmrc/releases/init-service/_latestVersion)
+A python script to initialise a repository
 
-Steps to create a service :
+Run `python ./scripts/bin/create.py -h` for instructions.
 
-1. Clone the repository
-2. run create_service.sh <your project name>
-3. follow the instruction on the prompt.
+The script requires a "WORKSPACE" environment variable to be set.
+The script requires a github token with permissions to push to the repository that need initialising
 
+This will:
+- clone an existing repository
+- add the play project with up to date dependencies
+- commit and push the changes
 
-PS: 
-   1. if you have a existing repo in git hub for service/frontend/stub respond accordingly when prompted and the repositories will be    cloned and project structure will be copied to them. If it fails to clone the repository it will continue to create the project locally.
-   2. script will use "WORKSPACE" environment variable to create/clone the projects. 
-    
+####Examples
+
+Create a frontend microservice like this:
+```python scripts/bin/create.py --type FRONTEND --exists --github-token <token> my-backend-microservice```
+
+Create a backend microservice like this:
+```python scripts/bin/create.py --type BACKEND --exists --with-mongo --github-token <token> my-backend-microservice```

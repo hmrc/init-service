@@ -3,4 +3,3 @@ test/controllers/HelloWorldControllerSpec.scala
 app/config
 app/views
 conf/messages
-conf/resources

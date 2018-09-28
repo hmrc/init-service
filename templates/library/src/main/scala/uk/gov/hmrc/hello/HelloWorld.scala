@@ -18,9 +18,5 @@ package uk.gov.hmrc.hello
 
 object HelloWorld {
 
-  def main(args: Array[String]) {
-    println(sayHello)
-  }
-
   def sayHello:String = "hello"
 }
