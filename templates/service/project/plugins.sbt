@@ -14,4 +14,4 @@ addSbtPlugin("uk.gov.hmrc" % "sbt-artifactory" % "$!sbt_artifactory!$")
 
 addSbtPlugin("uk.gov.hmrc" % "sbt-distributables" % "$!sbt_distributables!$")
 
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.12")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.19")
