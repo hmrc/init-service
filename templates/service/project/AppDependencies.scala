@@ -12,7 +12,7 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "play-ui"                  % "$!playUiVersion!$",
     <!--(end)-->
     <!--(if MONGO)-->
-    "uk.gov.hmrc"             %% "simple-reactivemongo"       % "$!simpleReactivemongoVersion!$",
+    "uk.gov.hmrc"             %% "simple-reactivemongo"     % "$!simpleReactivemongoVersion!$",
     <!--(end)-->
     "uk.gov.hmrc"             %% "bootstrap-play-25"        % "$!bootstrapPlay25Version!$"
   )
