@@ -141,8 +141,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
     bootstrapPlay25Version=get_latest_library_version_in_open("bootstrap-play-25")
     govukTemplateVersion=get_latest_library_version_in_open("govuk-template")
     playUiVersion=get_latest_library_version_in_open("play-ui")
-    playReactivemongoVersion="6.2.0"
-    simpleReactivemongoVersion="6.1.0"
+    simpleReactivemongoVersion="7.15.1"
     microserviceBootstrapVersion=get_latest_library_version_in_open("microservice-bootstrap")
 
     sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
@@ -173,7 +172,6 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              microserviceBootstrapVersion=microserviceBootstrapVersion,
                              govukTemplateVersion=govukTemplateVersion,
                              playUiVersion=playUiVersion,
-                             playReactivemongoVersion=playReactivemongoVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
                              sbt_auto_build=sbt_auto_build,
                              sbt_git_versioning=sbt_git_versioning,
