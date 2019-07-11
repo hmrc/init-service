@@ -245,18 +245,14 @@ def create_service(project_name, service_type, existing_repo, has_mongo, github_
 def move_folders_to_project_package(project_root_name, project_folder):
     project_app_folder = "%s/app" % project_folder
     project_test_folder = "%s/test" % project_folder
-    project_it_folder = "%s/it" % project_folder
     project_package = "uk/gov/hmrc/%s" % project_root_name.replace("-", "")
     project_package_app = os.path.join(project_app_folder, project_package)
     project_package_test = os.path.join(project_test_folder, project_package)
-    project_package_it = os.path.join(project_it_folder, project_package)
 
     print os.listdir(project_app_folder)
 
     move_files_to_dist(os.listdir(project_app_folder), project_app_folder, project_package_app)
     move_files_to_dist(os.listdir(project_test_folder), project_test_folder, project_package_test)
-    move_files_to_dist(os.listdir(project_it_folder), project_it_folder, project_package_it)
-
 
 def move_files_to_dist(dirs, src, dst):
     if not os.path.exists(dst):
