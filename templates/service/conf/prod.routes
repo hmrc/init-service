@@ -2,7 +2,7 @@
 ->         /$!APP_NAME!$              app.Routes
 ->         /                          health.Routes
 <!--(if type=="FRONTEND")-->
-->     	   /template                  template.Routes
+->         /template                  template.Routes
 <!--(end)-->
 
 GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController.metrics

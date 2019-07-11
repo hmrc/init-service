@@ -1,23 +1,29 @@
 package uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config
 
 import javax.inject.{Inject, Singleton}
-
-import play.api.{Configuration, Environment}
-import play.api.Mode.Mode
-import uk.gov.hmrc.play.config.ServicesConfig
+import play.api.Configuration
+import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 @Singleton
-class AppConfig @Inject()(val runModeConfiguration: Configuration, environment: Environment) extends ServicesConfig {
-  override protected def mode: Mode = environment.mode
+class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
+<!--(if type=="FRONTEND")-->
+  private val contactBaseUrl = servicesConfig.baseUrl("contact-frontend")
 
-  private def loadConfig(key: String) = runModeConfiguration.getString(key).getOrElse(throw new Exception(s"Missing configuration key: $key"))
+  private val assetsUrl         = config.get[String]("assets.url")
+  private val serviceIdentifier = "MyService"
 
-  private val contactHost = runModeConfiguration.getString(s"contact-frontend.host").getOrElse("")
-  private val contactFormServiceIdentifier = "MyService"
+  val assetsPrefix: String   = assetsUrl + config.get[String]("assets.version")
+  val analyticsToken: String = config.get[String](s"google-analytics.token")
+  val analyticsHost: String  = config.get[String](s"google-analytics.host")
 
-  lazy val assetsPrefix = loadConfig(s"assets.url") + loadConfig(s"assets.version")
-  lazy val analyticsToken = loadConfig(s"google-analytics.token")
-  lazy val analyticsHost = loadConfig(s"google-analytics.host")
-  lazy val reportAProblemPartialUrl = s"$contactHost/contact/problem_reports_ajax?service=$contactFormServiceIdentifier"
-  lazy val reportAProblemNonJSUrl = s"$contactHost/contact/problem_reports_nonjs?service=$contactFormServiceIdentifier"
+  val reportAProblemPartialUrl: String = s"$contactBaseUrl/contact/problem_reports_ajax?service=$serviceIdentifier"
+  val reportAProblemNonJSUrl: String   = s"$contactBaseUrl/contact/problem_reports_nonjs?service=$serviceIdentifier"
+<!--(end)-->
+
+<!--(if type=="BACKEND")-->
+  val authBaseUrl: String = servicesConfig.baseUrl("auth")
+
+  val auditingEnabled: Boolean = config.get[Boolean]("auditing.enabled")
+  val graphiteHost: String     = config.get[String]("microservice.metrics.graphite.host")
+<!--(end)-->
 }

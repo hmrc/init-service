@@ -45,20 +45,31 @@ class IntegrationTestActions(unittest.TestCase):
         self.runCreate(project_prefix + '-frontend', 'FRONTEND')
         self.runCreate(project_prefix + '-library', 'LIBRARY')
 
-        projects_to_compile = [
+        projects = [
             workspace + project_prefix + '-backend',
             workspace + project_prefix + '-frontend',
             workspace + project_prefix + '-library']
 
-        for project in projects_to_compile:
+        for project in projects:
             print('calling compile on ' + project)
-            compile_process = subprocess.Popen(['sbt', 'test'], cwd=project)
+            compile_process = subprocess.Popen(['sbt', 'compile'], cwd=project)
             o, e = compile_process.communicate()
             print(str(o))
             print('return code was ' + str(compile_process.returncode))
 
             if compile_process.returncode is not 0:
                 self.fail(msg="project did not compile, see output for errors")
+
+        for project in projects:
+            print('calling test on ' + project)
+            test_process = subprocess.Popen(['sbt', 'test'], cwd=project)
+            o, e = test_process.communicate()
+            print(str(o))
+            print('return code was ' + str(test_process.returncode))
+
+            if test_process.returncode is not 0:
+                self.fail(msg="tests in project failed, see output for errors")
+
 
 
 if __name__ == '__main__':

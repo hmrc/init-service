@@ -46,7 +46,7 @@ def get_latest_library_version_in_open(artifact, scalaVersion="_2.11"):
         print "Unable to get latest version from bintray"
         return None
 
-    return data.getElementsByTagName("latest")[0].firstChild.nodeValue.replace("play-26", "play-25")
+    return data.getElementsByTagName("latest")[0].firstChild.nodeValue
 
 
 def max_version_of(*args):
@@ -138,7 +138,7 @@ def generate_app_secret():
 
 
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
-    bootstrapPlay25Version=get_latest_library_version_in_open("bootstrap-play-25")
+    bootstrapPlay26Version=get_latest_library_version_in_open("bootstrap-play-26")
     govukTemplateVersion=get_latest_library_version_in_open("govuk-template")
     playUiVersion=get_latest_library_version_in_open("play-ui")
     simpleReactivemongoVersion=get_latest_library_version_in_open("simple-reactivemongo")
@@ -160,6 +160,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
 
         for f in files:
             file_name = os.path.join(subdir, f)
+            print("templating: " + subdir + " " + f)
             t = pyratemp.Template(filename=os.path.join(subdir, f))
             file_content = t(UPPER_CASE_APP_NAME=application_name.upper(),
                              UPPER_CASE_APP_NAME_UNDERSCORE_ONLY=application_name.upper().replace("-", "_"),
@@ -168,7 +169,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              SECRET_KEY=generate_app_secret(),
                              type=service_type,
                              MONGO=has_mongo,
-                             bootstrapPlay25Version=bootstrapPlay25Version,
+                             bootstrapPlay26Version=bootstrapPlay26Version,
                              microserviceBootstrapVersion=microserviceBootstrapVersion,
                              govukTemplateVersion=govukTemplateVersion,
                              playUiVersion=playUiVersion,
