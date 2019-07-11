@@ -1,5 +1,5 @@
-app/controllers/HelloWorld.scala
+app/controllers/HelloWorldController.scala
 test/controllers/HelloWorldControllerSpec.scala
-app/config
+app/config/ErrorHandler.scala
 app/views
 conf/messages
