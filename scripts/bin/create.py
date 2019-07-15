@@ -46,7 +46,7 @@ def get_latest_library_version_in_open(artifact, scalaVersion="_2.11"):
         print "Unable to get latest version from bintray"
         return None
 
-    return data.getElementsByTagName("latest")[0].firstChild.nodeValue.replace("play-26", "play-25")
+    return data.getElementsByTagName("latest")[0].firstChild.nodeValue
 
 
 def max_version_of(*args):
@@ -138,7 +138,7 @@ def generate_app_secret():
 
 
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
-    bootstrapPlay25Version=get_latest_library_version_in_open("bootstrap-play-25")
+    bootstrapPlay26Version=get_latest_library_version_in_open("bootstrap-play-26")
     govukTemplateVersion=get_latest_library_version_in_open("govuk-template")
     playUiVersion=get_latest_library_version_in_open("play-ui")
     simpleReactivemongoVersion=get_latest_library_version_in_open("simple-reactivemongo")
@@ -160,6 +160,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
 
         for f in files:
             file_name = os.path.join(subdir, f)
+            print("templating: " + subdir + " " + f)
             t = pyratemp.Template(filename=os.path.join(subdir, f))
             file_content = t(UPPER_CASE_APP_NAME=application_name.upper(),
                              UPPER_CASE_APP_NAME_UNDERSCORE_ONLY=application_name.upper().replace("-", "_"),
@@ -168,7 +169,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              SECRET_KEY=generate_app_secret(),
                              type=service_type,
                              MONGO=has_mongo,
-                             bootstrapPlay25Version=bootstrapPlay25Version,
+                             bootstrapPlay26Version=bootstrapPlay26Version,
                              microserviceBootstrapVersion=microserviceBootstrapVersion,
                              govukTemplateVersion=govukTemplateVersion,
                              playUiVersion=playUiVersion,
@@ -244,18 +245,14 @@ def create_service(project_name, service_type, existing_repo, has_mongo, github_
 def move_folders_to_project_package(project_root_name, project_folder):
     project_app_folder = "%s/app" % project_folder
     project_test_folder = "%s/test" % project_folder
-    project_it_folder = "%s/it" % project_folder
     project_package = "uk/gov/hmrc/%s" % project_root_name.replace("-", "")
     project_package_app = os.path.join(project_app_folder, project_package)
     project_package_test = os.path.join(project_test_folder, project_package)
-    project_package_it = os.path.join(project_it_folder, project_package)
 
     print os.listdir(project_app_folder)
 
     move_files_to_dist(os.listdir(project_app_folder), project_app_folder, project_package_app)
     move_files_to_dist(os.listdir(project_test_folder), project_test_folder, project_package_test)
-    move_files_to_dist(os.listdir(project_it_folder), project_it_folder, project_package_it)
-
 
 def move_files_to_dist(dirs, src, dst):
     if not os.path.exists(dst):

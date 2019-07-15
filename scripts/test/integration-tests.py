@@ -34,6 +34,19 @@ class IntegrationTestActions(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.workspace)
 
+
+    def runSbtCommand(self, projects, command):
+        for project in projects:
+            print('calling "sbt %s" on ' % command + project)
+            process = subprocess.Popen(['sbt', command], cwd=project)
+            o, e = process.communicate()
+            print(str(o))
+            print('return code was ' + str(process.returncode))
+
+            if process.returncode is not 0:
+                self.fail(msg='project did not pass stage "sbt %s", see output for errors' % command)
+
+
     def test_created_code_compiles(self):
         workspace = self.workspace
         print('workspace Used : '+ self.workspace)
@@ -45,21 +58,13 @@ class IntegrationTestActions(unittest.TestCase):
         self.runCreate(project_prefix + '-frontend', 'FRONTEND')
         self.runCreate(project_prefix + '-library', 'LIBRARY')
 
-        projects_to_compile = [
+        projects = [
             workspace + project_prefix + '-backend',
             workspace + project_prefix + '-frontend',
             workspace + project_prefix + '-library']
 
-        for project in projects_to_compile:
-            print('calling compile on ' + project)
-            compile_process = subprocess.Popen(['sbt', 'test'], cwd=project)
-            o, e = compile_process.communicate()
-            print(str(o))
-            print('return code was ' + str(compile_process.returncode))
-
-            if compile_process.returncode is not 0:
-                self.fail(msg="project did not compile, see output for errors")
-
+        self.runSbtCommand(projects, 'compile')
+        self.runSbtCommand(projects, 'test')
 
 if __name__ == '__main__':
     unittest.main()
