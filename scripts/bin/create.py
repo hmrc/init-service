@@ -46,8 +46,27 @@ def get_latest_library_version_in_open(artifact, scalaVersion="_2.11"):
         print "Unable to get latest version from bintray"
         return None
 
-    return data.getElementsByTagName("latest")[0].firstChild.nodeValue
+    latest = data.getElementsByTagName("latest")[0].firstChild.nodeValue
+    return prefer_play26_over_play27(data, latest)
 
+def prefer_play26_over_play27(data, version):
+    latest = version
+    if version.endswith("play-27"):
+        play26_version = latest.replace("play-27", "play-26")
+        if version_exists(data, play26_version):
+            latest = play26_version
+        
+    return latest    
+
+def version_exists(data, target_version):
+    is_found = False
+    versions = data.getElementsByTagName("version")
+    for version in versions:
+        if version.firstChild.nodeValue == target_version:
+            is_found = True
+            break
+
+    return is_found
 
 def max_version_of(*args):
     def rank(ver):
