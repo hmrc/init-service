@@ -1,6 +1,7 @@
 package uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers
 
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.Status
 import play.api.test.FakeRequest
@@ -10,7 +11,7 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config.AppConfig
 
-class HelloWorldControllerSpec extends WordSpec with Matchers with GuiceOneAppPerSuite {
+class HelloWorldControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
   private val fakeRequest = FakeRequest("GET", "/")
 
   private val env           = Environment.simple()
