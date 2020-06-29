@@ -47,16 +47,10 @@ def get_latest_library_version_in_open(artifact, scalaBinaryVersion):
         return None
 
     latest = data.getElementsByTagName("latest")[0].firstChild.nodeValue
-    return prefer_play26_over_play27(data, latest)
-
-def prefer_play26_over_play27(data, version):
-    latest = version
-    if version.endswith("play-27"):
-        play26_version = latest.replace("play-27", "play-26")
-        if version_exists(data, play26_version):
-            latest = play26_version
-
-    return latest
+    if re.search("-play-(\d)*$", latest) and not re.search("-play-27$", latest):
+        raise Exception("ERROR: Invalid dependency found '%s'" % latest)
+    else:
+        return latest
 
 def version_exists(data, target_version):
     is_found = False
@@ -161,11 +155,11 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
     scalaBinaryVersion = re.sub('\.(\d)*$', '', scalaVersion)
     print("scalaBinaryVersion=" + scalaBinaryVersion)
     if service_type == "FRONTEND":
-        bootstrapPlay26Version=get_latest_library_version_in_open("bootstrap-frontend-play-26", scalaBinaryVersion)
+        bootstrapPlay27Version=get_latest_library_version_in_open("bootstrap-frontend-play-27", scalaBinaryVersion)
     elif service_type == "BACKEND":
-        bootstrapPlay26Version=get_latest_library_version_in_open("bootstrap-backend-play-26", scalaBinaryVersion)
+        bootstrapPlay27Version=get_latest_library_version_in_open("bootstrap-backend-play-27", scalaBinaryVersion)
     else:
-        bootstrapPlay26Version="" # template won't use this
+        bootstrapPlay27Version="" # template won't use this
 
     govukTemplateVersion=get_latest_library_version_in_open("govuk-template", scalaBinaryVersion)
     playUiVersion=get_latest_library_version_in_open("play-ui", scalaBinaryVersion)
@@ -197,7 +191,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              SCALA_VERSION = scalaVersion,
                              type=service_type,
                              MONGO=has_mongo,
-                             bootstrapPlay26Version = bootstrapPlay26Version,
+                             bootstrapPlay27Version = bootstrapPlay27Version,
                              govukTemplateVersion=govukTemplateVersion,
                              playUiVersion=playUiVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
