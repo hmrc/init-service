@@ -10,6 +10,7 @@ import play.api.{Configuration, Environment}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 import uk.gov.hmrc.play.bootstrap.tools.Stubs.stubMessagesControllerComponents
 import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config.AppConfig
+import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.views.html.hello_world
 
 class HelloWorldControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
   private val fakeRequest = FakeRequest("GET", "/")
@@ -20,7 +21,9 @@ class HelloWorldControllerSpec extends AnyWordSpec with Matchers with GuiceOneAp
   private val serviceConfig = new ServicesConfig(configuration)
   private val appConfig     = new AppConfig(configuration, serviceConfig)
 
-  private val controller = new HelloWorldController(appConfig, stubMessagesControllerComponents())
+  val hello_world: hello_world = app.injector.instanceOf[hello_world]
+
+  private val controller = new HelloWorldController(appConfig, stubMessagesControllerComponents(), hello_world)
 
   "GET /" should {
     "return 200" in {
