@@ -55,8 +55,8 @@ def prefer_play26_over_play27(data, version):
         play26_version = latest.replace("play-27", "play-26")
         if version_exists(data, play26_version):
             latest = play26_version
-        
-    return latest    
+
+    return latest
 
 def version_exists(data, target_version):
     is_found = False
@@ -157,11 +157,16 @@ def generate_app_secret():
 
 
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
-    bootstrapPlay26Version=get_latest_library_version_in_open("bootstrap-play-26")
+    if service_type == "FRONTEND":
+        bootstrapPlay26Version=get_latest_library_version_in_open("bootstrap-frontend-play-26")
+    elif service_type == "BACKEND":
+        bootstrapPlay26Version=get_latest_library_version_in_open("bootstrap-backend-play-26")
+    else:
+        bootstrapPlay26Version="" # template won't use this
+
     govukTemplateVersion=get_latest_library_version_in_open("govuk-template")
     playUiVersion=get_latest_library_version_in_open("play-ui")
     simpleReactivemongoVersion=get_latest_library_version_in_open("simple-reactivemongo")
-    microserviceBootstrapVersion=get_latest_library_version_in_open("microservice-bootstrap")
 
     sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
     sbt_git_versioning = get_latest_sbt_plugin_version_in_open("sbt-git-versioning")
@@ -188,8 +193,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              SECRET_KEY=generate_app_secret(),
                              type=service_type,
                              MONGO=has_mongo,
-                             bootstrapPlay26Version=bootstrapPlay26Version,
-                             microserviceBootstrapVersion=microserviceBootstrapVersion,
+                             bootstrapPlay26Version = bootstrapPlay26Version,
                              govukTemplateVersion=govukTemplateVersion,
                              playUiVersion=playUiVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
@@ -235,8 +239,10 @@ def call(command, quiet=True):
 def create_service(project_name, service_type, existing_repo, has_mongo, github_token):
     if service_type == "LIBRARY":
         template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/library"))
-    else:
+    elif service_type in ["FRONTEND", "BACKEND"]:
         template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/service"))
+    else:
+        raise Exception("ERROR: Invalid type '%s'" % service_type)
 
     print("project name :" + project_name)
 
