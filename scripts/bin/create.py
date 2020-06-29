@@ -13,6 +13,7 @@ import pyratemp
 import urllib2
 import json
 from xml.dom.minidom import parse
+import re
 
 
 def required_environment_directory(environment_variable, description_for_error):
@@ -36,9 +37,8 @@ def get_latest_sbt_plugin_version_in_open(artifact):
     return get_sbt_plugin_version_info_from_bintray(artifact)
 
 
-def get_latest_library_version_in_open(artifact, scalaVersion="_2.11"):
-    artifact_with_version = artifact + scalaVersion
-    maven_metadata = get_library_version_info_from_bintray(artifact_with_version)
+def get_latest_library_version_in_open(artifact, scalaBinaryVersion):
+    maven_metadata = get_library_version_info_from_bintray(artifact + "_" + scalaBinaryVersion)
 
     try:
         data = maven_metadata.getElementsByTagName("versioning")[0]
@@ -157,16 +157,19 @@ def generate_app_secret():
 
 
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
+    scalaVersion = "2.12.11"
+    scalaBinaryVersion = re.sub('\.(\d)*$', '', scalaVersion)
+    print("scalaBinaryVersion=" + scalaBinaryVersion)
     if service_type == "FRONTEND":
-        bootstrapPlay26Version=get_latest_library_version_in_open("bootstrap-frontend-play-26")
+        bootstrapPlay26Version=get_latest_library_version_in_open("bootstrap-frontend-play-26", scalaBinaryVersion)
     elif service_type == "BACKEND":
-        bootstrapPlay26Version=get_latest_library_version_in_open("bootstrap-backend-play-26")
+        bootstrapPlay26Version=get_latest_library_version_in_open("bootstrap-backend-play-26", scalaBinaryVersion)
     else:
         bootstrapPlay26Version="" # template won't use this
 
-    govukTemplateVersion=get_latest_library_version_in_open("govuk-template")
-    playUiVersion=get_latest_library_version_in_open("play-ui")
-    simpleReactivemongoVersion=get_latest_library_version_in_open("simple-reactivemongo")
+    govukTemplateVersion=get_latest_library_version_in_open("govuk-template", scalaBinaryVersion)
+    playUiVersion=get_latest_library_version_in_open("play-ui", scalaBinaryVersion)
+    simpleReactivemongoVersion=get_latest_library_version_in_open("simple-reactivemongo", scalaBinaryVersion)
 
     sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
     sbt_git_versioning = get_latest_sbt_plugin_version_in_open("sbt-git-versioning")
@@ -191,6 +194,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              APP_NAME=application_name,
                              APP_PACKAGE_NAME=application_root_name.replace("-", ""),
                              SECRET_KEY=generate_app_secret(),
+                             SCALA_VERSION = scalaVersion,
                              type=service_type,
                              MONGO=has_mongo,
                              bootstrapPlay26Version = bootstrapPlay26Version,
