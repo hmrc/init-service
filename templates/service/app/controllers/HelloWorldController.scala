@@ -5,7 +5,7 @@ import javax.inject.{Inject, Singleton}
 import play.api.mvc._
 import uk.gov.hmrc.play.bootstrap.frontend.controller.FrontendController
 import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config.AppConfig
-import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.views.html.hello_world
+import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.views.html.HelloWorldPage
 
 import scala.concurrent.Future
 
@@ -13,13 +13,13 @@ import scala.concurrent.Future
 class HelloWorldController @Inject()(
   appConfig: AppConfig,
   mcc: MessagesControllerComponents,
-  hello_world: hello_world)
+  helloWorldPage: HelloWorldPage)
     extends FrontendController(mcc) {
 
   implicit val config: AppConfig = appConfig
 
   val helloWorld: Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(Ok(hello_world()))
+    Future.successful(Ok(helloWorldPage()))
   }
 
 }
