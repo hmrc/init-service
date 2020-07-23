@@ -8,6 +8,6 @@
 @()(implicit messages: Messages, appConfig: AppConfig)
 @hmrcLanguageSelect(LanguageSelect(
   if (messages.lang.code == "cy") Cy else En,
-  (En, switchToEnglish().url),
-  (Cy, switchToWelsh().url)
+  (En, switchToLanguage("en").url),
+  (Cy, switchToLanguage("cy").url)
 ))

@@ -9,7 +9,8 @@ object AppDependencies {
     <!--(if type=="FRONTEND")-->
     "uk.gov.hmrc"             %% "bootstrap-frontend-play-27" % "$!bootstrapPlay27Version!$",
     "uk.gov.hmrc"             %% "play-frontend-hmrc"         % "$!playFrontendHmrcVersion!$",
-    "uk.gov.hmrc"             %% "play-frontend-govuk"         % "$!playFrontendGovukVersion!$"<!--(if MONGO)-->,<!--(end)-->
+    "uk.gov.hmrc"             %% "play-frontend-govuk"        % "$!playFrontendGovukVersion!$",
+    "uk.gov.hmrc"             %% "play-language"              % "$!playLanguageVersion!$"<!--(if MONGO)-->,<!--(end)-->
     <!--(end)-->
     <!--(if type=="BACKEND")-->
     "uk.gov.hmrc"             %% "bootstrap-backend-play-27"  % "$!bootstrapPlay27Version!$"<!--(if MONGO)-->,<!--(end)-->

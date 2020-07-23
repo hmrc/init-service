@@ -18,9 +18,9 @@ class LanguageSwitchControllerSpec extends AnyWordSpec with Matchers with GuiceO
 
   def makeController(app: Application): LanguageSwitchController = app.injector.instanceOf[LanguageSwitchController]
 
-  def switchToEnglish(app: Application): Future[Result] = makeController(app).switchToEnglish()(fakeRequest)
+  def switchToEnglish(app: Application): Future[Result] = makeController(app).switchToLanguage("en")(fakeRequest)
 
-  def switchToWelsh(app: Application): Future[Result] = makeController(app).switchToWelsh()(fakeRequest)
+  def switchToWelsh(app: Application): Future[Result] = makeController(app).switchToLanguage("cy")(fakeRequest)
 
   def buildApp[A](elems: (String, _)*) = new GuiceApplicationBuilder()
     .configure(Map(elems:_*) ++ Map(
@@ -49,7 +49,8 @@ class LanguageSwitchControllerSpec extends AnyWordSpec with Matchers with GuiceO
 
     "not set the PLAY_LANG cookie correctly for Welsh if language switching is disabled" in new {
       val result = switchToWelsh(buildAppWithWelshLanguageSupport(false))
-      cookies(result).get("PLAY_LANG").isDefined shouldBe false
+      cookies(result).get("PLAY_LANG").isDefined shouldBe true
+      cookies(result).get("PLAY_LANG").get.value shouldBe "en"
     }
 
     "set the PLAY_LANG cookie correctly for English" in new {
@@ -58,13 +59,19 @@ class LanguageSwitchControllerSpec extends AnyWordSpec with Matchers with GuiceO
       cookies(result).get("PLAY_LANG").get.value shouldBe "en"
     }
 
-    "redirect to the cookie settings page by default" in new {
+    "redirect to the REFERER header url if set" in new {
       implicit val fakeRequestWithReferrer = fakeRequest.withHeaders(
-        HeaderNames.REFERER -> "http://some.tax.com/another-page"
+        HeaderNames.REFERER -> "/my-service-page"
       )
       val controller = buildAppWithWelshLanguageSupport().injector.instanceOf[LanguageSwitchController]
-      val result = controller.switchToEnglish()(fakeRequestWithReferrer)
-      redirectLocation(result) shouldBe Some("/another-page")
+      val result = controller.switchToLanguage("en")(fakeRequestWithReferrer)
+      redirectLocation(result) shouldBe Some("/my-service-page")
+    }
+
+    "redirect to the default url if no REFERER header set" in new {
+      val controller = buildAppWithWelshLanguageSupport().injector.instanceOf[LanguageSwitchController]
+      val result = controller.switchToLanguage("en")(fakeRequest)
+      redirectLocation(result) shouldBe Some("/$!APP_NAME!$/hello-world")
     }
   }
 }
