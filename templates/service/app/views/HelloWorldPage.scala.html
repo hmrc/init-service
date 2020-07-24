@@ -5,6 +5,6 @@
 @()(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @layout(pageTitle = Some("$!APP_NAME!$")) {
-    <h1 class="govuk-heading-xl">Hello from $!APP_NAME!$</h1>
-    <p class="govuk-body">This is your new frontend microservice</p>
+    <h1 class="govuk-heading-xl">$!APP_NAME!$</h1>
+    <p class="govuk-body">@{messages("service.text")}</p>
 }
