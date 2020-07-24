@@ -15,4 +15,6 @@ addSbtPlugin("uk.gov.hmrc" % "sbt-distributables" % "$!sbt_distributables!$")
 
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.5")
 
+<!--(if type=="FRONTEND")-->
 addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.11")
+<!--(end)-->
