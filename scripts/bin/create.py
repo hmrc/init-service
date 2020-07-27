@@ -161,8 +161,9 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
     else:
         bootstrapPlay27Version="" # template won't use this
 
-    govukTemplateVersion=get_latest_library_version_in_open("govuk-template", scalaBinaryVersion)
-    playUiVersion=get_latest_library_version_in_open("play-ui", scalaBinaryVersion)
+    playFrontendHmrcVersion=get_latest_library_version_in_open("play-frontend-hmrc", scalaBinaryVersion)
+    playFrontendGovukVersion=get_latest_library_version_in_open("play-frontend-govuk", scalaBinaryVersion)
+    playLanguageVersion=get_latest_library_version_in_open("play-language", scalaBinaryVersion)
     simpleReactivemongoVersion=get_latest_library_version_in_open("simple-reactivemongo", scalaBinaryVersion)
 
     sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
@@ -192,8 +193,9 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              type=service_type,
                              MONGO=has_mongo,
                              bootstrapPlay27Version = bootstrapPlay27Version,
-                             govukTemplateVersion=govukTemplateVersion,
-                             playUiVersion=playUiVersion,
+                             playFrontendHmrcVersion=playFrontendHmrcVersion,
+                             playFrontendGovukVersion=playFrontendGovukVersion,
+                             playLanguageVersion=playLanguageVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
                              sbt_auto_build=sbt_auto_build,
                              sbt_git_versioning=sbt_git_versioning,
@@ -272,9 +274,12 @@ def move_folders_to_project_package(project_root_name, project_folder):
     project_package_app = os.path.join(project_app_folder, project_package)
     project_package_test = os.path.join(project_test_folder, project_package)
 
-    print os.listdir(project_app_folder)
+    package_app_dirs = os.listdir(project_app_folder)
+    print package_app_dirs
+    if 'assets' in package_app_dirs:
+        package_app_dirs.remove('assets')
 
-    move_files_to_dist(os.listdir(project_app_folder), project_app_folder, project_package_app)
+    move_files_to_dist(package_app_dirs, project_app_folder, project_package_app)
     move_files_to_dist(os.listdir(project_test_folder), project_test_folder, project_package_test)
 
 def move_files_to_dist(dirs, src, dst):
