@@ -4,22 +4,17 @@
 
 @this(
         govukLayout: GovukLayout,
-        head: Head,
-        languageSelect: LanguageSelect
+        head: Head
 )
 @(pageTitle: Option[String] = None,
         headBlock: Option[Html] = None,
         scriptsBlock: Option[Html] = None
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
-@beforeContentBlock = {
-    @languageSelect()
-}
-
 @govukLayout(
     pageTitle = pageTitle,
     headBlock = Some(head(headBlock)),
     scriptsBlock = scriptsBlock,
-    beforeContentBlock = Some(beforeContentBlock),
+    beforeContentBlock = None,
     footerItems = FooterLinks()
 )(contentBlock)
