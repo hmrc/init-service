@@ -163,7 +163,6 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
 
     playFrontendHmrcVersion=get_latest_library_version_in_open("play-frontend-hmrc", scalaBinaryVersion)
     playFrontendGovukVersion=get_latest_library_version_in_open("play-frontend-govuk", scalaBinaryVersion)
-    playLanguageVersion=get_latest_library_version_in_open("play-language", scalaBinaryVersion)
     simpleReactivemongoVersion=get_latest_library_version_in_open("simple-reactivemongo", scalaBinaryVersion)
 
     sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
@@ -195,7 +194,6 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              bootstrapPlay27Version = bootstrapPlay27Version,
                              playFrontendHmrcVersion=playFrontendHmrcVersion,
                              playFrontendGovukVersion=playFrontendGovukVersion,
-                             playLanguageVersion=playLanguageVersion,
                              simpleReactivemongoVersion=simpleReactivemongoVersion,
                              sbt_auto_build=sbt_auto_build,
                              sbt_git_versioning=sbt_git_versioning,
