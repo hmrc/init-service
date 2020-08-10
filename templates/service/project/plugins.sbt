@@ -9,8 +9,6 @@ addSbtPlugin("uk.gov.hmrc" % "sbt-auto-build" % "$!sbt_auto_build!$")
 
 addSbtPlugin("uk.gov.hmrc" % "sbt-git-versioning" % "$!sbt_git_versioning!$")
 
-addSbtPlugin("uk.gov.hmrc" % "sbt-artifactory" % "$!sbt_artifactory!$")
-
 addSbtPlugin("uk.gov.hmrc" % "sbt-distributables" % "$!sbt_distributables!$")
 
 addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.7.5")
