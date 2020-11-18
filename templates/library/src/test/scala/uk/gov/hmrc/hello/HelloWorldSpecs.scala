@@ -19,7 +19,6 @@ package uk.gov.hmrc.hello
 import org.scalatest.Matchers._
 import org.scalatest.WordSpecLike
 
-
 class HelloWorldSpecs extends WordSpecLike {
 
   "HelloWorld" should {

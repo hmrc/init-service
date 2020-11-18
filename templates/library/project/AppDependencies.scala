@@ -6,7 +6,7 @@ object AppDependencies {
   )
 
   lazy val test: Seq[ModuleID] = Seq(
-    "org.pegdown"            % "pegdown"     % "1.6.0" % "test",
+    "org.pegdown"            %  "pegdown"    % "1.6.0" % "test",
     "org.scalatest"          %% "scalatest"  % "3.0.8" % "test"
   )
 
