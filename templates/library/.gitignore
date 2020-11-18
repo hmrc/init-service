@@ -8,6 +8,7 @@ tmp
 dist
 /.idea
 /*.iml
+/*.ipr
 /out
 /.idea_modules
 /.classpath
@@ -15,5 +16,8 @@ dist
 /RUNNING_PID
 /.settings
 *.iws
-.DS_Store
-**/*.DS_Store
+results.xml
+project/metals.sbt
+.bloop
+.metals
+.vscode/

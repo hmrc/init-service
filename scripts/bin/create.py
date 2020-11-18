@@ -151,7 +151,7 @@ def generate_app_secret():
 
 
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
-    scalaVersion = "2.12.11"
+    scalaVersion = "2.12.12"
     scalaBinaryVersion = re.sub('\.(\d)*$', '', scalaVersion)
     print("scalaBinaryVersion=" + scalaBinaryVersion)
     if service_type == "FRONTEND":
