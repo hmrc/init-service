@@ -2,8 +2,10 @@ package uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config
 
 import javax.inject.{Inject, Singleton}
 import play.api.Configuration
-import play.api.i18n.Lang
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+<!--(if type=="FRONTEND")-->
+import play.api.i18n.Lang
+<!--(end)-->
 
 @Singleton
 class AppConfig @Inject()(config: Configuration, servicesConfig: ServicesConfig) {
