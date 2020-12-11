@@ -1,4 +1,5 @@
 app/controllers/HelloWorldController.scala
+app/controllers/LanguageSwitchController.scala
 test/controllers/HelloWorldControllerSpec.scala
 app/config/ErrorHandler.scala
 app/assets
