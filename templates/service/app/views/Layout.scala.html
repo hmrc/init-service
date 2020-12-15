@@ -1,20 +1,25 @@
 @import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config.AppConfig
-@import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.views.FooterLinks
 @import uk.gov.hmrc.govukfrontend.views.Layouts
 
 @this(
         govukLayout: GovukLayout,
-        head: Head
+        head: Head,
+        hmrcStandardFooter: HmrcStandardFooter,
+        languageSelect: LanguageSelect
 )
 @(pageTitle: Option[String] = None,
         headBlock: Option[Html] = None,
         scriptsBlock: Option[Html] = None
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
+@beforeContentBlock = {
+    @if(appConfig.welshLanguageSupportEnabled) {@languageSelect()}
+}
+
 @govukLayout(
     pageTitle = pageTitle,
     headBlock = Some(head(headBlock)),
     scriptsBlock = scriptsBlock,
-    beforeContentBlock = None,
-    footerItems = FooterLinks()
+    beforeContentBlock = Some(beforeContentBlock),
+    footerBlock = Some(hmrcStandardFooter())
 )(contentBlock)
