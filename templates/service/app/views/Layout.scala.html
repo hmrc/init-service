@@ -1,4 +1,6 @@
 @import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config.AppConfig
+@import uk.gov.hmrc.govukfrontend.views.html.components.GovukLayout
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardFooter
 @import views.html.helper.CSPNonce
 
 @this(
@@ -10,8 +12,8 @@
         hmrcLanguageSelectHelper: HmrcLanguageSelectHelper
 )
 @(pageTitle: Option[String] = None,
-        headBlock: Option[Html] = None,
-        scriptsBlock: Option[Html] = None
+  headBlock: Option[Html] = None,
+  scriptsBlock: Option[Html] = None
 )(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
 
 @govukLayout(
