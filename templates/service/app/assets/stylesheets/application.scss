@@ -1,1 +1,5 @@
-@import "lib/govuk-frontend/govuk/base";
+$govuk-assets-path: "/$!APP_NAME!$/assets/lib/govuk-frontend/govuk/assets/";
+$hmrc-assets-path: "/$!APP_NAME!$/assets/lib/hmrc-frontend/hmrc/";
+
+@import "lib/govuk-frontend/govuk/all";
+@import "lib/hmrc-frontend/hmrc/all";

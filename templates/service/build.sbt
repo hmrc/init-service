@@ -19,8 +19,6 @@ lazy val microservice = Project(appName, file("."))
       "uk.gov.hmrc.hmrcfrontend.views.html.components._",
       "uk.gov.hmrc.hmrcfrontend.views.html.helpers._"
     ),
-    pipelineStages in Assets := Seq(gzip),
-    PlayKeys.devSettings ++= Seq("metrics.enabled" -> "false"),
     <!--(end)-->
     // ***************
     // Use the silencer plugin to suppress warnings
