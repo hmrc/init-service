@@ -1,9 +1,14 @@
 @import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config.AppConfig
 @import uk.gov.hmrc.govukfrontend.views.html.components.GovukLayout
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardFooter
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcStandardHeader
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcHead
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcScripts
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLanguageSelectHelper
 @import views.html.helper.CSPNonce
 
 @this(
+        appConfig: AppConfig,
         govukLayout: GovukLayout,
         hmrcHead: HmrcHead,
         hmrcStandardHeader: HmrcStandardHeader,
@@ -14,7 +19,7 @@
 @(pageTitle: Option[String] = None,
   headBlock: Option[Html] = None,
   scriptsBlock: Option[Html] = None
-)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(
     pageTitle = pageTitle,
