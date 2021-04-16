@@ -33,91 +33,25 @@ def required_environment_directory(environment_variable, description_for_error):
 workspace = required_environment_directory("WORKSPACE", "your workspace root dir")
 
 
-def get_latest_sbt_plugin_version_in_open(artifact):
-    return get_sbt_plugin_version_info_from_bintray(artifact)
+def get_latest_sbt_plugin_version(group, artefact):
+    return lookup_latest_artefact_version(group, artefact)
 
 
-def get_latest_library_version_in_open(artifact, scalaBinaryVersion):
-    maven_metadata = get_library_version_info_from_bintray(artifact + "_" + scalaBinaryVersion)
+def get_latest_library_version(group, artefact, scala_binary_version):
+    latest = lookup_latest_artefact_version(group, artefact + "_" + scala_binary_version)
 
-    try:
-        data = maven_metadata.getElementsByTagName("versioning")[0]
-    except:
-        print "Unable to get latest version from bintray"
-        return None
-
-    latest = data.getElementsByTagName("latest")[0].firstChild.nodeValue
-    if re.search("-play-(\d)*$", latest) and not re.search("-play-27$", latest) and not re.search("-play-28$", latest):
+    if re.search("-play-(\d)*$", latest) and not re.search("-play-28$", latest):
         raise Exception("ERROR: Invalid dependency found '%s'" % latest)
     else:
         return latest.replace("-play-28", "-play-27")
 
-def version_exists(data, target_version):
-    is_found = False
-    versions = data.getElementsByTagName("version")
-    for version in versions:
-        if version.firstChild.nodeValue == target_version:
-            is_found = True
-            break
-
-    return is_found
-
-def max_version_of(*args):
-    def rank(ver):
-        ver = ver or ""
-        return [int(s) for s in ver.split(".") if s.isdigit()]
-
-    return sorted(args, key=rank, reverse=True)[0]
-
-
-def find_version_in(dom):
-    latest = "latestRelease"
-    try:
-        data = dom.getElementsByTagName("artifact")[0]
-        latestNode = data.getElementsByTagName(latest)[0]
-    except:
-        return None
-    return latestNode.firstChild.nodeValue
-
-
-def get_library_version_info_from_bintray(artifact):
-    return get_maven_version_info_from_bintray("releases", artifact)
-
-
-def get_sbt_plugin_version_info_from_bintray(artifact):
-    return get_ivy_version_info_from_bintray("sbt-plugin-releases", artifact)
-
-
-def get_ivy_version_info_from_bintray(repository_name, artifact):
-    bintray = "https://api.bintray.com/packages/hmrc/" + repository_name + "/" + artifact
-    print(bintray)
-    request = urllib2.Request(bintray)
-    response = urllib2.urlopen(request).read()
-    return json.loads(response)['latest_version']
-
-
-def get_maven_version_info_from_bintray(repository_name, artifact):
-    bintray = "https://dl.bintray.com/hmrc/" + repository_name + "/uk/gov/hmrc/" + artifact + "/maven-metadata.xml"
-    print(bintray)
-    request = urllib2.Request(bintray)
-    response = urllib2.urlopen(request)
-    dom = parse(response)
-    response.close()
-    return dom
-
-
-def lookup_credentials():
-    sbt_credentials = os.environ["HOME"] + "/.sbt/.credentials"
-    if not os.path.exists(sbt_credentials):
-        print "Cannot look up nexus credentials from " + sbt_credentials
-        return {}
-    return {key.strip(): value.strip() for (key, value) in
-            map(lambda x: x.split("=", 1), open(sbt_credentials, 'r').readlines())}
-
-
-def _header_credentials():
-    credentials = lookup_credentials()
-    return credentials["user"] + ":" + credentials["password"]
+def lookup_latest_artefact_version(group, artefact):
+    url = "https://artefacts.tax.service.gov.uk/artifactory/api/search/latestVersion?g=" + group + "&a=" + artefact
+    print(url)
+    request = urllib2.Request(url)
+    response = urllib2.urlopen(request).read().decode('utf-8')
+    print(response)
+    return response
 
 
 def query_yes_no(question, default="yes"):
@@ -149,21 +83,21 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
     scalaBinaryVersion = re.sub('\.(\d)*$', '', scalaVersion)
     print("scalaBinaryVersion=" + scalaBinaryVersion)
     if service_type == "FRONTEND":
-        bootstrapPlay27Version=get_latest_library_version_in_open("bootstrap-frontend-play-27", scalaBinaryVersion)
+        bootstrapPlay27Version = get_latest_library_version("uk.gov.hmrc", "bootstrap-frontend-play-27", scalaBinaryVersion)
     elif service_type == "BACKEND":
-        bootstrapPlay27Version=get_latest_library_version_in_open("bootstrap-backend-play-27", scalaBinaryVersion)
+        bootstrapPlay27Version = get_latest_library_version("uk.gov.hmrc", "bootstrap-backend-play-27", scalaBinaryVersion)
     else:
         bootstrapPlay27Version="" # template won't use this
 
-    playFrontendHmrcVersion=get_latest_library_version_in_open("play-frontend-hmrc", scalaBinaryVersion)
-    playFrontendGovukVersion=get_latest_library_version_in_open("play-frontend-govuk", scalaBinaryVersion)
-    playLanguageVersion=get_latest_library_version_in_open("play-language", scalaBinaryVersion)
-    mongoVersion=get_latest_library_version_in_open("mongo/hmrc-mongo-play-27", scalaBinaryVersion)
+    playFrontendHmrcVersion=get_latest_library_version("uk.gov.hmrc", "play-frontend-hmrc", scalaBinaryVersion)
+    playFrontendGovukVersion=get_latest_library_version("uk.gov.hmrc", "play-frontend-govuk", scalaBinaryVersion)
+    playLanguageVersion=get_latest_library_version("uk.gov.hmrc", "play-language", scalaBinaryVersion)
+    mongoVersion=get_latest_library_version("uk.gov.hmrc.mongo", "hmrc-mongo-play-27", scalaBinaryVersion)
 
-    sbt_auto_build = get_latest_sbt_plugin_version_in_open("sbt-auto-build")
-    sbt_git_versioning = get_latest_sbt_plugin_version_in_open("sbt-git-versioning")
-    sbt_artifactory = get_latest_sbt_plugin_version_in_open("sbt-artifactory")
-    sbt_distributables = get_latest_sbt_plugin_version_in_open("sbt-distributables")
+    sbt_auto_build = get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-auto-build")
+    sbt_git_versioning = get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-git-versioning")
+    sbt_artifactory = get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-artifactory")
+    sbt_distributables = get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-distributables")
 
     print("sbt_auto_build  " + sbt_auto_build)
     print("sbt_git_versioning  " + sbt_git_versioning)

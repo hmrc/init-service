@@ -44,7 +44,7 @@ You can generate a repository for inspection with:
 
 The new repository will be created in `$WORKSPACE/`
 
-You will then need to manually copy over the `repository.yaml` and 
+You will then need to manually copy over the `repository.yaml` and
 `LICENSE` file (public repositories only) from another HMRC repository.
 
 For example,
@@ -62,5 +62,5 @@ Then navigate to http://localhost:9000/test-frontend
 ## Adding a file specific to a backend or a frontend
 
 If you need to add a file that should only exist in a frontend or backend, but not both, add the
-path to the file to `templates/service/template/BACKEND.delete` if frontend-specific or 
+path to the file to `templates/service/template/BACKEND.delete` if frontend-specific or
 `templates/service/template/FRONTEND.delete` if backend-specific.
