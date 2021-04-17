@@ -17,16 +17,13 @@ import re
 def required_environment_directory(environment_variable, description_for_error):
     directory = os.environ.get(environment_variable, None)
     if not directory:
-        print("'%s' environment variable is required. You can add this to your ~/.bash_profile by adding the line %s=[%s]" % (
-            environment_variable, environment_variable, description_for_error))
+        print(f"'{environment_variable}' environment variable is required. You can add this to your ~/.bash_profile by adding the line {environment_variable}=[{description_for_error}]")
         exit(1)
     directory = os.path.abspath(directory)
     if not os.path.isdir(directory):
-        print("Error: '%s' environment variable points to non-existent directory: %s" % (
-            environment_variable, directory))
+        print(f"Error: '{environment_variable}' environment variable points to non-existent directory: {directory}")
         sys.exit(1)
     return directory
-
 
 workspace = required_environment_directory("WORKSPACE", "your workspace root dir")
 
@@ -109,7 +106,7 @@ def get_maven_version_info_from_bintray(repository_name, artifact):
 def lookup_credentials():
     sbt_credentials = os.environ["HOME"] + "/.sbt/.credentials"
     if not os.path.exists(sbt_credentials):
-        print("Cannot look up nexus credentials from " + sbt_credentials)
+        print(f"Cannot look up nexus credentials from {sbt_credentials}")
         return {}
     return {key.strip(): value.strip() for (key, value) in
             map(lambda x: x.split("=", 1), open(sbt_credentials, 'r').readlines())}
@@ -123,7 +120,7 @@ def _header_credentials():
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
     scala_version = "2.12.13"
     scala_binary_version = re.sub('\.(\d)*$', '', scala_version)
-    print("scala_binary_version=" + scala_binary_version)
+    print(f"scala_binary_version={scala_binary_version}")
     if service_type == "FRONTEND":
         bootstrap_play_version = get_latest_library_version_in_open("bootstrap-frontend-play-28", scala_binary_version)
     elif service_type == "BACKEND":
@@ -141,10 +138,10 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
     sbt_artifactory = get_latest_sbt_plugin_version_in_open("sbt-artifactory")
     sbt_distributables = get_latest_sbt_plugin_version_in_open("sbt-distributables")
 
-    print("sbt_auto_build  " + sbt_auto_build)
-    print("sbt_git_versioning  " + sbt_git_versioning)
-    print("sbt_distributables  " + sbt_distributables)
-    print("sbt_artifactory  " + sbt_artifactory)
+    print(f"sbt_auto_build {sbt_auto_build}")
+    print(f"sbt_git_versioning {sbt_git_versioning}")
+    print(f"sbt_distributables {sbt_distributables}")
+    print(f"sbt_artifactory {sbt_artifactory}")
 
     for subdir, dirs, files in os.walk(folder_to_search):
         if '.git' in dirs:
@@ -152,7 +149,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
 
         for f in files:
             file_name = os.path.join(subdir, f)
-            print("templating: " + subdir + " " + f)
+            print(f"templating: {subdir} {f}")
             t = pyratemp.Template(filename=os.path.join(subdir, f))
             file_content = t(UPPER_CASE_APP_NAME=application_name.upper(),
                              UPPER_CASE_APP_NAME_UNDERSCORE_ONLY=application_name.upper().replace("-", "_"),
@@ -199,7 +196,7 @@ def delete_files_for_type(project_folder, service_type):
 
 def call(command, quiet=True):
     if not quiet:
-        print("calling: '" + command + "' from: '" + os.getcwd() + "'")
+        print(f"calling: '{command}' from: '{os.getcwd()}'")
     ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     ps_command.wait()
     return ps_command
@@ -213,15 +210,15 @@ def create_service(project_name, service_type, existing_repo, has_mongo, github_
     else:
         raise Exception("ERROR: Invalid type '%s'" % service_type)
 
-    print("project name :" + project_name)
+    print(f"project name: {project_name}")
 
     if existing_repo:
         clone_repo(project_name, github_token)
 
-    print("Creating new service: %s, this could take a few moments" % project_name)
+    print(f"Creating new service: {project_name}, this could take a few moments")
     project_folder = os.path.normpath(os.path.join(workspace, project_name))
     if os.path.isdir(project_folder) and not existing_repo:
-        print("The folder '%s' already exists, not creating front end module" % str(project_folder))
+        print(f"The folder '{str(project_folder)}' already exists, not creating front end module")
     else:
         distutils.dir_util.copy_tree(template_dir, project_folder)
         replace_variables_for_app(project_name, project_folder, project_name, service_type, has_mongo)
@@ -229,10 +226,10 @@ def create_service(project_name, service_type, existing_repo, has_mongo, github_
             delete_files_for_type(project_folder, service_type)
             shutil.rmtree(os.path.join(project_folder, "template"))
             move_folders_to_project_package(project_name, project_folder)
-        print("Created %s at '%s'." % (service_type, project_folder))
+        print(f"Created {service_type} at '{project_folder}'.")
         commit_repo(project_folder, project_name, existing_repo)
         if existing_repo:
-            print("Pushing repo '%s'." % project_folder)
+            print(f"Pushing repo '{project_folder}'.")
             push_repo(project_name)
 
 
@@ -263,7 +260,7 @@ def move_files_to_dist(dirs, src, dst):
 
 def clone_repo(repo, github_token):
     command = 'git clone https://%s@github.com/hmrc/%s' % (github_token, repo)
-    print("cloning : " + command)
+    print(f"cloning: {command}")
     ps_command = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, cwd=workspace)
     ps_command.communicate()
     if ps_command.returncode != 0:
@@ -280,7 +277,7 @@ def commit_repo(project_folder, project_name, existing_repo):
 
 def push_repo(project_name):
     command = 'git push -u origin master'
-    print("pushing repo : " + command)
+    print(f"pushing repo: {command}")
 
     fnull = open(os.devnull, 'w')
     ps_command = subprocess.Popen(command, shell=True, stdout=fnull, stderr=fnull, cwd=workspace+'/'+project_name)
