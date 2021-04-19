@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os
 import shutil
+import signal
 import sys
 import subprocess
 from subprocess import call
@@ -25,10 +26,11 @@ class IntegrationTestActions(unittest.TestCase):
                                            stdout=subprocess.PIPE,
                                            env=dict(os.environ, WORKSPACE=workspace))
 
-        out, err = process.communicate(input='Y\nn\nY\nn\nY\nY\nn')
+        out, err = process.communicate(input=b"Y\nn\nY\nn\nY\nY\nn")
 
         if process.returncode is not 0:
-            print (out)
+            os.killpg(os.getpgid(process.pid), signal.SIGKILL)
+            process.wait()
             self.fail(msg="script did not execute correctly, see output for errors")
 
     def tearDown(self):
@@ -43,28 +45,28 @@ class IntegrationTestActions(unittest.TestCase):
     """    
     def addFakeRepositoryYaml(self, projects):
         for project in projects:
-            print('adding fake repository.yaml to %s' % project)
+            print(f'adding fake repository.yaml to {project}')
             with open(project + "/repository.yaml", "w") as yaml:
                 yaml.write("repoVisibility: private_12E5349CFB8BBA30AF464C24760B70343C0EAE9E9BD99156345DD0852C2E0F6F")
             
     def runSbtCommand(self, projects, command):
         for project in projects:
-            print('calling "sbt %s" on ' % command + project)
+            print(f'calling "sbt {command}{project}" on ')
             process = subprocess.Popen(['sbt', command], cwd=project)
             o, e = process.communicate()
             print(str(o))
-            print('return code was ' + str(process.returncode))
+            print(f'return code was {str(process.returncode)}')
 
-            if process.returncode is not 0:
+            if process.returncode != 0:
                 self.fail(msg='project did not pass stage "sbt %s", see output for errors' % command)
 
 
     def test_created_code_compiles(self):
         workspace = self.workspace
-        print('workspace Used : '+ self.workspace)
+        print(f'workspace Used : {self.workspace}')
         project_prefix = "test_project_" + str(uuid.uuid4())
 
-        print project_prefix
+        print(project_prefix)
 
         self.runCreate(project_prefix + '-backend', 'BACKEND')
         self.runCreate(project_prefix + '-frontend', 'FRONTEND')

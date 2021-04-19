@@ -13,7 +13,7 @@ Run `python ./scripts/bin/create.py -h` for instructions.
 ## Prerequisites
 
 This script requires,
-- Python 2.7
+- Python 3.9
 - the `$WORKSPACE` environment variable to be set - new repositories will be created
 in this directory
 - a github token with permissions to push to the repository that needs initialising

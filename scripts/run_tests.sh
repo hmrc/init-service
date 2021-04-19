@@ -1,4 +1,4 @@
 #!/bin/bash
 
-py.test -v --junitxml results.xml test/tests.py
+python -m pytest -v --junitxml results.xml test/tests.py
 test/integration-tests.py

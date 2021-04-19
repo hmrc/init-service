@@ -2,6 +2,7 @@
 @import views.html.helper.CSPNonce
 
 @this(
+        appConfig: AppConfig,
         govukLayout: GovukLayout,
         hmrcHead: HmrcHead,
         hmrcStandardHeader: HmrcStandardHeader,
@@ -10,9 +11,9 @@
         hmrcLanguageSelectHelper: HmrcLanguageSelectHelper
 )
 @(pageTitle: Option[String] = None,
-        headBlock: Option[Html] = None,
-        scriptsBlock: Option[Html] = None
-)(contentBlock: Html)(implicit request: Request[_], messages: Messages, appConfig: AppConfig)
+  headBlock: Option[Html] = None,
+  scriptsBlock: Option[Html] = None
+)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
 @govukLayout(
     pageTitle = pageTitle,
