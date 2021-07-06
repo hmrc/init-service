@@ -135,7 +135,7 @@ def call(command, quiet=True):
     return ps_command
 
 
-def create_service(project_name, service_type, existing_repo, has_mongo, github_token):
+def create_service(project_name, service_type, existing_repo, has_mongo, github_token, default_branch):
     if service_type == "LIBRARY":
         template_dir = os.path.normpath(os.path.join(os.path.realpath(__file__), "../../../templates/library"))
     elif service_type in ["FRONTEND", "BACKEND"]:
@@ -163,7 +163,7 @@ def create_service(project_name, service_type, existing_repo, has_mongo, github_
         commit_repo(project_folder, project_name, existing_repo)
         if existing_repo:
             print(f"Pushing repo '{project_folder}'.")
-            push_repo(project_name)
+            push_repo(project_name, default_branch)
 
 
 def move_folders_to_project_package(project_root_name, project_folder):
@@ -208,8 +208,8 @@ def commit_repo(project_folder, project_name, existing_repo):
     call('git commit -m \"Creating new service %s\"' % project_name)
 
 
-def push_repo(project_name):
-    command = 'git push -u origin master'
+def push_repo(project_name, default_branch):
+    command = f'git push -u origin {default_branch}'
     print(f"pushing repo: {command}")
 
     fnull = open(os.devnull, 'w')
@@ -226,6 +226,7 @@ if __name__ == '__main__':
     parser.add_argument('--github-token', help='The github token authorised to push to the repository')
     parser.add_argument('--github', action='store_true', help='Does the repository already exists on github? Set --github for this repo to be cloned, and updated')
     parser.add_argument('--with-mongo', action='store_true', help='Does your service require Mongo? This only available if the repository is of type "BACKEND"')
+    parser.add_argument('--default-branch', default='master', help='The default branch name for the GitHub repository when pushing changes')
     args = parser.parse_args()
 
-    create_service(args.REPOSITORY, args.type, args.github, args.with_mongo, args.github_token)
+    create_service(args.REPOSITORY, args.type, args.github, args.with_mongo, args.github_token, args.default_branch)
