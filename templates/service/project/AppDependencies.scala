@@ -21,12 +21,9 @@ object AppDependencies {
   val test = Seq(
     "uk.gov.hmrc"             %% "bootstrap-test-play-28"     % "$!bootstrapPlayVersion!$"             % Test,
     <!--(if MONGO)-->"uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-28"    % "$!mongoVersion!$"            % Test,<!--(end)-->
-    "org.scalatest"           %% "scalatest"                  % "3.2.5"             % Test,
     <!--(if type=="FRONTEND")-->
     "org.jsoup"               %  "jsoup"                      % "1.13.1"            % Test,
     <!--(end)-->
-    "com.typesafe.play"       %% "play-test"                  % PlayVersion.current % Test,
-    "com.vladsch.flexmark"    %  "flexmark-all"               % "0.36.8"            % "test, it",
-    "org.scalatestplus.play"  %% "scalatestplus-play"         % "5.1.0"             % "test, it"
+    "com.vladsch.flexmark"    %  "flexmark-all"               % "0.36.8"            % "test, it"
   )
 }
