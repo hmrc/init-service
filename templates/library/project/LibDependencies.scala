@@ -1,6 +1,6 @@
 import sbt._
 
-object AppDependencies {
+object LibDependencies {
 
   val compile = Seq(
   )

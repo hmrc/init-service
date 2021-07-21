@@ -2,12 +2,9 @@
 import os
 import shutil
 import signal
-import sys
 import subprocess
-from subprocess import call
-import uuid
-
 import unittest
+import uuid
 
 
 class IntegrationTestActions(unittest.TestCase):
@@ -18,13 +15,21 @@ class IntegrationTestActions(unittest.TestCase):
         os.mkdir(self.workspace)
         pass
 
-    def runCreate(self, project_prefix, service_type):
+    def runCreate(self, project_prefix, service_type, with_mongo=None):
         workspace = self.workspace
-        process = subprocess.Popen(['python', self.createscript, project_prefix, "--type", service_type],
-                                           stderr=subprocess.STDOUT,
-                                           stdin=subprocess.PIPE,
-                                           stdout=subprocess.PIPE,
-                                           env=dict(os.environ, WORKSPACE=workspace))
+
+        if with_mongo:
+            script = ['python', self.createscript, project_prefix, "--type", service_type, "--github-token", "token",
+                      "--dry-run", "--with-mongo"]
+        else:
+            script = ['python', self.createscript, project_prefix, "--type", service_type, "--github-token", "token",
+                      "--dry-run"]
+
+        process = subprocess.Popen(script,
+                                   stderr=subprocess.STDOUT,
+                                   stdin=subprocess.PIPE,
+                                   stdout=subprocess.PIPE,
+                                   env=dict(os.environ, WORKSPACE=workspace))
 
         out, err = process.communicate(input=b"Y\nn\nY\nn\nY\nY\nn")
 
@@ -46,6 +51,7 @@ class IntegrationTestActions(unittest.TestCase):
     def addFakeRepositoryYaml(self, projects):
         for project in projects:
             print(f'adding fake repository.yaml to {project}')
+            os.makedirs(project)
             with open(project + "/repository.yaml", "w") as yaml:
                 yaml.write("repoVisibility: private_12E5349CFB8BBA30AF464C24760B70343C0EAE9E9BD99156345DD0852C2E0F6F")
             
@@ -60,7 +66,6 @@ class IntegrationTestActions(unittest.TestCase):
             if process.returncode != 0:
                 self.fail(msg='project did not pass stage "sbt %s", see output for errors' % command)
 
-
     def test_created_code_compiles(self):
         workspace = self.workspace
         print(f'workspace Used : {self.workspace}')
@@ -68,16 +73,21 @@ class IntegrationTestActions(unittest.TestCase):
 
         print(project_prefix)
 
-        self.runCreate(project_prefix + '-backend', 'BACKEND')
-        self.runCreate(project_prefix + '-frontend', 'FRONTEND')
-        self.runCreate(project_prefix + '-library', 'LIBRARY')
-
         projects = [
             workspace + project_prefix + '-backend',
+            workspace + project_prefix + '-backend-mongo',
             workspace + project_prefix + '-frontend',
+            workspace + project_prefix + '-frontend-mongo',
             workspace + project_prefix + '-library']
 
         self.addFakeRepositoryYaml(projects)
+
+        self.runCreate(project_prefix + '-backend', 'BACKEND')
+        self.runCreate(project_prefix + '-backend-mongo', 'BACKEND', with_mongo=True)
+        self.runCreate(project_prefix + '-frontend', 'FRONTEND')
+        self.runCreate(project_prefix + '-frontend-mongo', 'BACKEND', with_mongo=True)
+        self.runCreate(project_prefix + '-library', 'LIBRARY')
+
         self.runSbtCommand(projects, 'compile')
         self.runSbtCommand(projects, 'test')
 

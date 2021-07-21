@@ -1,7 +1,5 @@
-resolvers += Resolver.bintrayIvyRepo("hmrc", "sbt-plugin-releases")
-resolvers += Resolver.bintrayRepo("hmrc", "releases")
+resolvers += MavenRepository("HMRC-open-artefacts-maven2", "https://open.artefacts.tax.service.gov.uk/maven2")
+resolvers += Resolver.url("HMRC-open-artefacts-ivy2", url("https://open.artefacts.tax.service.gov.uk/ivy2"))(Resolver.ivyStylePatterns)
 resolvers += Resolver.typesafeRepo("releases")
 
 addSbtPlugin("uk.gov.hmrc" % "sbt-auto-build"     % "$!sbt_auto_build!$")
-addSbtPlugin("uk.gov.hmrc" % "sbt-git-versioning" % "$!sbt_git_versioning!$")
-addSbtPlugin("uk.gov.hmrc" % "sbt-artifactory"    % "$!sbt_artifactory!$")
