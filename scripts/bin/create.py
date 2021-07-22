@@ -232,7 +232,6 @@ if __name__ == '__main__':
                         help='Sets the type of repository to be either a Play template for FRONTEND or BACKEND microservice or a Play library')
     parser.add_argument('--dry-run', action='store_true',
                         help='Set --dry-run to avoid connecting with remote GitHub repository')
-    parser.add_argument('--github', action='store_true', help='ignored')
     parser.add_argument('--with-mongo', action='store_true',
                         help='Does your service require Mongo? This only available if the repository is of type "BACKEND"')
     parser.add_argument('--github-token', help='The GitHub token authorised to push to the repository')
