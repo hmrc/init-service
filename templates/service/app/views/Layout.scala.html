@@ -1,25 +1,15 @@
 @import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config.AppConfig
+@import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
 @import views.html.helper.CSPNonce
 
 @this(
         appConfig: AppConfig,
-        govukLayout: GovukLayout,
-        hmrcHead: HmrcHead,
-        hmrcStandardHeader: HmrcStandardHeader,
-        hmrcStandardFooter: HmrcStandardFooter,
-        hmrcScripts: HmrcScripts,
-        hmrcLanguageSelectHelper: HmrcLanguageSelectHelper
+        hmrcLayout: HmrcLayout
 )
-@(pageTitle: Option[String] = None,
-  headBlock: Option[Html] = None,
-  scriptsBlock: Option[Html] = None
-)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+@(pageTitle: Option[String] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
 
-@govukLayout(
+@hmrcLayout(
     pageTitle = pageTitle,
-    headBlock = Some(hmrcHead(headBlock = headBlock, nonce = CSPNonce.get)),
-    headerBlock = Some(hmrcStandardHeader()),
-    scriptsBlock = Some(hmrcScripts(scriptsBlock = scriptsBlock, nonce = CSPNonce.get)),
-    beforeContentBlock = if(appConfig.welshLanguageSupportEnabled) Some(hmrcLanguageSelectHelper()) else None,
-    footerBlock = Some(hmrcStandardFooter())
+    nonce = CSPNonce.get,
+    isWelshTranslationAvailable = appConfig.welshLanguageSupportEnabled
 )(contentBlock)
