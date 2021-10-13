@@ -10,9 +10,9 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 class AppConfig @Inject()
   (
     config: Configuration
-  <!--(if type=="BACKEND")-->
-  , servicesConfig: ServicesConfig
-  <!--(end)-->
+    <!--(if type=="BACKEND")-->
+    , servicesConfig: ServicesConfig
+    <!--(end)-->
   ) {
 <!--(if type=="FRONTEND")-->
   val welshLanguageSupportEnabled: Boolean = config.getOptional[Boolean]("features.welsh-language-support").getOrElse(false)
