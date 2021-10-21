@@ -1,44 +1,33 @@
 package uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config
 
-import org.scalamock.scalatest.MockFactory
 import org.scalatestplus.play.PlaySpec
-import play.api.{ConfigLoader, Configuration}
+import play.api.Configuration
 <!--(if type=="BACKEND")-->
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 <!--(end)-->
 
-class AppConfigSpec extends PlaySpec with MockFactory {
+class AppConfigSpec extends PlaySpec {
 
-  private val mockConfiguration = mock[Configuration]
-
+  private val mockConfiguration = Configuration(
   <!--(if type=="FRONTEND")-->
-  (mockConfiguration.getOptional(_: String)(_: ConfigLoader[Boolean]))
-    .expects("features.welsh-language-support", *)
-    .returns(Some(false))
+    "features.welsh-language-support" -> false
   <!--(end)-->
+  <!--(if type=="BACKEND")-->
+    "microservice.metrics.graphite.host" -> "graphite",
+    "auditing.enabled" -> true,
+    "microservice.services.auth.host" -> "localhost",
+    "microservice.services.auth.port" -> 8500
+  <!--(end)-->
+  )
 
   <!--(if type=="BACKEND")-->
-  (mockConfiguration.get(_: String)(_: ConfigLoader[String]))
-    .expects("microservice.metrics.graphite.host", *)
-    .returns("graphite")
+  private val mockServiceConfig = new ServicesConfig(mockConfiguration)
 
-  (mockConfiguration.get(_: String)(_: ConfigLoader[Boolean]))
-    .expects("auditing.enabled", *)
-    .returns(true)
-
-  private val mockServiceConfig = mock[ServicesConfig]
-
-  (mockServiceConfig.baseUrl(_: String))
-    .expects("auth")
-    .returns("http://localhost:8500")
+  lazy val appConfig = new AppConfig(mockConfiguration, mockServiceConfig)
   <!--(end)-->
-
-  lazy val appConfig = new AppConfig(
-    mockConfiguration
-    <!--(if type=="BACKEND")-->
-    , mockServiceConfig
-    <!--(end)-->
-    )
+  <!--(if type=="FRONTEND")-->
+  lazy val appConfig = new AppConfig(mockConfiguration)
+  <!--(end)-->
 
   "AppConfig" should {
     <!--(if type=="FRONTEND")-->
