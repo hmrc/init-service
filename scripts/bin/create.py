@@ -52,7 +52,7 @@ def lookup_latest_artefact_version(group, artefact):
 
 
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
-    scala_version = "2.12.13"
+    scala_version = "2.12.14"
     scala_binary_version = re.sub('\.(\d)*$', '', scala_version)
     print(f"scala_binary_version={scala_binary_version}")
     if service_type == "FRONTEND":
