@@ -1,15 +1,17 @@
-package uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers
+package uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Application
-import play.api.http.Status
-import play.api.test.Helpers._
+import play.api.http.{ContentTypes, Status}
 import play.api.test.FakeRequest
+import play.api.test.Helpers._
 import play.api.inject.guice.GuiceApplicationBuilder
 
-class MicroserviceHelloWorldControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
+class ErrorHandlerSpec extends AnyWordSpec
+  with Matchers
+  with GuiceOneAppPerSuite {
 
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder()
@@ -20,12 +22,14 @@ class MicroserviceHelloWorldControllerSpec extends AnyWordSpec with Matchers wit
       .build()
 
   private val fakeRequest = FakeRequest("GET", "/")
-  private val controller = app.injector.instanceOf[MicroserviceHelloWorldController]
 
-  "GET /" should {
-    "return 200" in {
-      val result = controller.hello()(fakeRequest)
-      status(result) shouldBe Status.OK
+  private val handler = app.injector.instanceOf[ErrorHandler]
+
+  "standardErrorTemplate" should {
+    "render HTML" in {
+      val html = handler.standardErrorTemplate("title", "heading", "message")(fakeRequest)
+      html.contentType shouldBe "text/html"
     }
   }
+
 }
