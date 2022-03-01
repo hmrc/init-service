@@ -73,12 +73,18 @@ class IntegrationTestActions(unittest.TestCase):
 
         print(project_prefix)
 
-        projects = [
+        services = [
             workspace + project_prefix + '-backend',
             workspace + project_prefix + '-backend-mongo',
             workspace + project_prefix + '-frontend',
-            workspace + project_prefix + '-frontend-mongo',
-            workspace + project_prefix + '-library']
+            workspace + project_prefix + '-frontend-mongo'
+        ]
+
+        libraries = [
+            workspace + project_prefix + '-library'
+        ]
+
+        projects = services + libraries
 
         self.addFakeRepositoryYaml(projects)
 
@@ -88,8 +94,8 @@ class IntegrationTestActions(unittest.TestCase):
         self.runCreate(project_prefix + '-frontend-mongo', 'BACKEND', with_mongo=True)
         self.runCreate(project_prefix + '-library', 'LIBRARY')
 
-        self.runSbtCommand(projects, 'compile')
-        self.runSbtCommand(projects, 'test')
+        self.runSbtCommand(services, 'test; it:test')
+        self.runSbtCommand(libraries, 'test')
 
 if __name__ == '__main__':
     unittest.main()
