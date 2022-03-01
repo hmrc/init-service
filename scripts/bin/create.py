@@ -53,6 +53,7 @@ def lookup_latest_artefact_version(group, artefact):
 
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
     scala_version = "2.12.14"
+    silencer_version = "1.7.5"
     scala_binary_version = re.sub('\.(\d)*$', '', scala_version)
     print(f"scala_binary_version={scala_binary_version}")
     if service_type == "FRONTEND":
@@ -88,6 +89,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              APP_NAME=application_name,
                              APP_PACKAGE_NAME=application_root_name.replace("-", ""),
                              SCALA_VERSION=scala_version,
+                             SILENCER_VERSION=silencer_version,
                              type=service_type,
                              MONGO=has_mongo,
                              bootstrapPlayVersion=bootstrap_play_version,
