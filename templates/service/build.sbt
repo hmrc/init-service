@@ -3,7 +3,7 @@ import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
 val appName = "$!APP_NAME!$"
 
-val silencerVersion = "1.7.5"
+val silencerVersion = "$!SILENCER_VERSION!$"
 
 lazy val microservice = Project(appName, file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)

@@ -52,7 +52,9 @@ def lookup_latest_artefact_version(group, artefact):
 
 
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
-    scala_version = "2.12.14"
+    sbt_version = "1.5.8"
+    scala_version = "2.12.15"
+    silencer_version = "1.7.7"
     scala_binary_version = re.sub('\.(\d)*$', '', scala_version)
     print(f"scala_binary_version={scala_binary_version}")
     if service_type == "FRONTEND":
@@ -87,7 +89,9 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              UPPER_CASE_APP_NAME_UNDERSCORE_ONLY=application_name.upper().replace("-", "_"),
                              APP_NAME=application_name,
                              APP_PACKAGE_NAME=application_root_name.replace("-", ""),
+                             SBT_VERSION=sbt_version,
                              SCALA_VERSION=scala_version,
+                             SILENCER_VERSION=silencer_version,
                              type=service_type,
                              MONGO=has_mongo,
                              bootstrapPlayVersion=bootstrap_play_version,
@@ -168,9 +172,11 @@ def create_project(project_name, project_type, dry_run, has_mongo, github_token,
 def move_folders_to_project_package(project_root_name, project_folder):
     project_app_folder = "%s/app" % project_folder
     project_test_folder = "%s/test" % project_folder
+    project_it_test_folder = "%s/it" % project_folder
     project_package = "uk/gov/hmrc/%s" % project_root_name.replace("-", "")
     project_package_app = os.path.join(project_app_folder, project_package)
     project_package_test = os.path.join(project_test_folder, project_package)
+    project_package_it_test = os.path.join(project_it_test_folder, project_package)
 
     package_app_dirs = os.listdir(project_app_folder)
     print(package_app_dirs)
@@ -179,6 +185,7 @@ def move_folders_to_project_package(project_root_name, project_folder):
 
     move_files_to_dist(package_app_dirs, project_app_folder, project_package_app)
     move_files_to_dist(os.listdir(project_test_folder), project_test_folder, project_package_test)
+    move_files_to_dist(os.listdir(project_it_test_folder), project_it_test_folder, project_package_it_test)
 
 
 def move_files_to_dist(dirs, src, dst):
