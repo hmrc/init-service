@@ -3,7 +3,7 @@ package uk.gov.hmrc.hello
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
 
-class HelloWorldSpecs extends AnyWordSpec with Matchers {
+class HelloWorldSpec extends AnyWordSpec with Matchers {
 
   "HelloWorld" should {
 
