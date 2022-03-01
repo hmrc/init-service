@@ -52,6 +52,7 @@ def lookup_latest_artefact_version(group, artefact):
 
 
 def replace_variables_for_app(application_root_name, folder_to_search, application_name, service_type, has_mongo=False):
+    sbt_version = "1.5.8"
     scala_version = "2.12.15"
     silencer_version = "1.7.7"
     scala_binary_version = re.sub('\.(\d)*$', '', scala_version)
@@ -88,6 +89,7 @@ def replace_variables_for_app(application_root_name, folder_to_search, applicati
                              UPPER_CASE_APP_NAME_UNDERSCORE_ONLY=application_name.upper().replace("-", "_"),
                              APP_NAME=application_name,
                              APP_PACKAGE_NAME=application_root_name.replace("-", ""),
+                             SBT_VERSION=sbt_version,
                              SCALA_VERSION=scala_version,
                              SILENCER_VERSION=silencer_version,
                              type=service_type,
