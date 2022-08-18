@@ -1,46 +1,52 @@
 
 # init-service
 
-A python script to initialise a repository.
+A python library to initialise a repository.
 
-This script,
+This library,
 - clones an existing repository
 - adds the Play project with up to date dependencies
 - commits and pushes the changes to Github
 
-Run `python ./scripts/bin/create.py -h` for instructions.
+Run `init-service --help` for instructions.
 
 ## Prerequisites
 
-This script requires,
-- Python 3.9 (If you have nix installed, you can just run `nix-shell`)
+This library requires,
+- Python 3.9
 - the `$WORKSPACE` environment variable to be set - new repositories will be created
 in this directory
 - a github token with permissions to push to the repository that needs initialising
 
+### Additional development dependencies
+
+- poetry ( `pip install poetry` )
+
+To install the dependencies run:
+```make init```
+
+## Installation
+
+```pip install -i https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/simple init-service```
 ## Example usage
 
 Create a frontend microservice like this:
-```python scripts/bin/create.py --type FRONTEND --github --github-token <token> my-frontend-microservice```
+```init-service my-frontend-microservice FRONTEND --github-token <token>```
 
 Create a backend microservice like this:
-```python scripts/bin/create.py --type BACKEND --github --with-mongo --github-token <token> my-backend-microservice```
+```init-service my-backend-microservice BACKEND --with-mongo --github-token <token>```
 
 ## Running the tests
 
 In order to run the tests you will need [pytest](https://docs.pytest.org/) installed.
 
-To run the tests,
-
-```
-cd scripts
-./run_tests.sh
-```
+To run the tests run:
+```make test```
 
 ## Manually testing a new repository
 
 You can generate a repository for inspection with:
-```python scripts/bin/create.py --type <type> <repository-name>```
+```init-service <repository-name> <type>  --dry-run```
 
 The new repository will be created in `$WORKSPACE/`
 
@@ -50,7 +56,7 @@ You will then need to manually copy over the `repository.yaml` and
 For example,
 
 ```
-python scripts/bin/create.py --type FRONTEND test-frontend
+init-service test-frontend FRONTEND
 cp ../contact-frontend/LICENSE ../test-frontend
 cp ../contact-frontend/repository.yaml ../test-frontend
 cd ../test-frontend

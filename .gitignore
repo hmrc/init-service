@@ -21,3 +21,6 @@ project/metals.sbt
 .bloop
 .metals
 .vscode/
+__pycache__/
+.pytest_cache/
+foo-service*
