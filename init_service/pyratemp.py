@@ -169,8 +169,8 @@ See documentation for a list of features, template-syntax etc.
 from __future__ import unicode_literals
 
 __version__ = "0.3.2"
-__author__   = "Roland Koebler <rk at simple-is-better dot org>"
-__license__  = """Copyright (c) Roland Koebler, 2007-2013
+__author__ = "Roland Koebler <rk at simple-is-better dot org>"
+__license__ = """Copyright (c) Roland Koebler, 2007-2013
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -190,22 +190,25 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 IN THE SOFTWARE."""
 
-#=========================================
+# =========================================
 
 import os, re, sys, types
+
 if sys.version_info[0] >= 3:
     import builtins
+
     unicode = str
     long = int
 else:
     import __builtin__ as builtins
     from codecs import open
 
-#=========================================
+# =========================================
 # some useful functions
 
-#----------------------
+# ----------------------
 # string-position: i <-> row,col
+
 
 def srow(string, i):
     """Get line numer of ``string[i]`` in `string`.
@@ -213,7 +216,8 @@ def srow(string, i):
     :Returns: row, starting at 1
     :Note:    This works for text-strings with ``\\n`` or ``\\r\\n``.
     """
-    return string.count('\n', 0, max(0, i)) + 1
+    return string.count("\n", 0, max(0, i)) + 1
+
 
 def scol(string, i):
     """Get column number of ``string[i]`` in `string`.
@@ -221,7 +225,8 @@ def scol(string, i):
     :Returns: column, starting at 1 (but may be <1 if i<0)
     :Note:    This works for text-strings with ``\\n`` or ``\\r\\n``.
     """
-    return i - string.rfind('\n', 0, max(0, i))
+    return i - string.rfind("\n", 0, max(0, i))
+
 
 def sindex(string, row, col):
     """Get index of the character at `row`/`col` in `string`.
@@ -233,41 +238,48 @@ def sindex(string, row, col):
     :Note:       This works for text-strings with '\\n' or '\\r\\n'.
     """
     n = 0
-    for _ in range(row-1):
-        n = string.find('\n', n) + 1
-    return n+col-1
+    for _ in range(row - 1):
+        n = string.find("\n", n) + 1
+    return n + col - 1
 
-#----------------------
+
+# ----------------------
+
 
 def dictkeyclean(d):
-    """Convert all keys of the dict `d` to strings.
-    """
+    """Convert all keys of the dict `d` to strings."""
     new_d = {}
     for k, v in d.items():
         new_d[str(k)] = v
     return new_d
 
-#----------------------
+
+# ----------------------
+
 
 def dummy(*_, **__):
-    """Dummy function, doing nothing.
-    """
+    """Dummy function, doing nothing."""
     pass
+
 
 def dummy_raise(exception, value):
     """Create an exception-raising dummy function.
 
     :Returns: dummy function, raising ``exception(value)``
     """
+
     def mydummy(*_, **__):
         raise exception(value)
+
     return mydummy
 
-#=========================================
+
+# =========================================
 # escaping
 
 (NONE, HTML, LATEX, MAIL_HEADER) = range(0, 4)
-ESCAPE_SUPPORTED = {"NONE":None, "HTML":HTML, "LATEX":LATEX, "MAIL_HEADER":MAIL_HEADER}
+ESCAPE_SUPPORTED = {"NONE": None, "HTML": HTML, "LATEX": LATEX, "MAIL_HEADER": MAIL_HEADER}
+
 
 def escape(s, format=HTML):
     """Replace special characters by their escape sequence.
@@ -288,53 +300,59 @@ def escape(s, format=HTML):
     :Uses:
         MAIL_HEADER uses module email
     """
-    #Note: If you have to make sure that every character gets replaced
+    # Note: If you have to make sure that every character gets replaced
     #      only once (and if you cannot achieve this with the following code),
     #      use something like "".join([replacedict.get(c,c) for c in s])
     #      which is about 2-3 times slower (but maybe needs less memory).
-    #Note: This is one of the most time-consuming parts of the template.
+    # Note: This is one of the most time-consuming parts of the template.
     if format is None or format == NONE:
         pass
     elif format == HTML:
-        s = s.replace("&", "&amp;") # must be done first!
+        s = s.replace("&", "&amp;")  # must be done first!
         s = s.replace("<", "&lt;")
         s = s.replace(">", "&gt;")
         s = s.replace('"', "&quot;")
         s = s.replace("'", "&#39;")
     elif format == LATEX:
-        s = s.replace("\\", "\\x")    #must be done first!
-        s = s.replace("#",  "\\#")
-        s = s.replace("$",  "\\$")
-        s = s.replace("%",  "\\%")
-        s = s.replace("&",  "\\&")
-        s = s.replace("_",  "\\_")
-        s = s.replace("{",  "\\{")
-        s = s.replace("}",  "\\}")
-        s = s.replace("\\x","\\textbackslash{}")
-        s = s.replace("~",  "\\textasciitilde{}")
-        s = s.replace("^",  "\\textasciicircum{}")
+        s = s.replace("\\", "\\x")  # must be done first!
+        s = s.replace("#", "\\#")
+        s = s.replace("$", "\\$")
+        s = s.replace("%", "\\%")
+        s = s.replace("&", "\\&")
+        s = s.replace("_", "\\_")
+        s = s.replace("{", "\\{")
+        s = s.replace("}", "\\}")
+        s = s.replace("\\x", "\\textbackslash{}")
+        s = s.replace("~", "\\textasciitilde{}")
+        s = s.replace("^", "\\textasciicircum{}")
     elif format == MAIL_HEADER:
         import email.header
+
         try:
             s.encode("ascii")
             return s
         except UnicodeEncodeError:
             return email.header.make_header([(s, "utf-8")]).encode()
     else:
-        raise ValueError('Invalid format (only None, HTML, LATEX and MAIL_HEADER are supported).')
+        raise ValueError("Invalid format (only None, HTML, LATEX and MAIL_HEADER are supported).")
     return s
 
-#=========================================
 
-#-----------------------------------------
+# =========================================
+
+# -----------------------------------------
 # Exceptions
+
 
 class TemplateException(Exception):
     """Base class for template-exceptions."""
+
     pass
+
 
 class TemplateParseError(TemplateException):
     """Template parsing failed."""
+
     def __init__(self, err, errpos):
         """
         :Parameters:
@@ -344,43 +362,58 @@ class TemplateParseError(TemplateException):
         self.err = err
         self.filename, self.row, self.col = errpos
         TemplateException.__init__(self)
+
     def __str__(self):
         if not self.filename:
             return "line %d, col %d: %s" % (self.row, self.col, str(self.err))
         else:
-            return "file %s, line %d, col %d: %s" % (self.filename, self.row, self.col, str(self.err))
+            return "file %s, line %d, col %d: %s" % (
+                self.filename,
+                self.row,
+                self.col,
+                str(self.err),
+            )
+
 
 class TemplateSyntaxError(TemplateParseError, SyntaxError):
     """Template syntax-error."""
+
     pass
+
 
 class TemplateIncludeError(TemplateParseError):
     """Template 'include' failed."""
+
     pass
+
 
 class TemplateRenderError(TemplateException):
     """Template rendering failed."""
+
     pass
 
-#-----------------------------------------
+
+# -----------------------------------------
 # Loader
+
 
 class LoaderString:
     """Load template from a string/unicode.
 
     Note that 'include' is not possible in such templates.
     """
-    def __init__(self, encoding='utf-8'):
+
+    def __init__(self, encoding="utf-8"):
         self.encoding = encoding
 
     def load(self, s):
-        """Return template-string as unicode.
-        """
+        """Return template-string as unicode."""
         if isinstance(s, unicode):
             u = s
         else:
             u = s.decode(self.encoding)
         return u
+
 
 class LoaderFile:
     """Load template from a file.
@@ -390,7 +423,8 @@ class LoaderFile:
     and security, all included templates have to be in the same directory!
     (see ``allowed_path``)
     """
-    def __init__(self, allowed_path=None, encoding='utf-8'):
+
+    def __init__(self, allowed_path=None, encoding="utf-8"):
         """Init the loader.
 
         :Parameters:
@@ -401,7 +435,7 @@ class LoaderFile:
         """
         if allowed_path and not os.path.isdir(allowed_path):
             raise ValueError("'allowed_path' has to be a directory.")
-        self.path     = allowed_path
+        self.path = allowed_path
         self.encoding = encoding
 
     def load(self, filename):
@@ -417,17 +451,19 @@ class LoaderFile:
             - `ValueError`: if `filename` contains a path
         """
         if filename != os.path.basename(filename):
-            raise ValueError("No path allowed in filename. (%s)" %(filename))
+            raise ValueError("No path allowed in filename. (%s)" % (filename))
         filename = os.path.join(self.path, filename)
 
-        f = open(filename, 'r', encoding=self.encoding)
+        f = open(filename, "r", encoding=self.encoding)
         u = f.read()
         f.close()
 
         return u
 
-#-----------------------------------------
+
+# -----------------------------------------
 # Parser
+
 
 class Parser(object):
     """Parse a template into a parse-tree.
@@ -437,21 +473,24 @@ class Parser(object):
 
     See documentation for a description of the parse-tree.
     """
+
     # template-syntax
     _comment_start = "#!"
-    _comment_end   = "!#"
-    _sub_start     = "$!"
-    _sub_end       = "!$"
-    _subesc_start  = "@!"
-    _subesc_end    = "!@"
-    _block_start   = "<!--("
-    _block_end     = ")-->"
+    _comment_end = "!#"
+    _sub_start = "$!"
+    _sub_end = "!$"
+    _subesc_start = "@!"
+    _subesc_end = "!@"
+    _block_start = "<!--("
+    _block_end = ")-->"
 
     # build regexps
     # comment
     #   single-line, until end-tag or end-of-line.
-    _strComment = r"""%s(?P<content>.*?)(?P<end>%s|\n|$)""" \
-                    % (re.escape(_comment_start), re.escape(_comment_end))
+    _strComment = r"""%s(?P<content>.*?)(?P<end>%s|\n|$)""" % (
+        re.escape(_comment_start),
+        re.escape(_comment_end),
+    )
     _reComment = re.compile(_strComment, re.M)
 
     # escaped or unescaped substitution
@@ -462,9 +501,13 @@ class Parser(object):
                     |
                     %s\s*(?P<escsub>.*?)\s*(?P<escend>%s|$) #escaped substitution
                     )
-                """ % (re.escape(_sub_start),    re.escape(_sub_end),
-                       re.escape(_subesc_start), re.escape(_subesc_end))
-    _reSubstitution = re.compile(_strSubstitution, re.X|re.M)
+                """ % (
+        re.escape(_sub_start),
+        re.escape(_sub_end),
+        re.escape(_subesc_start),
+        re.escape(_subesc_end),
+    )
+    _reSubstitution = re.compile(_strSubstitution, re.X | re.M)
 
     # block
     #   - single-line, no nesting.
@@ -493,19 +536,30 @@ class Parser(object):
                     %s(?P<mKeyw>\w+)\s*(?P<mParam>.*?)%s(?P<mIgnored>.*)\r?\n
                     (?P<mContent>(?:.*\n)*?)
                     (?=(?P=indent)%s(?:.|\s)*?%s)                   #   match indentation
-                """ % (_s, _e,
-                       _s, _e,
-                       _s, _e, _s, _e, _s, _e,
-                       _s, _e, _s, _e)
-    _reBlock = re.compile(_strBlock, re.X|re.M)
+                """ % (
+        _s,
+        _e,
+        _s,
+        _e,
+        _s,
+        _e,
+        _s,
+        _e,
+        _s,
+        _e,
+        _s,
+        _e,
+        _s,
+        _e,
+    )
+    _reBlock = re.compile(_strBlock, re.X | re.M)
 
     # "for"-block parameters: "var(,var)* in ..."
     _strForParam = r"""^(?P<names>\w+(?:\s*,\s*\w+)*)\s+in\s+(?P<iter>.+)$"""
-    _reForParam  = re.compile(_strForParam)
+    _reForParam = re.compile(_strForParam)
 
     # allowed macro-names
     _reMacroParam = re.compile(r"""^\w+$""")
-
 
     def __init__(self, loadfunc=None, testexpr=None, escape=HTML):
         """Init the parser.
@@ -520,21 +574,23 @@ class Parser(object):
             - `ValueError`: if `testexpr` or `escape` is invalid.
         """
         if loadfunc is None:
-            self._load = dummy_raise(NotImplementedError, "'include' not supported, since no 'loadfunc' was given.")
+            self._load = dummy_raise(
+                NotImplementedError, "'include' not supported, since no 'loadfunc' was given."
+            )
         else:
             self._load = loadfunc
 
         if testexpr is None:
             self._testexprfunc = dummy
         else:
-            try:    # test if testexpr() works
+            try:  # test if testexpr() works
                 testexpr("i==1")
             except Exception as err:
-                raise ValueError("Invalid 'testexpr'. (%s)" %(err))
+                raise ValueError("Invalid 'testexpr'. (%s)" % (err))
             self._testexprfunc = testexpr
 
         if escape not in ESCAPE_SUPPORTED.values():
-            raise ValueError("Unsupported 'escape'. (%s)" %(escape))
+            raise ValueError("Unsupported 'escape'. (%s)" % (escape))
         self.escape = escape
         self._includestack = []
 
@@ -549,7 +605,7 @@ class Parser(object):
             - `TemplateIncludeError`: if template-inclusion failed
             - `TemplateException`
         """
-        self._includestack = [(None, template)]   # for error-messages (_errpos)
+        self._includestack = [(None, template)]  # for error-messages (_errpos)
         return self._parse(template)
 
     def _errpos(self, fpos):
@@ -557,7 +613,7 @@ class Parser(object):
         filename, string = self._includestack[-1]
         return filename, srow(string, fpos), scol(string, fpos)
 
-    def _testexpr(self, expr,  fpos=0):
+    def _testexpr(self, expr, fpos=0):
         """Test a template-expression to detect errors."""
         try:
             self._testexprfunc(expr)
@@ -573,28 +629,32 @@ class Parser(object):
         for match in self._reSubstitution.finditer(text):
             start = match.start()
             if start > curr:
-                parsetree.append(("str", self._reComment.sub('', text[curr:start])))
+                parsetree.append(("str", self._reComment.sub("", text[curr:start])))
 
             if match.group("sub") is not None:
                 if not match.group("end"):
-                    raise TemplateSyntaxError("Missing closing tag '%s' for '%s'."
-                            % (self._sub_end, match.group()), self._errpos(fpos+start))
+                    raise TemplateSyntaxError(
+                        "Missing closing tag '%s' for '%s'." % (self._sub_end, match.group()),
+                        self._errpos(fpos + start),
+                    )
                 if len(match.group("sub")) > 0:
-                    self._testexpr(match.group("sub"), fpos+start)
+                    self._testexpr(match.group("sub"), fpos + start)
                     parsetree.append(("sub", match.group("sub")))
             else:
-                assert(match.group("escsub") is not None)
+                assert match.group("escsub") is not None
                 if not match.group("escend"):
-                    raise TemplateSyntaxError("Missing closing tag '%s' for '%s'."
-                            % (self._subesc_end, match.group()), self._errpos(fpos+start))
+                    raise TemplateSyntaxError(
+                        "Missing closing tag '%s' for '%s'." % (self._subesc_end, match.group()),
+                        self._errpos(fpos + start),
+                    )
                 if len(match.group("escsub")) > 0:
-                    self._testexpr(match.group("escsub"), fpos+start)
+                    self._testexpr(match.group("escsub"), fpos + start)
                     parsetree.append(("esc", self.escape, match.group("escsub")))
 
             curr = match.end()
 
         if len(text) > curr:
-            parsetree.append(("str", self._reComment.sub('', text[curr:])))
+            parsetree.append(("str", self._reComment.sub("", text[curr:])))
 
     def _parse(self, template, fpos=0):
         """Recursive part of `parse()`.
@@ -607,13 +667,15 @@ class Parser(object):
         # (So that its content does not collide with other syntax, and
         #  because removing them completely would falsify the character-
         #  position ("match.start()") of error-messages)
-        template = self._reComment.sub(lambda match: self._comment_start+" "*len(match.group(1))+match.group(2), template)
+        template = self._reComment.sub(
+            lambda match: self._comment_start + " " * len(match.group(1)) + match.group(2), template
+        )
 
         # init parser
         parsetree = []
-        curr = 0            # current position (= end of previous block)
-        block_type = None   # block type: if,for,macro,raw,...
-        block_indent = None # None: single-line, >=0: multi-line
+        curr = 0  # current position (= end of previous block)
+        block_type = None  # block type: if,for,macro,raw,...
+        block_indent = None  # None: single-line, >=0: multi-line
 
         # find blocks
         for match in self._reBlock.finditer(template):
@@ -625,149 +687,223 @@ class Parser(object):
             # analyze block syntax (incl. error-checking and -messages)
             keyword = None
             block = match.groupdict()
-            pos__ = fpos + start                # shortcut
-            if   block["sKeyw"] is not None:    # single-line block tag
+            pos__ = fpos + start  # shortcut
+            if block["sKeyw"] is not None:  # single-line block tag
                 block_indent = None
                 keyword = block["sKeyw"]
-                param   = block["sParam"]
+                param = block["sParam"]
                 content = block["sContent"]
-                if block["sSpace"]:             # restore spaces before start-tag
+                if block["sSpace"]:  # restore spaces before start-tag
                     if len(parsetree) > 0 and parsetree[-1][0] == "str":
                         parsetree[-1] = ("str", parsetree[-1][1] + block["sSpace"])
                     else:
                         parsetree.append(("str", block["sSpace"]))
-                pos_p = fpos + match.start("sParam")    # shortcuts
+                pos_p = fpos + match.start("sParam")  # shortcuts
                 pos_c = fpos + match.start("sContent")
-            elif block["mKeyw"] is not None:    # multi-line block tag
+            elif block["mKeyw"] is not None:  # multi-line block tag
                 block_indent = len(block["indent"])
                 keyword = block["mKeyw"]
-                param   = block["mParam"]
+                param = block["mParam"]
                 content = block["mContent"]
                 pos_p = fpos + match.start("mParam")
                 pos_c = fpos + match.start("mContent")
                 ignored = block["mIgnored"].strip()
-                if ignored  and  ignored != self._comment_start:
-                    raise TemplateSyntaxError("No code allowed after block-tag.", self._errpos(fpos+match.start("mIgnored")))
-            elif block["mEnd"] is not None:     # multi-line block end
+                if ignored and ignored != self._comment_start:
+                    raise TemplateSyntaxError(
+                        "No code allowed after block-tag.",
+                        self._errpos(fpos + match.start("mIgnored")),
+                    )
+            elif block["mEnd"] is not None:  # multi-line block end
                 if block_type is None:
-                    raise TemplateSyntaxError("No block to end here/invalid indent.", self._errpos(pos__) )
+                    raise TemplateSyntaxError(
+                        "No block to end here/invalid indent.", self._errpos(pos__)
+                    )
                 if block_indent != len(block["mEnd"]):
-                    raise TemplateSyntaxError("Invalid indent for end-tag.", self._errpos(pos__) )
+                    raise TemplateSyntaxError("Invalid indent for end-tag.", self._errpos(pos__))
                 ignored = block["meIgnored"].strip()
-                if ignored  and  ignored != self._comment_start:
-                    raise TemplateSyntaxError("No code allowed after end-tag.", self._errpos(fpos+match.start("meIgnored")))
+                if ignored and ignored != self._comment_start:
+                    raise TemplateSyntaxError(
+                        "No code allowed after end-tag.",
+                        self._errpos(fpos + match.start("meIgnored")),
+                    )
                 block_type = None
-            elif block["sEnd"] is not None:     # single-line block end
+            elif block["sEnd"] is not None:  # single-line block end
                 if block_type is None:
-                    raise TemplateSyntaxError("No block to end here/invalid indent.", self._errpos(pos__))
+                    raise TemplateSyntaxError(
+                        "No block to end here/invalid indent.", self._errpos(pos__)
+                    )
                 if block_indent is not None:
                     raise TemplateSyntaxError("Invalid indent for end-tag.", self._errpos(pos__))
                 block_type = None
             else:
-                raise TemplateException("FATAL: Block regexp error. Please contact the author. (%s)" % match.group())
+                raise TemplateException(
+                    "FATAL: Block regexp error. Please contact the author. (%s)" % match.group()
+                )
 
             # analyze block content (mainly error-checking and -messages)
             if keyword:
                 keyword = keyword.lower()
-                if   'for'   == keyword:
+                if "for" == keyword:
                     if block_type is not None:
-                        raise TemplateSyntaxError("Missing block-end-tag before new block at '%s'." %(match.group()), self._errpos(pos__))
-                    block_type = 'for'
+                        raise TemplateSyntaxError(
+                            "Missing block-end-tag before new block at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
+                    block_type = "for"
                     cond = self._reForParam.match(param)
                     if cond is None:
-                        raise TemplateSyntaxError("Invalid 'for ...' at '%s'." %(param), self._errpos(pos_p))
-                    names = tuple(n.strip()  for n in cond.group("names").split(","))
-                    self._testexpr(cond.group("iter"), pos_p+cond.start("iter"))
-                    parsetree.append(("for", names, cond.group("iter"), self._parse(content, pos_c)))
-                elif 'if'    == keyword:
+                        raise TemplateSyntaxError(
+                            "Invalid 'for ...' at '%s'." % (param), self._errpos(pos_p)
+                        )
+                    names = tuple(n.strip() for n in cond.group("names").split(","))
+                    self._testexpr(cond.group("iter"), pos_p + cond.start("iter"))
+                    parsetree.append(
+                        ("for", names, cond.group("iter"), self._parse(content, pos_c))
+                    )
+                elif "if" == keyword:
                     if block_type is not None:
-                        raise TemplateSyntaxError("Missing block-end-tag before new block at '%s'." %(match.group()), self._errpos(pos__))
+                        raise TemplateSyntaxError(
+                            "Missing block-end-tag before new block at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
                     if not param:
-                        raise TemplateSyntaxError("Missing condition for 'if' at '%s'." %(match.group()), self._errpos(pos__))
-                    block_type = 'if'
+                        raise TemplateSyntaxError(
+                            "Missing condition for 'if' at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
+                    block_type = "if"
                     self._testexpr(param, pos_p)
                     parsetree.append(("if", param, self._parse(content, pos_c)))
-                elif 'elif'  == keyword:
-                    if block_type != 'if':
-                        raise TemplateSyntaxError("'elif' may only appear after 'if' at '%s'." %(match.group()), self._errpos(pos__))
+                elif "elif" == keyword:
+                    if block_type != "if":
+                        raise TemplateSyntaxError(
+                            "'elif' may only appear after 'if' at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
                     if not param:
-                        raise TemplateSyntaxError("Missing condition for 'elif' at '%s'." %(match.group()), self._errpos(pos__))
+                        raise TemplateSyntaxError(
+                            "Missing condition for 'elif' at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
                     self._testexpr(param, pos_p)
                     parsetree.append(("elif", param, self._parse(content, pos_c)))
-                elif 'else'  == keyword:
-                    if block_type not in ('if', 'for'):
-                        raise TemplateSyntaxError("'else' may only appear after 'if' or 'for' at '%s'." %(match.group()), self._errpos(pos__))
+                elif "else" == keyword:
+                    if block_type not in ("if", "for"):
+                        raise TemplateSyntaxError(
+                            "'else' may only appear after 'if' or 'for' at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
                     if param:
-                        raise TemplateSyntaxError("'else' may not have parameters at '%s'." %(match.group()), self._errpos(pos__))
+                        raise TemplateSyntaxError(
+                            "'else' may not have parameters at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
                     parsetree.append(("else", self._parse(content, pos_c)))
-                elif 'macro' == keyword:
+                elif "macro" == keyword:
                     if block_type is not None:
-                        raise TemplateSyntaxError("Missing block-end-tag before new block '%s'." %(match.group()), self._errpos(pos__))
-                    block_type = 'macro'
+                        raise TemplateSyntaxError(
+                            "Missing block-end-tag before new block '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
+                    block_type = "macro"
                     # make sure param is "\w+" (instead of ".+")
                     if not param:
-                        raise TemplateSyntaxError("Missing name for 'macro' at '%s'." %(match.group()), self._errpos(pos__))
+                        raise TemplateSyntaxError(
+                            "Missing name for 'macro' at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
                     if not self._reMacroParam.match(param):
-                        raise TemplateSyntaxError("Invalid name for 'macro' at '%s'." %(match.group()), self._errpos(pos__))
-                    #remove last newline
-                    if len(content) > 0 and content[-1] == '\n':
+                        raise TemplateSyntaxError(
+                            "Invalid name for 'macro' at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
+                    # remove last newline
+                    if len(content) > 0 and content[-1] == "\n":
                         content = content[:-1]
-                    if len(content) > 0 and content[-1] == '\r':
+                    if len(content) > 0 and content[-1] == "\r":
                         content = content[:-1]
                     parsetree.append(("macro", param, self._parse(content, pos_c)))
 
                 # parser-commands
-                elif 'raw'   == keyword:
+                elif "raw" == keyword:
                     if block_type is not None:
-                        raise TemplateSyntaxError("Missing block-end-tag before new block '%s'." %(match.group()), self._errpos(pos__))
+                        raise TemplateSyntaxError(
+                            "Missing block-end-tag before new block '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
                     if param:
-                        raise TemplateSyntaxError("'raw' may not have parameters at '%s'." %(match.group()), self._errpos(pos__))
-                    block_type = 'raw'
+                        raise TemplateSyntaxError(
+                            "'raw' may not have parameters at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
+                    block_type = "raw"
                     parsetree.append(("str", content))
-                elif 'include' == keyword:
+                elif "include" == keyword:
                     if block_type is not None:
-                        raise TemplateSyntaxError("Missing block-end-tag before new block '%s'." %(match.group()), self._errpos(pos__))
+                        raise TemplateSyntaxError(
+                            "Missing block-end-tag before new block '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
                     if param:
-                        raise TemplateSyntaxError("'include' may not have parameters at '%s'." %(match.group()), self._errpos(pos__))
-                    block_type = 'include'
+                        raise TemplateSyntaxError(
+                            "'include' may not have parameters at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
+                    block_type = "include"
                     try:
                         u = self._load(content.strip())
                     except Exception as err:
                         raise TemplateIncludeError(err, self._errpos(pos__))
-                    self._includestack.append((content.strip(), u))  # current filename/template for error-msg.
+                    self._includestack.append(
+                        (content.strip(), u)
+                    )  # current filename/template for error-msg.
                     p = self._parse(u)
                     self._includestack.pop()
                     parsetree.extend(p)
-                elif 'set_escape' == keyword:
+                elif "set_escape" == keyword:
                     if block_type is not None:
-                        raise TemplateSyntaxError("Missing block-end-tag before new block '%s'." %(match.group()), self._errpos(pos__))
+                        raise TemplateSyntaxError(
+                            "Missing block-end-tag before new block '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
                     if param:
-                        raise TemplateSyntaxError("'set_escape' may not have parameters at '%s'." %(match.group()), self._errpos(pos__))
-                    block_type = 'set_escape'
+                        raise TemplateSyntaxError(
+                            "'set_escape' may not have parameters at '%s'." % (match.group()),
+                            self._errpos(pos__),
+                        )
+                    block_type = "set_escape"
                     esc = content.strip().upper()
                     if esc not in ESCAPE_SUPPORTED:
-                        raise TemplateSyntaxError("Unsupported escape '%s'." %(esc), self._errpos(pos__))
+                        raise TemplateSyntaxError(
+                            "Unsupported escape '%s'." % (esc), self._errpos(pos__)
+                        )
                     self.escape = ESCAPE_SUPPORTED[esc]
                 else:
-                    raise TemplateSyntaxError("Invalid keyword '%s'." %(keyword), self._errpos(pos__))
+                    raise TemplateSyntaxError(
+                        "Invalid keyword '%s'." % (keyword), self._errpos(pos__)
+                    )
             curr = match.end()
 
         if block_type is not None:
             raise TemplateSyntaxError("Missing end-tag.", self._errpos(pos__))
 
-        if len(template) > curr:            # process template-part after last block
-            self._parse_sub(parsetree, template[curr:], fpos+curr)
+        if len(template) > curr:  # process template-part after last block
+            self._parse_sub(parsetree, template[curr:], fpos + curr)
 
         return parsetree
 
-#-----------------------------------------
+
+# -----------------------------------------
 # Evaluation
 
 # some checks
-assert len(eval("dir()", {'__builtins__':{'dir':dir}})) == 1, \
-    "FATAL: 'eval' does not work as expected (%s)."
-assert compile("0 .__class__", "<string>", "eval").co_names == ('__class__',), \
-    "FATAL: 'compile' does not work as expected."
+assert (
+    len(eval("dir()", {"__builtins__": {"dir": dir}})) == 1
+), "FATAL: 'eval' does not work as expected (%s)."
+assert compile("0 .__class__", "<string>", "eval").co_names == (
+    "__class__",
+), "FATAL: 'compile' does not work as expected."
+
 
 class EvalPseudoSandbox:
     """An eval-pseudo-sandbox.
@@ -798,45 +934,42 @@ class EvalPseudoSandbox:
     """
 
     safe_builtins = {
-        "True"      : True,
-        "False"     : False,
-        "None"      : None,
-
-        "abs"       : builtins.abs,
-        "chr"       : builtins.chr,
-        "divmod"    : builtins.divmod,
-        "hash"      : builtins.hash,
-        "hex"       : builtins.hex,
+        "True": True,
+        "False": False,
+        "None": None,
+        "abs": builtins.abs,
+        "chr": builtins.chr,
+        "divmod": builtins.divmod,
+        "hash": builtins.hash,
+        "hex": builtins.hex,
         "isinstance": builtins.isinstance,
-        "len"       : builtins.len,
-        "max"       : builtins.max,
-        "min"       : builtins.min,
-        "oct"       : builtins.oct,
-        "ord"       : builtins.ord,
-        "pow"       : builtins.pow,
-        "range"     : builtins.range,
-        "round"     : builtins.round,
-        "sorted"    : builtins.sorted,
-        "sum"       : builtins.sum,
-        "unichr"    : builtins.chr,
-        "zip"       : builtins.zip,
-
-        "bool"      : builtins.bool,
-        "bytes"     : builtins.bytes,
-        "complex"   : builtins.complex,
-        "dict"      : builtins.dict,
-        "enumerate" : builtins.enumerate,
-        "float"     : builtins.float,
-        "int"       : builtins.int,
-        "list"      : builtins.list,
-        "long"      : long,
-        "reversed"  : builtins.reversed,
-        "set"       : builtins.set,
-        "str"       : builtins.str,
-        "tuple"     : builtins.tuple,
-        "unicode"   : unicode,
-
-        "dir"       : builtins.dir,
+        "len": builtins.len,
+        "max": builtins.max,
+        "min": builtins.min,
+        "oct": builtins.oct,
+        "ord": builtins.ord,
+        "pow": builtins.pow,
+        "range": builtins.range,
+        "round": builtins.round,
+        "sorted": builtins.sorted,
+        "sum": builtins.sum,
+        "unichr": builtins.chr,
+        "zip": builtins.zip,
+        "bool": builtins.bool,
+        "bytes": builtins.bytes,
+        "complex": builtins.complex,
+        "dict": builtins.dict,
+        "enumerate": builtins.enumerate,
+        "float": builtins.float,
+        "int": builtins.int,
+        "list": builtins.list,
+        "long": long,
+        "reversed": builtins.reversed,
+        "set": builtins.set,
+        "str": builtins.str,
+        "tuple": builtins.tuple,
+        "unicode": unicode,
+        "dir": builtins.dir,
     }
     if sys.version_info[0] < 3:
         safe_builtins["unichr"] = builtins.unichr
@@ -846,10 +979,10 @@ class EvalPseudoSandbox:
         self.vars_ptr = None
         self.eval_allowed_builtins = self.safe_builtins.copy()
         self.register("__import__", self.f_import)
-        self.register("exists",  self.f_exists)
+        self.register("exists", self.f_exists)
         self.register("default", self.f_default)
-        self.register("setvar",  self.f_setvar)
-        self.register("escape",  self.f_escape)
+        self.register("setvar", self.f_setvar)
+        self.register("escape", self.f_escape)
 
     def register(self, name, obj):
         """Add an object to the "allowed eval-builtins".
@@ -868,7 +1001,7 @@ class EvalPseudoSandbox:
             NameError if expression contains forbidden names.
         """
         for name in code.co_names:
-            if name[0] == '_' and name != '_[1]':  # _[1] is necessary for [x for x in y]
+            if name[0] == "_" and name != "_[1]":  # _[1] is necessary for [x for x in y]
                 raise NameError("Name '%s' is not allowed in '%s'." % (name, expr))
         # recursively check sub-codes (e.g. lambdas)
         for const in code.co_consts:
@@ -946,10 +1079,17 @@ class EvalPseudoSandbox:
             # >>> print(t(mytime=datetime.now(), time=time))
             # 13:40:54
         """
-        if self.vars_ptr is not None  and  name in self.vars_ptr  and  isinstance(self.vars_ptr[name], types.ModuleType):
+        if (
+            self.vars_ptr is not None
+            and name in self.vars_ptr
+            and isinstance(self.vars_ptr[name], types.ModuleType)
+        ):
             return self.vars_ptr[name]
         else:
-            raise ImportError("import not allowed in pseudo-sandbox; try to import '%s' yourself (and maybe pass it to the sandbox/template)" % name)
+            raise ImportError(
+                "import not allowed in pseudo-sandbox; try to import '%s' yourself (and maybe pass it to the sandbox/template)"
+                % name
+            )
 
     def f_exists(self, varname):
         """``exists()`` for the sandboxed code.
@@ -963,7 +1103,7 @@ class EvalPseudoSandbox:
         :Note:      the variable-name has to be quoted! (like in eval)
         :Example:   see module-docstring
         """
-        return (varname in self.vars_ptr)
+        return varname in self.vars_ptr
 
     def f_default(self, expr, default=None):
         """``default()`` for the sandboxed code.
@@ -988,7 +1128,7 @@ class EvalPseudoSandbox:
             if r is None:
                 return default
             return r
-        #TODO: which exceptions should be catched here?
+        # TODO: which exceptions should be catched here?
         except (NameError, LookupError, TypeError, AttributeError):
             return default
 
@@ -1003,14 +1143,15 @@ class EvalPseudoSandbox:
         return ""
 
     def f_escape(self, s, format="HTML"):
-        """``escape()`` for the sandboxed code.
-        """
+        """``escape()`` for the sandboxed code."""
         if isinstance(format, (str, unicode)):
             format = ESCAPE_SUPPORTED[format.upper()]
         return escape(unicode(s), format)
 
-#-----------------------------------------
+
+# -----------------------------------------
 # basic template / subtemplate
+
 
 class TemplateBase:
     """Basic template-class.
@@ -1030,7 +1171,7 @@ class TemplateBase:
         :Exceptions:
             - `TypeError`: if `data` is not a dictionary
         """
-        #TODO: parameter-checking?
+        # TODO: parameter-checking?
         self.parsetree = parsetree
         if isinstance(data, dict):
             self.data = data
@@ -1054,18 +1195,21 @@ class TemplateBase:
         self.current_data = self.data.copy()
         self.current_data.update(override)
         u = "".join(self._render(self.parsetree, self.current_data))
-        self.current_data = self.data       # restore current_data
-        return _dontescape(u)               # (see class _dontescape)
+        self.current_data = self.data  # restore current_data
+        return _dontescape(u)  # (see class _dontescape)
 
     def __unicode__(self):
         """Alias for __call__()."""
         return self.__call__()
+
     def __str__(self):
         """Alias for __call__()."""
         return self.__call__()
 
-#-----------------------------------------
+
+# -----------------------------------------
 # Renderer
+
 
 class _dontescape(unicode):
     """Unicode-string which should not be escaped.
@@ -1077,6 +1221,7 @@ class _dontescape(unicode):
     :Note: This only works if the object is used on its own in ``@!...!@``.
            It i.e. does not work in ``@!object*2!@`` or ``@!object + "hi"!@``.
     """
+
     __slots__ = []
 
 
@@ -1095,7 +1240,7 @@ class Renderer(object):
             - `escapefunc`: function for escaping special characters
               (i.e. `escape`)
         """
-        #TODO: test evalfunc
+        # TODO: test evalfunc
         self.evalfunc = evalfunc
         self.escapefunc = escapefunc
 
@@ -1103,9 +1248,11 @@ class Renderer(object):
         """evalfunc with error-messages"""
         try:
             return self.evalfunc(expr, data)
-        #TODO: any other errors to catch here?
+        # TODO: any other errors to catch here?
         except (TypeError, NameError, LookupError, AttributeError, SyntaxError) as err:
-            raise TemplateRenderError("Cannot eval expression '%s'. (%s: %s)" %(expr, err.__class__.__name__, err))
+            raise TemplateRenderError(
+                "Cannot eval expression '%s'. (%s: %s)" % (expr, err.__class__.__name__, err)
+            )
 
     def render(self, parsetree, data):
         """Render a parse-tree of a template.
@@ -1119,23 +1266,23 @@ class Renderer(object):
         """
         _eval = self._eval  # shortcut
         output = []
-        do_else = False     # use else/elif-branch?
+        do_else = False  # use else/elif-branch?
 
         if parsetree is None:
             return ""
         for elem in parsetree:
-            if   "str"   == elem[0]:
+            if "str" == elem[0]:
                 output.append(elem[1])
-            elif "sub"   == elem[0]:
+            elif "sub" == elem[0]:
                 output.append(unicode(_eval(elem[1], data)))
-            elif "esc"   == elem[0]:
+            elif "esc" == elem[0]:
                 obj = _eval(elem[2], data)
-                #prevent double-escape
+                # prevent double-escape
                 if isinstance(obj, _dontescape) or isinstance(obj, TemplateBase):
                     output.append(unicode(obj))
                 else:
                     output.append(self.escapefunc(unicode(obj), elem[1]))
-            elif "for"   == elem[0]:
+            elif "for" == elem[0]:
                 do_else = True
                 (names, iterable) = elem[1:3]
                 try:
@@ -1147,30 +1294,32 @@ class Renderer(object):
                     if len(names) == 1:
                         data[names[0]] = i
                     else:
-                        data.update(zip(names, i))   #"for a,b,.. in list"
+                        data.update(zip(names, i))  # "for a,b,.. in list"
                     output.extend(self.render(elem[3], data))
-            elif "if"    == elem[0]:
+            elif "if" == elem[0]:
                 do_else = True
                 if _eval(elem[1], data):
                     do_else = False
                     output.extend(self.render(elem[2], data))
-            elif "elif"  == elem[0]:
+            elif "elif" == elem[0]:
                 if do_else and _eval(elem[1], data):
                     do_else = False
                     output.extend(self.render(elem[2], data))
-            elif "else"  == elem[0]:
+            elif "else" == elem[0]:
                 if do_else:
                     do_else = False
                     output.extend(self.render(elem[1], data))
             elif "macro" == elem[0]:
                 data[elem[1]] = TemplateBase(elem[2], self.render, data)
             else:
-                raise TemplateRenderError("Invalid parse-tree (%s)." %(elem))
+                raise TemplateRenderError("Invalid parse-tree (%s)." % (elem))
 
         return output
 
-#-----------------------------------------
+
+# -----------------------------------------
 # template user-interface (putting it all together)
+
 
 class Template(TemplateBase):
     """Template-User-Interface.
@@ -1184,12 +1333,20 @@ class Template(TemplateBase):
         see module-docstring
     """
 
-    def __init__(self, string=None,filename=None,parsetree=None, encoding='utf-8', data=None, escape=HTML,
-            loader_class=LoaderFile,
-            parser_class=Parser,
-            renderer_class=Renderer,
-            eval_class=EvalPseudoSandbox,
-            escape_func=escape):
+    def __init__(
+        self,
+        string=None,
+        filename=None,
+        parsetree=None,
+        encoding="utf-8",
+        data=None,
+        escape=HTML,
+        loader_class=LoaderFile,
+        parser_class=Parser,
+        renderer_class=Renderer,
+        eval_class=EvalPseudoSandbox,
+        escape_func=escape,
+    ):
         """Load (+parse) a template.
 
         :Parameters:
@@ -1208,7 +1365,7 @@ class Template(TemplateBase):
             - `escapefunc`
         """
         if [string, filename, parsetree].count(None) != 2:
-            raise ValueError('Exactly 1 of string,filename,parsetree is necessary.')
+            raise ValueError("Exactly 1 of string,filename,parsetree is necessary.")
 
         tmpl = None
         # load template
@@ -1216,7 +1373,9 @@ class Template(TemplateBase):
             incl_load = loader_class(os.path.dirname(filename), encoding).load
             tmpl = incl_load(os.path.basename(filename))
         if string is not None:
-            incl_load = dummy_raise(NotImplementedError, "'include' not supported for template-strings.")
+            incl_load = dummy_raise(
+                NotImplementedError, "'include' not supported for template-strings."
+            )
             tmpl = LoaderString(encoding).load(string)
 
         # eval (incl. compile-cache)
@@ -1231,8 +1390,8 @@ class Template(TemplateBase):
         # renderer
         renderfunc = renderer_class(templateeval.eval, escape_func).render
 
-        #create template
+        # create template
         TemplateBase.__init__(self, parsetree, renderfunc, data)
 
 
-#=========================================
+# =========================================

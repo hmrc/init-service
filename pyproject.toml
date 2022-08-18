@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "init-service"
+version = "0.1.0"
+description = "A templating tool for HMRC MDTP repositories"
+authors = ["Your Name <you@example.com>"]
+license = "Apache-2.0"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+click = "^8.1.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.2"
+pytest-cov = "^3.0.0"
+pytest-mock = "^3.8.2"
+black = "^22.6.0"
+safety = "^2.1.1"
+bandit = "^1.7.4"
+
+[tool.poetry.scripts]
+init-service = 'init_service:run_cli'
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+
+[tool.bandit]
+exclude_dirs = ["./init_service/pyratemp.py", "./tests/", "./dist/"]
+skips = ["B603", "B310", "B404"]
