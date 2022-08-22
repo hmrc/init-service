@@ -244,9 +244,8 @@ class InitService:
         self.call(["git", "commit", "-m", f"'Creating new service {self.repository}'"])
 
     def push_repo(self):
-        command = ["git", "push", "-u", "origin", "self.default_branch"]
+        command = ["git", "push", "-u", "origin", self.default_branch]
         print(f"pushing repo: {command}")
-
         fnull = open(os.devnull, "w")
         ps_command = subprocess.Popen(
             command,
