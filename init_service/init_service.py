@@ -43,7 +43,7 @@ class InitService:
     def get_latest_library_version(self, group, artefact, scala_binary_version):
         latest = self.lookup_latest_artefact_version(group, artefact + "_" + scala_binary_version)
 
-        if re.search("-play-(\d)*$", latest) and not re.search("-play-28$", latest):
+        if re.search(r"-play-(\d)*$", latest) and not re.search("-play-28$", latest):
             raise Exception("ERROR: Invalid dependency found '%s'" % latest)
         else:
             return latest
@@ -65,7 +65,7 @@ class InitService:
         sbt_version = "1.5.8"
         scala_version = "2.12.15"
         silencer_version = "1.7.7"
-        scala_binary_version = re.sub("\.(\d)*$", "", scala_version)
+        scala_binary_version = re.sub(r"\.(\d)*$", "", scala_version)
         print(f"scala_binary_version={scala_binary_version}")
         if self.type == "FRONTEND":
             bootstrap_play_version = self.get_latest_library_version(
