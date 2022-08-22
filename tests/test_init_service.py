@@ -80,6 +80,32 @@ def test_init_service_with_type_service_successfully_runs(mocker, args):
     shutil.rmtree(f"{cwd}/{name}")
 
 
+def test_init_service_push_repo_arguments(mocker):
+    mock_subprocess_popen = mocker.Mock()
+    mock_subprocess_popen.return_value.returncode = 0
+    patched_subprocess_popen = mocker.patch(
+        "init_service.init_service.subprocess.Popen", return_value=mock_subprocess_popen()
+    )
+
+    service = init_service.InitService(
+        repository="foo-repo",
+        type="FRONTEND",
+        dry_run=True,
+        github_token="foo-github-token",
+        with_mongo=True,
+        default_branch="foo-default-branch",
+    )
+    service.push_repo()
+
+    assert patched_subprocess_popen.mock_calls[0].args[0] == [
+        "git",
+        "push",
+        "-u",
+        "origin",
+        "foo-default-branch",
+    ]
+
+
 def assert_code_compiles(name, command):
     add_fake_repository_yaml(name)
     print(f'calling "sbt {command}foo-service" on ')

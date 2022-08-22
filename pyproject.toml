@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "init-service"
-version = "0.2.0"
+version = "0.2.1"
 description = "A templating tool for HMRC MDTP repositories"
 authors = ["Your Name <you@example.com>"]
 license = "Apache-2.0"
@@ -30,3 +30,7 @@ line-length = 100
 [tool.bandit]
 exclude_dirs = ["./init_service/pyratemp.py", "./tests/", "./dist/"]
 skips = ["B603", "B310", "B404"]
+
+[tool.pytest.ini_options]
+python_files = "tests.py test_*.py *_tests.py"
+addopts = "--cov=./init_service --cov-report term-missing --no-cov-on-fail -p no:warnings -r fEsx"
