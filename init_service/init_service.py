@@ -64,7 +64,6 @@ class InitService:
     def replace_variables_for_app(self, folder_to_search):
         sbt_version = "1.5.8"
         scala_version = "2.12.15"
-        silencer_version = "1.7.7"
         scala_binary_version = re.sub(r"\.(\d)*$", "", scala_version)
         print(f"scala_binary_version={scala_binary_version}")
         if self.type == "FRONTEND":
@@ -112,7 +111,6 @@ class InitService:
                     APP_PACKAGE_NAME=self.repository.replace("-", ""),
                     SBT_VERSION=sbt_version,
                     SCALA_VERSION=scala_version,
-                    SILENCER_VERSION=silencer_version,
                     type=self.type,
                     MONGO=self.with_mongo,
                     bootstrapPlayVersion=bootstrap_play_version,
