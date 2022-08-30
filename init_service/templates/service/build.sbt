@@ -1,27 +1,19 @@
 import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
 
-val appName = "$!APP_NAME!$"
-
-val silencerVersion = "$!SILENCER_VERSION!$"
-
-lazy val microservice = Project(appName, file("."))
+lazy val microservice = Project("$!APP_NAME!$", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(
-    majorVersion                     := 0,
-    scalaVersion                     := "$!SCALA_VERSION!$",
-    libraryDependencies              ++= AppDependencies.compile ++ AppDependencies.test,
+    majorVersion        := 0,
+    scalaVersion        := "$!SCALA_VERSION!$",
+    libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
+    // https://www.scala-lang.org/2021/01/12/configuring-and-suppressing-warnings.html
+    // suppress warnings in generated routes files
+    scalacOptions += "-Wconf:src=routes/.*:s",
     <!--(if type=="FRONTEND")-->
-    pipelineStages in Assets := Seq(gzip),
+    scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
+    pipelineStages := Seq(gzip),
     <!--(end)-->
-    // ***************
-    // Use the silencer plugin to suppress warnings
-    scalacOptions += "-P:silencer:pathFilters=routes",
-    libraryDependencies ++= Seq(
-      compilerPlugin("com.github.ghik" % "silencer-plugin" % silencerVersion cross CrossVersion.full),
-      "com.github.ghik" % "silencer-lib" % silencerVersion % Provided cross CrossVersion.full
-    )
-    // ***************
   )
   .settings(publishingSettings: _*)
   .configs(IntegrationTest)
