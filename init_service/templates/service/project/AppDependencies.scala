@@ -24,6 +24,5 @@ object AppDependencies {
     <!--(if type=="FRONTEND")-->
     "org.jsoup"               %  "jsoup"                      % "1.13.1"            % Test,
     <!--(end)-->
-    "com.vladsch.flexmark"    %  "flexmark-all"               % "0.36.8"            % "test, it"
   )
 }
