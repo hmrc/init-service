@@ -63,7 +63,7 @@ class InitService:
 
     def replace_variables_for_app(self, folder_to_search):
         sbt_version = "1.6.2"
-        scala_version = "2.12.15"
+        scala_version = "2.13.8"
         scala_binary_version = re.sub(r"\.(\d)*$", "", scala_version)
         print(f"scala_binary_version={scala_binary_version}")
         if self.type == "FRONTEND":
@@ -79,9 +79,6 @@ class InitService:
 
         play_frontend_hmrc_version = self.get_latest_library_version(
             "uk.gov.hmrc", "play-frontend-hmrc", scala_binary_version
-        )
-        play_frontend_govuk_version = self.get_latest_library_version(
-            "uk.gov.hmrc", "play-frontend-govuk", scala_binary_version
         )
         play_language_version = self.get_latest_library_version(
             "uk.gov.hmrc", "play-language", scala_binary_version
@@ -115,7 +112,6 @@ class InitService:
                     MONGO=self.with_mongo,
                     bootstrapPlayVersion=bootstrap_play_version,
                     playFrontendHmrcVersion=play_frontend_hmrc_version,
-                    playFrontendGovukVersion=play_frontend_govuk_version,
                     playLanguageVersion=play_language_version,
                     mongoVersion=mongo_version,
                     sbt_auto_build=sbt_auto_build,
