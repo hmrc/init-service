@@ -25,6 +25,8 @@ in this directory
 To install the dependencies run:
 ```make init```
 
+Or if you have nix installed, you can just run `nix-shell`
+
 ## Installation
 
 ```pip install -i https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/simple init-service```
