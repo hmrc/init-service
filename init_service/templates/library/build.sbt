@@ -1,8 +1,6 @@
 import sbt._
 
-val appName = "$!APP_NAME!$"
-
-lazy val library = Project(appName, file("."))
+lazy val library = Project("$!APP_NAME!$", file("."))
   .settings(
     majorVersion := 0,
     scalaVersion := "$!SCALA_VERSION!$",
