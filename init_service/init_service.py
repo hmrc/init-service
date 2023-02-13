@@ -49,12 +49,10 @@ class InitService:
             return latest
 
     def lookup_latest_artefact_version(self, group, artefact):
-        url = (
-            "https://artefacts.tax.service.gov.uk/artifactory/api/search/latestVersion?g="
-            + group
-            + "&a="
-            + artefact
+        artifactory_uri = os.getenv(
+            "ARTIFACTORY_URI", "https://artefacts.tax.service.gov.uk/artifactory"
         )
+        url = artifactory_uri + "/api/search/latestVersion?g=" + group + "&a=" + artefact
         print(url)
         request = url_request.Request(url)
         response = url_request.urlopen(request).read().decode("utf-8")
