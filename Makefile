@@ -16,6 +16,7 @@ init:
 	poetry install
 #    poetry run pre-commit install
 
+# Increment the version found in pyproject.toml for a new release
 .PHONY: publish
 publish: build
 	@poetry publish --username ${PYPI_USERNAME} --password ${PYPI_PASSWORD}
