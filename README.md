@@ -72,3 +72,11 @@ Then navigate to http://localhost:9000/test-frontend
 If you need to add a file that should only exist in a frontend or backend, but not both, add the
 path to the file to `templates/service/template/BACKEND.delete` if frontend-specific or
 `templates/service/template/FRONTEND.delete` if backend-specific.
+
+## Publishing a new version
+
+Increment the version found in pyproject.toml and run:
+
+```
+make publish
+````
