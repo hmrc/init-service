@@ -14,7 +14,6 @@ pytest = "^7.1.2"
 pytest-cov = "^3.0.0"
 pytest-mock = "^3.8.2"
 black = "^22.6.0"
-safety = "^2.1.1"
 bandit = "^1.7.4"
 
 [tool.poetry.scripts]
