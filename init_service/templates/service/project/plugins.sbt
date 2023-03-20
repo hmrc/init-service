@@ -4,7 +4,7 @@ resolvers += Resolver.typesafeRepo("releases")
 
 addSbtPlugin("uk.gov.hmrc"       % "sbt-auto-build"     % "$!sbt_auto_build!$")
 addSbtPlugin("uk.gov.hmrc"       % "sbt-distributables" % "$!sbt_distributables!$")
-addSbtPlugin("com.typesafe.play" % "sbt-plugin"         % "2.8.16")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin"         % "2.8.19")
 addSbtPlugin("org.scoverage"     % "sbt-scoverage"      % "1.9.3")
 <!--(if type=="FRONTEND")-->
 addSbtPlugin("com.typesafe.sbt"  % "sbt-gzip"           % "1.0.2")

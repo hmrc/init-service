@@ -1,6 +1,5 @@
 @import uk.gov.hmrc.$!APP_PACKAGE_NAME!$.config.AppConfig
 @import uk.gov.hmrc.hmrcfrontend.views.html.helpers.HmrcLayout
-@import views.html.helper.CSPNonce
 
 @this(
         appConfig: AppConfig,
@@ -10,7 +9,6 @@
 
 @hmrcLayout(
     pageTitle = pageTitle,
-    nonce = CSPNonce.get,
     isWelshTranslationAvailable = appConfig.welshLanguageSupportEnabled
 )(contentBlock)
 
