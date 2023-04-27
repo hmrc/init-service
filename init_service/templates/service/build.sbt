@@ -18,3 +18,8 @@ lazy val microservice = Project("$!APP_NAME!$", file("."))
   .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings: _*)
+  <!--(if type=="API")-->
+  .settings(
+    Compile / unmanagedResourceDirectories += baseDirectory.value / "resources",
+  )
+  <!--(end)-->
