@@ -148,22 +148,20 @@ class InitService:
 
     def create_project(self):
         if self.type == "LIBRARY":
-            template_dir = os.path.normpath(
-                os.path.join(os.path.abspath(__file__), "../templates/library")
-            )
+            template_location = "../templates/library"
             repository_type = "library"
         elif self.type in ["FRONTEND", "BACKEND"]:
-            template_dir = os.path.normpath(
-                os.path.join(os.path.abspath(__file__), "../templates/service")
-            )
+            template_location = "../templates/service"
             repository_type = "service"
         elif self.type == "API":
-            template_dir = os.path.normpath(
-                os.path.join(os.path.abspath(__file__), "../templates/service")
-            )
+            template_location = "../templates/service"
             repository_type = "api"
         else:
             raise Exception(f"ERROR: Invalid type '{self.type}'")
+
+        template_dir = os.path.normpath(
+            os.path.join(os.path.abspath(__file__), template_location)
+        )
 
         print(f"project name: {self.repository}")
 
