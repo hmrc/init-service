@@ -150,12 +150,9 @@ class InitService:
         if self.type == "LIBRARY":
             template_location = "../templates/library"
             repository_type = "library"
-        elif self.type in ["FRONTEND", "BACKEND"]:
+        elif self.type in ["FRONTEND", "BACKEND", "API"]:
             template_location = "../templates/service"
             repository_type = "service"
-        elif self.type == "API":
-            template_location = "../templates/service"
-            repository_type = "api"
         else:
             raise Exception(f"ERROR: Invalid type '{self.type}'")
 
