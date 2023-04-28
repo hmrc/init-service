@@ -3,12 +3,10 @@
 ->         /                          app.Routes
 ->         /                          health.Routes
 ->         /                          definition.Routes
-
-GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController.metrics
 <!--(else)-->
 # Add all the application routes to the app.routes file
 ->         /$!APP_NAME!$              app.Routes
 ->         /                          health.Routes
+<!--(end)-->
 
 GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController.metrics
-<!--(end)-->
