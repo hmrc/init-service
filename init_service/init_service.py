@@ -156,9 +156,7 @@ class InitService:
         else:
             raise Exception(f"ERROR: Invalid type '{self.type}'")
 
-        template_dir = os.path.normpath(
-            os.path.join(os.path.abspath(__file__), template_location)
-        )
+        template_dir = os.path.normpath(os.path.join(os.path.abspath(__file__), template_location))
 
         print(f"project name: {self.repository}")
 
