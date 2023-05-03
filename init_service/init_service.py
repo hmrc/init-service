@@ -68,7 +68,7 @@ class InitService:
             bootstrap_play_version = self.get_latest_library_version(
                 "uk.gov.hmrc", "bootstrap-frontend-play-28", scala_binary_version
             )
-        elif self.type == "BACKEND":
+        elif self.type in ["BACKEND", "API"]:
             bootstrap_play_version = self.get_latest_library_version(
                 "uk.gov.hmrc", "bootstrap-backend-play-28", scala_binary_version
             )
@@ -148,17 +148,15 @@ class InitService:
 
     def create_project(self):
         if self.type == "LIBRARY":
-            template_dir = os.path.normpath(
-                os.path.join(os.path.abspath(__file__), "../templates/library")
-            )
+            template_location = "../templates/library"
             repository_type = "library"
-        elif self.type in ["FRONTEND", "BACKEND"]:
-            template_dir = os.path.normpath(
-                os.path.join(os.path.abspath(__file__), "../templates/service")
-            )
+        elif self.type in ["FRONTEND", "BACKEND", "API"]:
+            template_location = "../templates/service"
             repository_type = "service"
         else:
             raise Exception(f"ERROR: Invalid type '{self.type}'")
+
+        template_dir = os.path.normpath(os.path.join(os.path.abspath(__file__), template_location))
 
         print(f"project name: {self.repository}")
 

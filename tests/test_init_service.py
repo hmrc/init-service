@@ -65,6 +65,23 @@ def test_init_service_with_missing_positional_args(mocker):
             "ghp_fooToken",
             "--dry-run",
         ],
+        [
+            "init-service",
+            "foo-service-api",
+            "API",
+            "--github-token",
+            "ghp_fooToken",
+            "--dry-run",
+        ],
+        [
+            "init-service",
+            "foo-service-api-mongo",
+            "API",
+            "--github-token",
+            "ghp_fooToken",
+            "--with-mongo",
+            "--dry-run",
+        ],
     ],
 )
 def test_init_service_with_type_service_successfully_runs(mocker, args):

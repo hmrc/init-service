@@ -1,0 +1,2 @@
+GET        /api/definition                 uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers.DocumentationController.definition()
+GET        /api/conf/:version/*file        uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers.DocumentationController.specification(version, file)
