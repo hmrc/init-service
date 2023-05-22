@@ -13,7 +13,7 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "bootstrap-frontend-play-28" % bootstrapVersion,
     "uk.gov.hmrc"             %% "play-frontend-hmrc"         % "$!playFrontendHmrcVersion!$"<!--(if MONGO)-->,<!--(end)-->
     <!--(end)-->
-    <!--(if type=="BACKEND")-->
+    <!--(if type in ["BACKEND", "API"])-->
     "uk.gov.hmrc"             %% "bootstrap-backend-play-28"  % bootstrapVersion<!--(if MONGO)-->,<!--(end)-->
     <!--(end)-->
     <!--(if MONGO)-->

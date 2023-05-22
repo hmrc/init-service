@@ -9,7 +9,7 @@ class AppConfig @Inject()(config: Configuration) {
   val welshLanguageSupportEnabled: Boolean = config.getOptional[Boolean]("features.welsh-language-support").getOrElse(false)
 <!--(end)-->
 
-<!--(if type=="BACKEND")-->
+<!--(if type in ["BACKEND", "API"])-->
   val appName: String = config.get[String]("appName")
 <!--(end)-->
 }
