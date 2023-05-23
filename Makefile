@@ -19,7 +19,8 @@ init:
 # Increment the version found in pyproject.toml for a new release
 .PHONY: publish
 publish: build
-	@poetry publish --username ${PYPI_USERNAME} --password ${PYPI_PASSWORD}
+	@poetry config pypi-token.artefacts ${ARTIFACTORY_PASSWORD}
+	@poetry publish --repository artefacts
 
 .PHONY: test
 test: init black
