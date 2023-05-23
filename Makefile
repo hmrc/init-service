@@ -22,7 +22,6 @@ publish: build
 	poetry config repositories.artifactory "https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/"
 	@poetry config http-basic.artifactory ${ARTIFACTORY_USERNAME} ${ARTIFACTORY_PASSWORD}
 	@poetry publish --repository artifactory
-	poetry run cut-release
 	poetry config http-basic.artifactory --unset
 	poetry config repositories.artifactory --unset
 
