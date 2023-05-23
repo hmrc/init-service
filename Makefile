@@ -19,8 +19,12 @@ init:
 # Increment the version found in pyproject.toml for a new release
 .PHONY: publish
 publish: build
-	@poetry config pypi-token.artefacts ${ARTIFACTORY_PASSWORD}
-	@poetry publish --repository artefacts
+	poetry config repositories.artifactory "https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/"
+	@poetry config http-basic.artifactory ${ARTIFACTORY_USERNAME} ${ARTIFACTORY_PASSWORD}
+	@poetry publish --repository artifactory
+	poetry run cut-release
+	poetry config http-basic.artifactory --unset
+	poetry config repositories.artifactory --unset
 
 .PHONY: test
 test: init black
