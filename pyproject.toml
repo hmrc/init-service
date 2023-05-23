@@ -5,6 +5,11 @@ description = "A templating tool for HMRC MDTP repositories"
 authors = ["Your Name <you@example.com>"]
 license = "Apache-2.0"
 
+[[tool.poetry.source]]
+name = "artefacts"
+url = "https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/simple/"
+priority = "primary"
+
 [tool.poetry.dependencies]
 python = "^3.9"
 click = "^8.1.3"
