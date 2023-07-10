@@ -8,5 +8,3 @@
 ->         /$!APP_NAME!$              app.Routes
 ->         /                          health.Routes
 <!--(end)-->
-
-GET        /admin/metrics             com.kenshoo.play.metrics.MetricsController.metrics
