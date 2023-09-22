@@ -156,19 +156,6 @@ class InitService:
         else:
             raise Exception(f"ERROR: Invalid type '{self.type}'")
 
-        service_type = None
-        tags = None
-
-        if self.type == "FRONTEND":
-            service_type = "frontend"
-            tags = "[]"
-        elif self.type == "BACKEND":
-            service_type = "backend"
-            tags = "[]"
-        elif self.type == "API":
-            service_type = "backend"
-            tags = "['api']"
-
         template_dir = os.path.normpath(os.path.join(os.path.abspath(__file__), template_location))
 
         print(f"project name: {self.repository}")
@@ -179,7 +166,6 @@ class InitService:
 
         print(f"Creating new {repository_type}: {self.repository}, this could take a few moments")
         project_folder = os.path.normpath(os.path.join(self.workspace, self.repository))
-        self.update_repository_yaml(project_folder, repository_type, service_type, tags)
         distutils.dir_util.copy_tree(template_dir, project_folder)
         self.replace_variables_for_app(project_folder)
         if self.type != "LIBRARY":
@@ -222,17 +208,6 @@ class InitService:
         for d in dirs:
             full_path = src + "/" + d
             shutil.move(full_path, dst)
-
-    def update_repository_yaml(self, project_folder, repository_type, service_type, tags):
-        filename = f"{project_folder}/repository.yaml"
-        if os.path.exists(filename):
-            with open(filename, "a") as f:
-                f.write(f"\ntype: {repository_type}")
-                if service_type is not None:
-                    f.write(f"\nservice-type: {service_type}")
-                if tags is not None:
-                    f.write(f"\ntags: {tags}")
-            f.close()
 
     def clone_repo(self):
         command = ["git", "clone", f"https://{self.github_token}@github.com/hmrc/{self.repository}"]
