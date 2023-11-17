@@ -86,7 +86,7 @@ class InitService:
         )
 
         sbt_auto_build = self.get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-auto-build")
-        sbt_distributables = self.get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-distributables")
+        sbt_distributables = "2.2.0" # self.get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-distributables") # pinned until we release Play 3.0
 
         print(f"sbt_auto_build {sbt_auto_build}")
         print(f"sbt_distributables {sbt_distributables}")
