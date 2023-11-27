@@ -43,7 +43,7 @@ class InitService:
     def get_latest_library_version(self, group, artefact, scala_binary_version):
         latest = self.lookup_latest_artefact_version(group, artefact + "_" + scala_binary_version)
 
-        if re.search(r"-play-(\d)*$", latest) and not re.search("-play-28$", latest):
+        if re.search(r"-play-(\d)*$", latest) and not re.search("-play-30$", latest):
             raise Exception("ERROR: Invalid dependency found '%s'" % latest)
         else:
             return latest
@@ -60,33 +60,33 @@ class InitService:
         return response
 
     def replace_variables_for_app(self, folder_to_search):
-        sbt_version = "1.7.2"
-        scala_version = "2.13.8"
+        sbt_version = "1.9.7"
+        scala_version = "2.13.12"
         scala_binary_version = re.sub(r"\.(\d)*$", "", scala_version)
         print(f"scala_binary_version={scala_binary_version}")
         if self.type == "FRONTEND":
             bootstrap_play_version = self.get_latest_library_version(
-                "uk.gov.hmrc", "bootstrap-frontend-play-28", scala_binary_version
+                "uk.gov.hmrc", "bootstrap-frontend-play-30", scala_binary_version
             )
         elif self.type in ["BACKEND", "API"]:
             bootstrap_play_version = self.get_latest_library_version(
-                "uk.gov.hmrc", "bootstrap-backend-play-28", scala_binary_version
+                "uk.gov.hmrc", "bootstrap-backend-play-30", scala_binary_version
             )
         else:
             bootstrap_play_version = ""  # template won't use this
 
         play_frontend_hmrc_version = self.get_latest_library_version(
-            "uk.gov.hmrc", "play-frontend-hmrc", scala_binary_version
+            "uk.gov.hmrc", "play-frontend-hmrc-play-30", scala_binary_version
         )
         play_language_version = self.get_latest_library_version(
-            "uk.gov.hmrc", "play-language", scala_binary_version
+            "uk.gov.hmrc", "play-language-play-30", scala_binary_version
         )
         mongo_version = self.get_latest_library_version(
-            "uk.gov.hmrc.mongo", "hmrc-mongo-play-28", scala_binary_version
+            "uk.gov.hmrc.mongo", "hmrc-mongo-play-30", scala_binary_version
         )
 
         sbt_auto_build = self.get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-auto-build")
-        sbt_distributables = "2.2.0" # self.get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-distributables") # pinned until we release Play 3.0
+        sbt_distributables = self.get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-distributables")
 
         print(f"sbt_auto_build {sbt_auto_build}")
         print(f"sbt_distributables {sbt_distributables}")
@@ -182,7 +182,7 @@ class InitService:
     def move_folders_to_project_package(self, project_folder):
         project_app_folder = f"{project_folder}/app"
         project_test_folder = f"{project_folder}/test"
-        project_it_test_folder = f"{project_folder}/it"
+        project_it_test_folder = f"{project_folder}/it/test"
         project_package = f"uk/gov/hmrc/{self.repository.replace('-', '')}"
         project_package_app = os.path.join(project_app_folder, project_package)
         project_package_test = os.path.join(project_test_folder, project_package)

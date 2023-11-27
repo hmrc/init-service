@@ -8,7 +8,7 @@ class HelloWorldSpec extends AnyWordSpec with Matchers {
   "HelloWorld" should {
 
     "say hello" in {
-      HelloWorld.sayHello shouldBe "hello"
+      HelloWorld.sayHello() shouldBe "hello"
     }
   }
 }

@@ -57,7 +57,7 @@ You will then need to manually copy over the `repository.yaml` and
 
 For example,
 
-```
+```bash
 init-service test-frontend FRONTEND
 cp ../contact-frontend/LICENSE ../test-frontend
 cp ../contact-frontend/repository.yaml ../test-frontend
@@ -77,6 +77,6 @@ path to the file to `templates/service/template/BACKEND.delete` if frontend-spec
 
 Increment the version found in pyproject.toml and run:
 
-```
+```bash
 make publish
 ````
