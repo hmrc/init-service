@@ -28,4 +28,6 @@ object AppDependencies {
     "org.jsoup"               %  "jsoup"                      % "1.13.1"            % Test,
     <!--(end)-->
   )
+
+  val it = Seq.empty
 }

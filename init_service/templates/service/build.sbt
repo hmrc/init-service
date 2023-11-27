@@ -1,10 +1,11 @@
-import uk.gov.hmrc.DefaultBuildSettings.integrationTestSettings
+import uk.gov.hmrc.DefaultBuildSettings
+
+ThisBuild / majorVersion := 0
+ThisBuild / scalaVersion := "$!SCALA_VERSION!$"
 
 lazy val microservice = Project("$!APP_NAME!$", file("."))
   .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
   .settings(
-    majorVersion        := 0,
-    scalaVersion        := "$!SCALA_VERSION!$",
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     // https://www.scala-lang.org/2021/01/12/configuring-and-suppressing-warnings.html
     // suppress warnings in generated routes files
@@ -14,8 +15,6 @@ lazy val microservice = Project("$!APP_NAME!$", file("."))
     pipelineStages := Seq(gzip),
     <!--(end)-->
   )
-  .configs(IntegrationTest)
-  .settings(integrationTestSettings(): _*)
   .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings: _*)
   <!--(if type=="API")-->
@@ -23,3 +22,9 @@ lazy val microservice = Project("$!APP_NAME!$", file("."))
     Compile / unmanagedResourceDirectories += baseDirectory.value / "resources",
   )
   <!--(end)-->
+
+lazy val it = project
+  .enablePlugins(PlayScala)
+  .dependsOn(microservice % "test->test")
+  .settings(DefaultBuildSettings.itSettings)
+  .settings(libraryDependencies ++= AppDependencies.it)

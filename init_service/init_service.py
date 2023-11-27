@@ -182,7 +182,7 @@ class InitService:
     def move_folders_to_project_package(self, project_folder):
         project_app_folder = f"{project_folder}/app"
         project_test_folder = f"{project_folder}/test"
-        project_it_test_folder = f"{project_folder}/it"
+        project_it_test_folder = f"{project_folder}/it/test"
         project_package = f"uk/gov/hmrc/{self.repository.replace('-', '')}"
         project_package_app = os.path.join(project_app_folder, project_package)
         project_package_test = os.path.join(project_test_folder, project_package)
