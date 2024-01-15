@@ -12,10 +12,6 @@ import play.api.inject.guice.GuiceApplicationBuilder
 class HelloWorldControllerSpec extends AnyWordSpec with Matchers with GuiceOneAppPerSuite {
   override def fakeApplication(): Application =
     new GuiceApplicationBuilder()
-      .configure(
-        "metrics.jvm"     -> false,
-        "metrics.enabled" -> false
-      )
       .build()
 
   private val fakeRequest = FakeRequest("GET", "/")
