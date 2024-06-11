@@ -3,10 +3,11 @@
 @import uk.gov.hmrc.hmrcfrontend.views.viewmodels.hmrcstandardpage.HmrcStandardPageParams
 
 @this(
-        appConfig: AppConfig,
-        hmrcStandardPage: HmrcStandardPage
+  appConfig: AppConfig,
+  hmrcStandardPage: HmrcStandardPage
 )
-@(pageTitle: Option[String] = None)(contentBlock: Html)(implicit request: Request[_], messages: Messages)
+
+@(pageTitle: Option[String] = None)(contentBlock: Html)(implicit request: RequestHeader, messages: Messages)
 
 @hmrcStandardPage(
   HmrcStandardPageParams(
