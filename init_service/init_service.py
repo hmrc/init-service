@@ -60,7 +60,7 @@ class InitService:
         return response
 
     def replace_variables_for_app(self, folder_to_search):
-        sbt_version = "1.9.7"
+        sbt_version = "1.9.9"
         scala_version = "2.13.12"
         scala_binary_version = re.sub(r"\.(\d)*$", "", scala_version)
         print(f"scala_binary_version={scala_binary_version}")
