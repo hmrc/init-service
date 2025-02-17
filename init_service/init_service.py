@@ -87,9 +87,11 @@ class InitService:
 
         sbt_auto_build = self.get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-auto-build")
         sbt_distributables = self.get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-distributables")
+        sbt_sass_compiler = self.get_latest_sbt_plugin_version("uk.gov.hmrc", "sbt-sass-compiler")
 
         print(f"sbt_auto_build {sbt_auto_build}")
         print(f"sbt_distributables {sbt_distributables}")
+        print(f"sbt_sass_compiler {sbt_sass_compiler}")
 
         for subdir, dirs, files in os.walk(folder_to_search):
             if ".git" in dirs:
@@ -114,6 +116,7 @@ class InitService:
                     mongoVersion=mongo_version,
                     sbt_auto_build=sbt_auto_build,
                     sbt_distributables=sbt_distributables,
+                    sbt_sass_compiler=sbt_sass_compiler,
                     bashbang="#!/bin/bash",
                     shbang="#!/bin/sh",
                 )
