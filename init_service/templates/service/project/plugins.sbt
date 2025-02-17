@@ -7,6 +7,6 @@ addSbtPlugin("uk.gov.hmrc"        % "sbt-distributables" % "$!sbt_distributables
 addSbtPlugin("org.playframework"  % "sbt-plugin"         % "3.0.6")
 addSbtPlugin("org.scoverage"      % "sbt-scoverage"      % "2.0.12")
 <!--(if type=="FRONTEND")-->
-addSbtPlugin("com.typesafe.sbt"   % "sbt-gzip"           % "1.0.2")
+addSbtPlugin("com.github.sbt"     % "sbt-gzip"           % "2.0.0")
 addSbtPlugin("uk.gov.hmrc"        % "sbt-sass-compiler"  % "$!sbt_sass_compiler!$")
 <!--(end)-->
