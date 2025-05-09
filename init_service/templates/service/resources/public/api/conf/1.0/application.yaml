@@ -24,7 +24,7 @@ components:
       required: true
 
 paths:
-  /<your-API-context>/world:
+  /<your-API-context>/hello-world:
     get:
       summary: Placeholder hello world endpoint
       description: |
