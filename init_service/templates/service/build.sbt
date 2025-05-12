@@ -15,7 +15,6 @@ lazy val microservice = Project("$!APP_NAME!$", file("."))
     pipelineStages := Seq(gzip),
     <!--(end)-->
   )
-  .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings: _*)
   <!--(if type=="API")-->
   .settings(
