@@ -1,13 +1,13 @@
 openapi: "3.0.3"
 
 info:
-  version: 1.0.0
+  version: "1.0"
   title: Hello World
 
 servers:
-  - url: https://test-api.service.hmrc.gov.uk/hello-world
+  - url: https://test-api.service.hmrc.gov.uk
     description: Sandbox
-  - url: https://api.service.hmrc.gov.uk/hello-world
+  - url: https://api.service.hmrc.gov.uk
     description: Production
 
 components:
@@ -24,7 +24,7 @@ components:
       required: true
 
 paths:
-  /hello-world:
+  /<your-API-context>/hello-world:
     get:
       summary: Placeholder hello world endpoint
       description: |
@@ -44,6 +44,8 @@ paths:
                   message:
                     type: string
               example:
-                "Hello world"
+                {
+                  "message" : "Hello World"
+                }
       security:
         - {}
