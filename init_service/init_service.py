@@ -61,7 +61,7 @@ class InitService:
 
     def replace_variables_for_app(self, folder_to_search):
         sbt_version = "1.10.10"
-        scala_version = "3.7.1"
+        scala_version = "3.3.6"
         scala_binary_version = "3"
         print(f"scala_binary_version={scala_binary_version}")
         if self.type == "FRONTEND":
