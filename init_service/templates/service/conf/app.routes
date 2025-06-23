@@ -1,7 +1,7 @@
 # microservice specific routes
 
 <!--(if type in ["BACKEND", "API"])-->
-GET        /hello-world             uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers.MicroserviceHelloWorldController.hello
+GET        /hello-world             uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers.MicroserviceHelloWorldController.hello()
 <!--(else)-->
 ->         /hmrc-frontend           hmrcfrontend.Routes
 GET        /                        uk.gov.hmrc.$!APP_PACKAGE_NAME!$.controllers.HelloWorldController.helloWorld
