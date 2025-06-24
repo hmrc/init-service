@@ -1,7 +1,6 @@
 import sbt._
 
 lazy val library = Project("$!APP_NAME!$", file("."))
-  .disablePlugins(JUnitXmlReportPlugin)
   .settings(
     majorVersion := 0,
     scalaVersion := "$!SCALA_VERSION!$",
