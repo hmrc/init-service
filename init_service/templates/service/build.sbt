@@ -10,6 +10,7 @@ lazy val microservice = Project("$!APP_NAME!$", file("."))
     // https://www.scala-lang.org/2021/01/12/configuring-and-suppressing-warnings.html
     // suppress warnings in generated routes files
     scalacOptions += "-Wconf:src=routes/.*:s",
+    scalacOptions += "-Wconf:msg=Flag.*repeatedly:s",
     <!--(if type=="FRONTEND")-->
     scalacOptions += "-Wconf:cat=unused-imports&src=html/.*:s",
     pipelineStages := Seq(gzip),
