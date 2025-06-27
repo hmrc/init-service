@@ -4,12 +4,12 @@ import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 
 @Singleton
-class AppConfig @Inject()(config: Configuration) {
-<!--(if type=="FRONTEND")-->
-  val welshLanguageSupportEnabled: Boolean = config.getOptional[Boolean]("features.welsh-language-support").getOrElse(false)
-<!--(end)-->
+class AppConfig @Inject()(config: Configuration):
 
+<!--(if type=="FRONTEND")-->
+  val welshLanguageSupportEnabled: Boolean =
+    config.getOptional[Boolean]("features.welsh-language-support").getOrElse(false)
+<!--(end)-->
 <!--(if type in ["BACKEND", "API"])-->
   val appName: String = config.get[String]("appName")
 <!--(end)-->
-}

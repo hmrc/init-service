@@ -1,5 +1,3 @@
-import play.core.PlayVersion
-import play.sbt.PlayImport._
 import sbt.Keys.libraryDependencies
 import sbt._
 
