@@ -1,6 +1,5 @@
 package uk.gov.hmrc.hello
 
-object HelloWorld {
+object HelloWorld:
 
   def sayHello(): String = "hello"
-}
