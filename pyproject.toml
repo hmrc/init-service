@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "init-service"
-version = "0.24.0"
+version = "0.25.0"
 description = "A templating tool for HMRC MDTP repositories"
 authors = ["Your Name <you@example.com>"]
 license = "Apache-2.0"
