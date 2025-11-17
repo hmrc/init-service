@@ -79,4 +79,15 @@ Increment the version found in pyproject.toml and run:
 
 ```bash
 make publish
-````
+```
+
+## CI/CD Build Process
+
+The build process is managed through Jenkins and is defined in the [build-jobs repository](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platops.groovy#L178).
+
+When a PR is merged to `main`, the CI/CD pipeline:
+- Runs `make test` to execute unit tests
+- Runs `make bandit` for security scanning
+- Builds and publishes the package to Artifactory
+
+For more details on the build process, see the [platops.groovy configuration](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platops.groovy#L178).
