@@ -1,6 +1,6 @@
 .PHONY: bandit
 bandit:
-	poetry run bandit -c pyproject.toml -r ./init_service -x "./init_service/pyratemp.py"
+	poetry run bandit -c pyproject.toml --recursive .
 
 .PHONY: black
 black:
