@@ -109,7 +109,6 @@ class InitService:
                     MONGO=self.with_mongo,
                     bootstrapPlayVersion=bootstrap_play_version,
                     playFrontendHmrcVersion=play_frontend_hmrc_version,
-                    playLanguageVersion=play_language_version,
                     mongoVersion=mongo_version,
                     sbt_auto_build=sbt_auto_build,
                     sbt_distributables=sbt_distributables,

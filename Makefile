@@ -12,7 +12,7 @@ build: test bandit
 
 .PHONY: init
 init:
-	pip install --index-url https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/simple/ poetry
+	pip install --index-url https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/simple/ "poetry==1.5.0"
 	poetry install
 #    poetry run pre-commit install
 

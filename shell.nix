@@ -10,7 +10,7 @@ in
     shellHook = ''
       virtualenv venv
       source ./venv/bin/activate
-      pip install poetry
+      pip install "poetry=1.5.0"
       make init
     '';
   }
