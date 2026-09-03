@@ -6,7 +6,7 @@ object LibDependencies {
   )
 
   lazy val test: Seq[ModuleID] = Seq(
-    "org.scalatest"          %% "scalatest"    % "3.2.17" % Test,
+    "org.scalatest"          %% "scalatest"    % "3.2.19" % Test,
     "com.vladsch.flexmark"   %  "flexmark-all" % "0.64.8" % Test
   )
 }

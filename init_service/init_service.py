@@ -78,9 +78,6 @@ class InitService:
         play_frontend_hmrc_version = self.get_latest_library_version(
             "uk.gov.hmrc", "play-frontend-hmrc-play-30", scala_binary_version
         )
-        play_language_version = self.get_latest_library_version(
-            "uk.gov.hmrc", "play-language-play-30", scala_binary_version
-        )
         mongo_version = self.get_latest_library_version(
             "uk.gov.hmrc.mongo", "hmrc-mongo-play-30", scala_binary_version
         )
@@ -112,7 +109,6 @@ class InitService:
                     MONGO=self.with_mongo,
                     bootstrapPlayVersion=bootstrap_play_version,
                     playFrontendHmrcVersion=play_frontend_hmrc_version,
-                    playLanguageVersion=play_language_version,
                     mongoVersion=mongo_version,
                     sbt_auto_build=sbt_auto_build,
                     sbt_distributables=sbt_distributables,

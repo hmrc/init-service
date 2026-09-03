@@ -23,7 +23,7 @@ object AppDependencies {
     "uk.gov.hmrc"             %% "bootstrap-test-play-30"     % bootstrapVersion            % Test,
     <!--(if MONGO)-->"uk.gov.hmrc.mongo"       %% "hmrc-mongo-test-play-30"    % hmrcMongoVersion            % Test,<!--(end)-->
     <!--(if type=="FRONTEND")-->
-    "org.jsoup"               %  "jsoup"                      % "1.13.1"            % Test,
+    "org.jsoup"               %  "jsoup"                      % "1.21.2"            % Test,
     <!--(end)-->
   )
 
