@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import distutils.core
 import fileinput
 import os
 import re
@@ -165,7 +164,7 @@ class InitService:
 
         print(f"Creating new {repository_type}: {self.repository}, this could take a few moments")
         project_folder = os.path.normpath(os.path.join(self.workspace, self.repository))
-        distutils.dir_util.copy_tree(template_dir, project_folder)
+        shutil.copytree(template_dir, project_folder, dirs_exist_ok=True)
         self.replace_variables_for_app(project_folder)
         if self.type != "LIBRARY":
             self.delete_files_for_type(project_folder)
