@@ -92,8 +92,10 @@ def test_init_service_with_type_service_successfully_runs(mocker, args):
         init_service.run_cli()
     assert system_exit.value.code == 0
 
-    assert_code_compiles(name, "test; it:test") if type != "LIBRARY" else assert_code_compiles(
-        name, "test"
+    (
+        assert_code_compiles(name, "test; it:test")
+        if type != "LIBRARY"
+        else assert_code_compiles(name, "test")
     )
 
     shutil.rmtree(f"{cwd}/{name}")

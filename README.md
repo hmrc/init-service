@@ -13,19 +13,21 @@ Run `init-service --help` for instructions.
 ## Prerequisites
 
 This library requires,
-- Python 3.9
+- Python 3.14 (see `.python-version` for the pinned patch version)
 - the `$WORKSPACE` environment variable to be set - new repositories will be created
 in this directory
 - a github token with permissions to push to the repository that needs initialising
 
 ### Additional development dependencies
 
-- poetry ( `pip install poetry` )
+- Poetry 2.4.3 (installed by `make init`)
 
 To install the dependencies run:
 ```make init```
 
 Or if you have nix installed, you can just run `nix-shell`
+
+Recreate existing virtual environments with Python 3.14 before installing dependencies.
 
 ## Installation
 

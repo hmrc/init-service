@@ -5,12 +5,12 @@ let
 in
   pkgs.mkShell {
     buildInputs = [
-      pkgs.python39Packages.virtualenv
+      pkgs.python314Packages.virtualenv
     ];
     shellHook = ''
       virtualenv venv
       source ./venv/bin/activate
-      pip install "poetry==1.5.0"
+      pip install "poetry==2.4.3"
       make init
     '';
   }
