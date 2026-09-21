@@ -85,7 +85,7 @@ make publish
 
 ## CI/CD Build Process
 
-The build process is managed through Jenkins and is defined in the [build-jobs repository](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platops.groovy#L178).
+The build process is managed through Jenkins and is defined in [init-service/Build Steps](https://build.tax.service.gov.uk/job/PlatOps/job/Libraries/job/init-service/configure).
 
 ### Pull Request Build
 
@@ -104,5 +104,3 @@ When a PR is merged to `main`:
 - Tags the repository with the version number
 
 The build uses credentials stored in Jenkins under `hmrc-pips-local-writer-token` for Artifactory authentication.
-
-For more details, see the [platops.groovy configuration](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platops.groovy#L178).
