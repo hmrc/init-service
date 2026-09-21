@@ -1,3 +1,6 @@
+PYTHON ?= python3.14
+POETRY_VERSION := 2.4.3
+
 .PHONY: bandit
 bandit:
 	poetry run bandit -c pyproject.toml --recursive .
@@ -12,7 +15,8 @@ build: test bandit
 
 .PHONY: init
 init:
-	pip install --index-url https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/simple/ "poetry==1.5.0"
+	$(PYTHON) -m pip install --index-url https://artefacts.tax.service.gov.uk/artifactory/api/pypi/pips/simple/ "poetry==$(POETRY_VERSION)"
+	poetry env use $(PYTHON)
 	poetry install
 #    poetry run pre-commit install
 

@@ -13,19 +13,21 @@ Run `init-service --help` for instructions.
 ## Prerequisites
 
 This library requires,
-- Python 3.9
+- Python 3.14 (see `.python-version` for the pinned patch version)
 - the `$WORKSPACE` environment variable to be set - new repositories will be created
 in this directory
 - a github token with permissions to push to the repository that needs initialising
 
 ### Additional development dependencies
 
-- poetry ( `pip install poetry` )
+- Poetry 2.4.3 (installed by `make init`)
 
 To install the dependencies run:
 ```make init```
 
 Or if you have nix installed, you can just run `nix-shell`
+
+Recreate existing virtual environments with Python 3.14 before installing dependencies.
 
 ## Installation
 
@@ -83,7 +85,7 @@ make publish
 
 ## CI/CD Build Process
 
-The build process is managed through Jenkins and is defined in the [build-jobs repository](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platops.groovy#L178).
+The build process is managed through Jenkins and is defined in [init-service/Build Steps](https://build.tax.service.gov.uk/job/PlatOps/job/Libraries/job/init-service/configure).
 
 ### Pull Request Build
 
@@ -102,5 +104,3 @@ When a PR is merged to `main`:
 - Tags the repository with the version number
 
 The build uses credentials stored in Jenkins under `hmrc-pips-local-writer-token` for Artifactory authentication.
-
-For more details, see the [platops.groovy configuration](https://github.com/hmrc/build-jobs/blob/main/jobs/live/platops.groovy#L178).
